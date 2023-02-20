@@ -96,7 +96,6 @@ git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 08-AWS-EKS
 
 
 
-<<<<<<< HEAD
 # Dia 20/02/2023
 
 
@@ -205,7 +204,6 @@ null_resource.copy_ec2_keys: Still creating... [4m51s elapsed]
 fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests$
 
 ~~~~
-<<<<<<< HEAD
 
 
 
@@ -752,6 +750,7 @@ Solução completa em:
 /home/fernando/cursos/terraform/eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/troubleshooting/EKS - Console - Your current user or role does not have access to Kubernetes objects on this EKS cluster.md
 
 
+git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform/providers/registry.terraform.io/hashicorp/aws/3.76.1/linux_amd64/terraform-provider-aws_v3.76.1_x5'
 
 
 
@@ -761,8 +760,3 @@ Solução completa em:
 - Criar branch com a versão final testada e completa.
 - Criar branch com a versão final testada e simples(sem Bastion).
 - Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
-=======
-=======
-# Dia 20/02/2023
->>>>>>> 9b3ecb424cc3a89cccbf87057cb235c09ef3b469
->>>>>>> 1169808b14ad45d5b06c8fee2e577ea5a467c303
