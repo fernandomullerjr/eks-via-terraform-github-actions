@@ -755,8 +755,8 @@ git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 08-AWS-EKS
 
 
 # PENDENTE
-- Tratar erro "Your current user or role does not have access to Kubernetes objects on this EKS cluster".
-- Criar pipeline no Github Actions.
 - Criar branch com a versão final testada e completa.
 - Criar branch com a versão final testada e simples(sem Bastion).
 - Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+  https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Criar pipeline no Github Actions.
