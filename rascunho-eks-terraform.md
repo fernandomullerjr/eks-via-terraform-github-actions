@@ -71,6 +71,7 @@ git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 08-AWS-EKS
 
 
 
+<<<<<<< HEAD
 # Dia 20/02/2023
 
 
@@ -179,3 +180,6 @@ null_resource.copy_ec2_keys: Still creating... [4m51s elapsed]
 fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests$
 
 ~~~~
+=======
+# Dia 20/02/2023
+>>>>>>> 9b3ecb424cc3a89cccbf87057cb235c09ef3b469
