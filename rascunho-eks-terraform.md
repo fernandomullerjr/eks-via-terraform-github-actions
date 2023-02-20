@@ -1,4 +1,11 @@
 
+git status
+git add .
+git commit -m "Projeto - eks-via-terraform-github-actions"
+eval $(ssh-agent -s)
+ssh-add /home/fernando/.ssh/chave-debian10-github
+git push
+git status
 
 
 
@@ -46,3 +53,11 @@ Changes to Outputs:
     ]
   + vpc_cidr_block                     = "10.0.0.0/16"
   + vpc_id                             = (known after apply)
+
+
+
+
+
+
+
+git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform/providers/registry.terraform.io/hashicorp/aws/3.76.1/linux_amd64/terraform-provider-aws_v3.76.1_x5'
