@@ -869,13 +869,30 @@ git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 09-eks-clu
 git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 01-ekscluster-terraform-manifests/.terraform/providers/registry.terraform.io/hashicorp/aws/3.76.1/linux_amd64/terraform-provider-aws_v3.76.1_x5'
 
 
+
+
+
+### - Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 09.
+- Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 09.
+- Deletando manifestos sobre Bastion
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-cluster-terraform-simples/c4-01-ec2bastion-variables.tf
+
+
+
+
+
+
+
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # PENDENTE
-- Configurar o Gitignore para os arquivos Terraform.
 - Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 09.
+- Criar chave SSH para uso no Cluster EKS. Ajustar os manifestos que chamam ela.
+- Configurar o Gitignore para os arquivos Terraform.
 - Configurar Terraform Cloud Free.
 - Criar pipeline no Github Actions.
 - Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
