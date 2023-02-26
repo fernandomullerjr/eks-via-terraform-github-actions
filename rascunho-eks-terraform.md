@@ -901,3 +901,13 @@ git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 01-eksclus
   https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
 - Criar branch com a versão final testada e completa.
 - Criar branch com a versão final testada e simples(sem Bastion).
+
+
+
+
+
+
+
+
+
+### Dia 26/02/2023
