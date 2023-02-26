@@ -6,16 +6,25 @@
 
 # Git - Efetuando Push
 git status
-git add .
+git add -u
+git reset -- 01-eks-cluster-terraform-simples/.terraform
+git reset -- 01-eks-cluster-terraform-simples/.terraform/*
 git commit -m "Projeto - eks-via-terraform-github-actions"
 eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
 git push
 git status
 
+- Git - add sem colocar .terraform:
+git add -u
+git reset -- 01-eks-cluster-terraform-simples/.terraform
+git reset -- 01-eks-cluster-terraform-simples/.terraform/*
 
 
+- Erro - arquivo pesado:
 git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform/providers/registry.terraform.io/hashicorp/aws/3.76.1/linux_amd64/terraform-provider-aws_v3.76.1_x5'
+
+
 
 
 
@@ -919,3 +928,296 @@ git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 01-eksclus
   520  git add .
   521  git commit -m "atualizando o Gitignore"
   522  git push
+
+
+
+
+
+
+For a folder
+
+git add -u
+git reset -- main/*
+
+
+
+ -u, --update
+           Update the index just where it already has an entry matching <pathspec>. This removes as well as modifies index entries to match the working tree, but adds no new files.
+
+           If no <pathspec> is given when -u option is used, all tracked files in the entire working tree are updated (old versions of Git used to limit the update to the current
+           directory and its subdirectories).
+
+
+
+01-eks-cluster-terraform-simples/.terraform
+
+
+
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   01-eks-cluster-terraform-simples/c1-versions.tf
+        modified:   01-eks-cluster-terraform-simples/c2-01-generic-variables.tf
+        modified:   01-eks-cluster-terraform-simples/c2-02-local-values.tf
+        modified:   01-eks-cluster-terraform-simples/c3-01-vpc-variables.tf
+        modified:   01-eks-cluster-terraform-simples/c3-02-vpc-module.tf
+        modified:   01-eks-cluster-terraform-simples/c5-01-eks-variables.tf
+        modified:   01-eks-cluster-terraform-simples/c5-02-eks-outputs.tf
+        modified:   01-eks-cluster-terraform-simples/c5-06-eks-cluster.tf
+        modified:   01-eks-cluster-terraform-simples/c5-07-eks-node-group-public.tf
+        modified:   01-eks-cluster-terraform-simples/c5-08-eks-node-group-private.tf
+        modified:   01-eks-cluster-terraform-simples/eks.auto.tfvars
+        modified:   01-eks-cluster-terraform-simples/terraform.tfvars
+        modified:   01-eks-cluster-terraform-simples/vpc.auto.tfvars
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        01-eks-cluster-terraform-simples/.terraform.lock.hcl
+        01-eks-cluster-terraform-simples/.terraform/
+
+no changes added to commit (use "git add" and/or "git commit -a")
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions$
+
+
+
+
+git add -u
+git reset -- 01-eks-cluster-terraform-simples/.terraform
+git reset -- 01-eks-cluster-terraform-simples/.terraform/*
+
+
+
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions$ git add -u
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions$ git reset -- 01-eks-cluster-terraform-simples/.terraform
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions$ git reset -- 01-eks-cluster-terraform-simples/.terraform/*
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions$
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions$
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions$
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        modified:   01-eks-cluster-terraform-simples/c1-versions.tf
+        modified:   01-eks-cluster-terraform-simples/c2-01-generic-variables.tf
+        modified:   01-eks-cluster-terraform-simples/c2-02-local-values.tf
+        modified:   01-eks-cluster-terraform-simples/c3-01-vpc-variables.tf
+        modified:   01-eks-cluster-terraform-simples/c3-02-vpc-module.tf
+        modified:   01-eks-cluster-terraform-simples/c5-01-eks-variables.tf
+        modified:   01-eks-cluster-terraform-simples/c5-02-eks-outputs.tf
+        modified:   01-eks-cluster-terraform-simples/c5-06-eks-cluster.tf
+        modified:   01-eks-cluster-terraform-simples/c5-07-eks-node-group-public.tf
+        modified:   01-eks-cluster-terraform-simples/c5-08-eks-node-group-private.tf
+        modified:   01-eks-cluster-terraform-simples/eks.auto.tfvars
+        modified:   01-eks-cluster-terraform-simples/terraform.tfvars
+        modified:   01-eks-cluster-terraform-simples/vpc.auto.tfvars
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        01-eks-cluster-terraform-simples/.terraform.lock.hcl
+        01-eks-cluster-terraform-simples/.terraform/
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions$
+
+
+
+
+
+
+
+
+
+
+- Efetuando apply
+
+
+Plan: 31 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + azs                                = [
+      + "us-east-1a",
+      + "us-east-1b",
+      + "us-east-1c",
+      + "us-east-1d",
+      + "us-east-1e",
+      + "us-east-1f",
+    ]
+  + cluster_arn                        = (known after apply)
+  + cluster_certificate_authority_data = (known after apply)
+  + cluster_endpoint                   = (known after apply)
+  + cluster_iam_role_arn               = (known after apply)
+  + cluster_iam_role_name              = "hr-stag-eks-master-role"
+  + cluster_id                         = (known after apply)
+  + cluster_oidc_issuer_url            = (known after apply)
+  + cluster_primary_security_group_id  = (known after apply)
+  + cluster_version                    = "1.22"
+  + nat_public_ips                     = [
+      + (known after apply),
+    ]
+  + node_group_public_arn              = (known after apply)
+  + node_group_public_id               = (known after apply)
+  + node_group_public_status           = (known after apply)
+  + node_group_public_version          = (known after apply)
+  + private_subnets                    = [
+      + (known after apply),
+      + (known after apply),
+    ]
+  + public_subnets                     = [
+      + (known after apply),
+      + (known after apply),
+    ]
+  + vpc_cidr_block                     = "10.0.0.0/16"
+  + vpc_id                             = (known after apply)
+
+Do you want to perform these actions in workspace "eks-via-terraform"?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# PENDENTE
+- Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 01.
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+  https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
+
+
+
+
+
+
+
+
+
+- ERRO
+
+
+╷
+│ Error: error creating EKS Node Group (hr-stag-eksdemo1:hr-stag-eks-ng-public): InvalidParameterException: KeyPair fernando-devops-new-26-02-2023 not found
+│ {
+│   RespMetadata: {
+│     StatusCode: 400,
+│     RequestID: "f41c263f-9c92-4720-8b17-287b47872393"
+│   },
+│   ClusterName: "hr-stag-eksdemo1",
+│   Message_: "KeyPair fernando-devops-new-26-02-2023 not found",
+│   NodegroupName: "hr-stag-eks-ng-public"
+│ }
+│
+│   with aws_eks_node_group.eks_ng_public,
+│   on c5-07-eks-node-group-public.tf line 2, in resource "aws_eks_node_group" "eks_ng_public":
+│    2: resource "aws_eks_node_group" "eks_ng_public" {
+│
+╵
+Operation failed: failed running terraform apply (exit 1)
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples$
+
+
+
+
+
+
+- Comentando o bloco sobre chave SSH no arquivo:
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/c5-07-eks-node-group-public.tf
+
+  remote_access {
+    ec2_ssh_key = "fernando-devops-new-26-02-2023"
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- Apply ocorreu em outra conta AWS
+
+
+
+      - "us-east-1f",
+    ] -> null
+  - cluster_arn                        = "arn:aws:eks:us-east-1:816678621138:cluster/hr-stag-eksdemo1" -> null
+  - cluster_certificate_authority_data = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUMvakNDQWVhZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJek1ESXlOakUxTURJMU5Gb1hEVE16TURJeU16RTFNREkxTkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTWVkCmQ5amo4VnR2TjFHWlR1dWVYQ0Zwdlh4KzAxL2FheFBDbEhJNkNwOHBTZmpFYXhyYUk1MlJwbDgrSUlwZ3ZaREIKRUZqWXFtUlJJNkdCWDA0NjhvcUd4VGNzWnFoaFg0aFJ6WW9ZOWFibkVsME5LZi9rV3VUUzBGSW5hNUtmKzljUgpRamdla3VPZUZTeFV6MmZNa01SblUrWGF3R2Yvdkh2SlhmMGx6SnJqL1Z4REZxVUpxWVV4bmVFY3pDRG1zS3lPCkRnQXdQMEtLMm96RGZkalhkRVExcktDWFVOd0MyTzliTFZYYXVTMUc0ek1iUkRLaGQ2L282WFhlbktKL3NvRGMKOG5NRXJwODZSQXlLTnpvaCtDQ3c1RTlyU2xnL1ROZXhRYXhSeklkUlNhQUgvMjI3Z0l3Y1VoWkExTTBiQjZRSQplcDVlQU41YlRaRkF0K0twbmZNQ0F3RUFBYU5aTUZjd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZGUEh6NmZOZ0JJNnFxQUhtMHZZaU52bUJXTmpNQlVHQTFVZEVRUU8KTUF5Q0NtdDFZbVZ5Ym1WMFpYTXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBRnFLa3hXL1NvbHNUWWJwMURjUAovcngzeXFYaEJsVUcyYmV5aHdyVHRKQy9OU1E5Z3Y5RUJlU29FQk9POEk4cHJJVUNMUGxGd1U3eGx2Y245K2JNClZiTGxYM0NtMEVOUHA5RzVhOU56OVVNMU9aQkdDQm04aFBVT0wxQm1HcTEzNjMrOURPVVRxeW1wL0tlVFB6V0UKM2wwaVVPSnlmTy9vM0JsMHVtS2Rod1E3UVI0bjB2WmtzTTBZanlFZG44a0ZaNW4wT1diR1ZQRnIveDBIa2prcwovUmN2T3hHbTN1U2Mwb0I3ejJvd1UvQTBRQ3IyRXd3NjZZVjRJd0YycVJrd2RxSHJWMXA2ZHBDRFFWRnh5U3JJCkc0Vks4TE0xYTgyL0wrU3NMSjVVekJDQlNXUEVlUlpHNmJDRnlGVXlqSVJJb2JwRkhSWUxoOWhBUFNobXdXK2MKRmdZPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==" -> null
+  - cluster_endpoint                   = "https://EC06C9ACC3084FC82815C306CD4169D4.gr7.us-east-1.eks.amazonaws.com" -> null
+  - cluster_iam_role_arn               = "arn:aws:iam::816678621138:role/hr-stag-eks-master-role" -> null
+  - cluster_iam_role_name              = "hr-stag-eks-master-role" -> null
+  - cluster_id                         = "hr-stag-eksdemo1" -> null
+  - cluster_oidc_issuer_url            = "https://oidc.eks.us-east-1.amazonaws.com/id/EC06C9ACC3084FC82815C306CD4169D4" -> null
+  - cluster_primary_security_group_id  = "sg-089dc9df2e29c41d9" -> null
+  - cluster_version                    = "1.22" -> null
+  - nat_public_ips                     = [
+      - "52.204.54.74",
+    ] -> null
+  - node_group_public_arn              = "arn:aws:eks:us-east-1:816678621138:nodegroup/hr-stag-eksdemo1/hr-stag-eks-ng-public/d6c34725-80e3-de01-16ba-1927ffe2991b" -> null
+  - node_group_public_id               = "hr-stag-eksdemo1:hr-stag-eks-ng-public" -> null
+  - node_group_public_status           = "ACTIVE" -> null
+  - node_group_public_version          = "1.22" -> null
+  - private_subnets                    = [
+      - "subnet-047164ac5c2415cfb",
+      - "subnet-0a0af4947604cac47",
+    ] -> null
+  - public_subnets                     = [
+      - "subnet-0c22f9b23d7e3f1db",
+      - "subnet-0c2ea8dc8ea2df0d6",
+    ] -> null
+
+
+
+
+
+
+
+
+
+- Provável que tenha sido usada a chave:
+fernandomjunior_accessKeys__2.csv
+arn:aws:iam::816678621138:user/fernandomjunior
+AKIA34JOWZ7JI3YJMTTK
+
+
+- Como o backend está remoto, necessário ajustar variáveis no Terraform CLOUD:
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+
+
+- Ajustando para:
+fernandomullerjr8596__new_user_credentials.csv
+
