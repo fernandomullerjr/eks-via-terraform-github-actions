@@ -1,7 +1,12 @@
 # Local .terraform directories
 **/.terraform/*
+.terraform
 eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/.terraform
 eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/.terraform/*
+eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/.terraform/
+eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform
+eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform/
+eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform/*
 
 # .tfstate files
 *.tfstate

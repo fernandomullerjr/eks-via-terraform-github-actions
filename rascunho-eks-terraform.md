@@ -890,15 +890,14 @@ git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 01-eksclus
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # PENDENTE
-- Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 09.
-- Criar chave SSH para uso no Cluster EKS. Ajustar os manifestos que chamam ela.
+- Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 01.
 - Configurar o Gitignore para os arquivos Terraform.
 - Configurar Terraform Cloud Free.
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+  https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
 - Criar pipeline no Github Actions.
 - Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
 - Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
-- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
-  https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
 - Criar branch com a versão final testada e completa.
 - Criar branch com a versão final testada e simples(sem Bastion).
 
@@ -911,3 +910,5 @@ git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 01-eksclus
 
 
 ### Dia 26/02/2023
+
+- Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 01.
