@@ -866,9 +866,13 @@ Successfully deleted 1 key pairs
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # PENDENTE
+- Configurar o Gitignore para os arquivos Terraform.
+- Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 09.
 - Configurar Terraform Cloud Free.
-- Criar branch com a versão final testada e completa.
-- Criar branch com a versão final testada e simples(sem Bastion).
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
 - Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
   https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
-- Criar pipeline no Github Actions.
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
