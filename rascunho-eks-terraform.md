@@ -1202,6 +1202,41 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-
 
 
 
+apsed]
+aws_eks_node_group.eks_ng_public: Destruction complete after 8m22s
+aws_iam_role_policy_attachment.eks-AmazonEC2ContainerRegistryReadOnly: Destroying... [id=hr-stag-eks-nodegroup-role-20230226145655921000000002]
+aws_iam_role_policy_attachment.eks-AmazonEKSWorkerNodePolicy: Destroying... [id=hr-stag-eks-nodegroup-role-20230226145655924400000003]
+aws_iam_role_policy_attachment.eks-AmazonEKS_CNI_Policy: Destroying... [id=hr-stag-eks-nodegroup-role-20230226145655919200000001]
+aws_eks_cluster.eks_cluster: Destroying... [id=hr-stag-eksdemo1]
+aws_iam_role_policy_attachment.eks-AmazonEKSWorkerNodePolicy: Destruction complete after 0s
+aws_iam_role_policy_attachment.eks-AmazonEC2ContainerRegistryReadOnly: Destruction complete after 0s
+aws_iam_role_policy_attachment.eks-AmazonEKS_CNI_Policy: Destruction complete after 0s
+aws_iam_role.eks_nodegroup_role: Destroying... [id=hr-stag-eks-nodegroup-role]
+aws_iam_role.eks_nodegroup_role: Destruction complete after 0s
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 10s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 20s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 30s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 40s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 50s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 1m0s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 1m10s elapsed]
+aws_eks_cluster.eks_cluster: Destruction complete after 1m14s
+aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy: Destroying... [id=hr-stag-eks-master-role-20230226145655930300000004]
+aws_iam_role_policy_attachment.eks-AmazonEKSVPCResourceController: Destroying... [id=hr-stag-eks-master-role-20230226145655933100000005]
+module.vpc.aws_subnet.public[0]: Destroying... [id=subnet-0c22f9b23d7e3f1db]
+module.vpc.aws_subnet.public[1]: Destroying... [id=subnet-0c2ea8dc8ea2df0d6]
+aws_iam_role_policy_attachment.eks-AmazonEKSVPCResourceController: Destruction complete after 0s
+aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy: Destruction complete after 0s
+aws_iam_role.eks_master_role: Destroying... [id=hr-stag-eks-master-role]
+aws_iam_role.eks_master_role: Destruction complete after 0s
+module.vpc.aws_subnet.public[1]: Destruction complete after 1s
+module.vpc.aws_subnet.public[0]: Destruction complete after 1s
+module.vpc.aws_vpc.this[0]: Destroying... [id=vpc-0e1032235a23e81d2]
+module.vpc.aws_vpc.this[0]: Destruction complete after 0s
+
+Apply complete! Resources: 0 added, 0 changed, 31 destroyed.
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples$
 
 
 
@@ -1220,4 +1255,104 @@ AWS_SECRET_ACCESS_KEY
 
 - Ajustando para:
 fernandomullerjr8596__new_user_credentials.csv
+
+
+
+
+
+
+│ Warning: Value for undeclared variable
+│
+│ The root module does not declare a variable named "AWS_SECRET_ACCESS_KEY"
+│ but a value was found in file
+│ "/home/tfc-agent/.tfc-agent/component/terraform/runs/run-uTfTZ6RTQfNWNzsC/terraform.tfvars".
+│ If you meant to use this value, add a "variable" block to the
+│ configuration.
+│
+│ To silence these warnings, use TF_VAR_... environment variables to provide
+│ certain "global" settings to all configurations in your organization. To
+│ reduce the verbosity of these warnings, use the -compact-warnings option.
+╵
+╷
+│ Error: error configuring Terraform AWS Provider: no valid credential sources for Terraform AWS Provider found.
+│
+│ Please see https://registry.terraform.io/providers/hashicorp/aws
+│ for more information about providing credentials.
+│
+│ Error: NoCredentialProviders: no valid providers in chain
+│ caused by: EnvAccessKeyNotFound: failed to find credentials in the environment.
+│ SharedCredsLoad: failed to load profile, .
+│ EC2RoleRequestError: no EC2 instance role found
+│ caused by: RequestError: send request failed
+│ caused by: Get "http://169.254.169.254/latest/meta-data/iam/security-credentials/": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+│
+│
+│   with provider["registry.terraform.io/hashicorp/aws"],
+│   on c1-versions.tf line 13, in provider "aws":
+│   13: provider "aws" {
+│
+╵
+Operation failed: failed running terraform plan (exit 1)
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples$
+
+
+
+
+
+
+
+- Plan dando erro com novas chaves AWS no TF CLOUD
+
+Terraform v1.1.5
+on linux_amd64
+Initializing plugins and modules...
+╷
+│ Warning: Value for undeclared variable
+│
+│ The root module does not declare a variable named "AWS_SECRET_ACCESS_KEY"
+│ but a value was found in file
+│ "/home/tfc-agent/.tfc-agent/component/terraform/runs/run-kk9Z8TcHaqUxc1rc/terraform.tfvars".
+│ If you meant to use this value, add a "variable" block to the
+│ configuration.
+│
+│ To silence these warnings, use TF_VAR_... environment variables to provide
+│ certain "global" settings to all configurations in your organization. To
+│ reduce the verbosity of these warnings, use the -compact-warnings option.
+╵
+╷
+│ Error: error configuring Terraform AWS Provider: no valid credential sources for Terraform AWS Provider found.
+│
+│ Please see https://registry.terraform.io/providers/hashicorp/aws
+│ for more information about providing credentials.
+│
+│ Error: NoCredentialProviders: no valid providers in chain
+│ caused by: EnvAccessKeyNotFound: failed to find credentials in the environment.
+│ SharedCredsLoad: failed to load profile, .
+│ EC2RoleRequestError: no EC2 instance role found
+│ caused by: RequestError: send request failed
+│ caused by: Get "http://169.254.169.254/latest/meta-data/iam/security-credentials/": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+│
+│
+│   with provider["registry.terraform.io/hashicorp/aws"],
+│   on c1-versions.tf line 13, in provider "aws":
+│   13: provider "aws" {
+│
+╵
+Operation failed: failed running terraform plan (exit 1)
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples$
+
+
+
+
+# PENDENTE
+- TSHOOT, - Plan dando erro com novas chaves AWS no TF CLOUD
+- Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 01.
+- Ver sobre conta AWS 816678621138 e o Billing dela.
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+  https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
 
