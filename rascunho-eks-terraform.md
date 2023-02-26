@@ -809,14 +809,18 @@ Mon 20 Feb 2023 06:59:29 PM -03
 fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests$
 
 ~~~~
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> a39362a5b2671cee66b255dde0ae004fb25a8526
 
 
 
 
 
 
-
-
+<<<<<<< HEAD
 - Efetuando o destroy:
 
 ~~~~bash
@@ -864,11 +868,14 @@ Successfully deleted 1 key pairs
 
 
 
+=======
+>>>>>>> a39362a5b2671cee66b255dde0ae004fb25a8526
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # PENDENTE
+<<<<<<< HEAD
 - Configurar o Gitignore para os arquivos Terraform.
 - Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 09.
 - Configurar Terraform Cloud Free.
@@ -879,3 +886,10 @@ Successfully deleted 1 key pairs
   https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
 - Criar branch com a versão final testada e completa.
 - Criar branch com a versão final testada e simples(sem Bastion).
+=======
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+  https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Criar pipeline no Github Actions.
+>>>>>>> a39362a5b2671cee66b255dde0ae004fb25a8526
