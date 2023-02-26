@@ -1,18 +1,18 @@
 # Local .terraform directories
 **/.terraform/*
 .terraform
-eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/.terraform
-eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/.terraform/*
-eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/.terraform/
-eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform
-eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform/
-eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform/*
+01-eks-cluster-terraform-simples/.terraform
+01-eks-cluster-terraform-simples/.terraform/*
+01-eks-cluster-terraform-simples/.terraform/
+08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform
+08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform/
+08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/.terraform/*
 
 # .tfstate files
 *.tfstate
 *.tfstate.*
-eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/*.tfstate.*
-eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/*.tfstate
+01-eks-cluster-terraform-simples/*.tfstate.*
+01-eks-cluster-terraform-simples/*.tfstate
 
 # Crash log files
 crash.log
@@ -43,4 +43,4 @@ override.tf.json
 terraform.rc
 
 # Chave SSH
-#eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/private-key/eks-terraform-key.pem
+#08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/private-key/eks-terraform-key.pem

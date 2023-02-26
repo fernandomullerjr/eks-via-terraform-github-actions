@@ -912,3 +912,10 @@ git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 01-eksclus
 ### Dia 26/02/2023
 
 - Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 01.
+
+
+- Configurar o Gitignore para os arquivos Terraform.
+  519  git status
+  520  git add .
+  521  git commit -m "atualizando o Gitignore"
+  522  git push
