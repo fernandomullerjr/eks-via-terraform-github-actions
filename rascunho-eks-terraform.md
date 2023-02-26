@@ -1345,7 +1345,7 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-
 
 
 # PENDENTE
-- TSHOOT, - Plan dando erro com novas chaves AWS no TF CLOUD
+- TSHOOT, - Plan dando erro com novas chaves AWS no TF CLOUD. Avaliar variável a nível de configuração no home, tf, cloud, .conf, etc
 - Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 01.
 - Ver sobre conta AWS 816678621138 e o Billing dela.
 - Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
