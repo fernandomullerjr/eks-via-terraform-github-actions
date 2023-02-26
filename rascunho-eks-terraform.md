@@ -812,11 +812,61 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/08-AWS-
 
 
 
+
+
+- Efetuando o destroy:
+
+~~~~bash
+
+aws_iam_role.eks_nodegroup_role: Destruction complete after 4s
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 11s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 21s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 31s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 41s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 51s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 1m1s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 1m11s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 1m21s elapsed]
+aws_eks_cluster.eks_cluster: Destruction complete after 1m26s
+aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy: Destroying... [id=hr-stag-eks-master-role-20230220200558148500000001]
+aws_iam_role_policy_attachment.eks-AmazonEKSVPCResourceController: Destroying... [id=hr-stag-eks-master-role-20230220200558157800000003]
+module.vpc.aws_subnet.public[0]: Destroying... [id=subnet-088048b340bbff294]
+module.vpc.aws_subnet.public[1]: Destroying... [id=subnet-043a48c6c3bd84ebd]
+aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy: Destruction complete after 1s
+aws_iam_role_policy_attachment.eks-AmazonEKSVPCResourceController: Destruction complete after 1s
+aws_iam_role.eks_master_role: Destroying... [id=hr-stag-eks-master-role]
+module.vpc.aws_subnet.public[0]: Destruction complete after 2s
+module.vpc.aws_subnet.public[1]: Destruction complete after 2s
+module.vpc.aws_vpc.this[0]: Destroying... [id=vpc-0e7f8e1665fd0e30f]
+module.vpc.aws_vpc.this[0]: Destruction complete after 1s
+aws_iam_role.eks_master_role: Destruction complete after 3s
+
+Destroy complete! Resources: 37 destroyed.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests$
+
+~~~~
+
+
+
+
+
+
+
+### Dia 25/02/2023
+
+- Deletando a chave SSH "fernando-devops-20-02-2023":
+fernando-devops-20-02-2023
+Successfully deleted 1 key pairs
+
+
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # PENDENTE
+- Configurar Terraform Cloud Free.
 - Criar branch com a versão final testada e completa.
 - Criar branch com a versão final testada e simples(sem Bastion).
 - Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.

@@ -36,3 +36,4 @@ terraform.rc
 
 # Chave SSH
 eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/private-key/eks-terraform-key.pem
+*.pem
