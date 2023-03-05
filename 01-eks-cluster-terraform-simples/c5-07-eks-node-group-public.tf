@@ -13,9 +13,9 @@ resource "aws_eks_node_group" "eks_ng_public" {
   instance_types = ["t3.micro"]
 
 
-#  remote_access {
-#    ec2_ssh_key = "fernando-devops-new-26-02-2023"
-#  }
+  #  remote_access {
+  #    ec2_ssh_key = "fernando-devops-new-26-02-2023"
+  #  }
 
   scaling_config {
     desired_size = 1

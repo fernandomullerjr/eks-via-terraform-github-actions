@@ -1364,7 +1364,21 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-
 
 - TSHOOT, - Plan dando erro com novas chaves AWS no TF CLOUD. Avaliar variável a nível de configuração no home, tf, cloud, .conf, etc
 
+- Coloquei as variáveis que existiam apenas no "Variable sets ", dentro do "Variables" em "Workspace variables" como Environment:
+Key 	Value 	Category 	
 
+AWS_ACCESS_KEY_ID
+
+fernandomullerjr8596 - nova
+	AKIATZSZP7M27OZBGERG 	env 	
+
+AWS_SECRET_ACCESS_KEY
+
+fernandomullerjr8596 - nova
+Sensitive 
+
+
+- Rodei o plan novamente, apesar do warning, fez o plan:
 
 ~~~~bash
 
@@ -1382,3 +1396,55 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-
 ╵
 fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples$
 ~~~~
+
+
+
+
+
+- Comentei o bloco no arquivo
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/c1-versions.tf
+
+~~~~h
+# Terraform Provider Block
+#provider "aws" {
+#  region = var.aws_region
+#
+~~~~
+
+
+
+
+
+shared_credentials_file - (Optional, Deprecated) Path to the shared credentials file. If not set and a profile is used, the default value is ~/.aws/credentials. Can also be set with the AWS_SHARED_CREDENTIALS_FILE environment variable.
+shared_credentials_files - (Optional) List of paths to the shared credentials file. If not set and a profile is used, the default value is [~/.aws/credentials]. A single value can also be set with the AWS_SHARED_CREDENTIALS_FILE environment variable.
+
+
+
+variable "AWS_SECRET_ACCESS_KEY" {
+  default = ""
+}
+
+variable "AWS_ACCESS_KEY_ID" {
+  default = ""
+}
+
+
+
+
+
+- Ver sobre conta AWS 816678621138 e o Billing dela. Avaliar desativação de chaves AWS ou não. Ver cartão associado.
+chaves desativadas
+
+
+
+
+
+# PENDENTE
+- Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 01.
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
