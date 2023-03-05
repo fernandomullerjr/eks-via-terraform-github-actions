@@ -1362,3 +1362,23 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-
 
 # Dia 05/03/2023
 
+- TSHOOT, - Plan dando erro com novas chaves AWS no TF CLOUD. Avaliar variável a nível de configuração no home, tf, cloud, .conf, etc
+
+
+
+~~~~bash
+
+│ Warning: Value for undeclared variable
+│
+│ The root module does not declare a variable named "AWS_SECRET_ACCESS_KEY"
+│ but a value was found in file
+│ "/home/tfc-agent/.tfc-agent/component/terraform/runs/run-i1E5RpujEiwLKiUT/terraform.tfvars".
+│ If you meant to use this value, add a "variable" block to the
+│ configuration.
+│
+│ To silence these warnings, use TF_VAR_... environment variables to provide
+│ certain "global" settings to all configurations in your organization. To
+│ reduce the verbosity of these warnings, use the -compact-warnings option.
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples$
+~~~~
