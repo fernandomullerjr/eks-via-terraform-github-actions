@@ -26,7 +26,7 @@ data "aws_availability_zones" "available" {}
 
 locals {
   name   = basename(path.cwd)
-  region = "us-west-2"
+  region = "us-east-1"
 
   cluster_version = "1.24"
 
