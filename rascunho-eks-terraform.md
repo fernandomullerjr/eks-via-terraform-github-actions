@@ -1346,13 +1346,19 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-
 
 # PENDENTE
 - TSHOOT, - Plan dando erro com novas chaves AWS no TF CLOUD. Avaliar variável a nível de configuração no home, tf, cloud, .conf, etc
+- Ver sobre conta AWS 816678621138 e o Billing dela. Avaliar desativação de chaves AWS ou não. Ver cartão associado.
 - Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 01.
-- Ver sobre conta AWS 816678621138 e o Billing dela.
 - Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
-  https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
 - Criar pipeline no Github Actions.
 - Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
 - Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
 - Criar branch com a versão final testada e completa.
 - Criar branch com a versão final testada e simples(sem Bastion).
+
+
+
+
+
+# Dia 05/03/2023
 
