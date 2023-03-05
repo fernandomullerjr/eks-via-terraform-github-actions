@@ -9,6 +9,8 @@ git status
 git add -u
 git reset -- 01-eks-cluster-terraform-simples/.terraform
 git reset -- 01-eks-cluster-terraform-simples/.terraform/*
+git reset -- 02-eks-via-blueprint/.terraform
+git reset -- 02-eks-via-blueprint/.terraform*
 git commit -m "Projeto - eks-via-terraform-github-actions"
 eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
@@ -1448,3 +1450,60 @@ chaves desativadas
 - Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
 - Criar branch com a versão final testada e completa.
 - Criar branch com a versão final testada e simples(sem Bastion).
+
+
+
+
+
+
+
+
+
+
+# Git - Efetuando Push
+git status
+git add -u
+git reset -- 02-eks-via-blueprint/.terraform
+git reset -- 02-eks-via-blueprint/.terraform*
+git commit -m "Adicionando pasta 02-eks-via-blueprint"
+eval $(ssh-agent -s)
+ssh-add /home/fernando/.ssh/chave-debian10-github
+git push
+git status
+
+
+
+
+
+
+
+
+
+# PENDENTE
+- Avaliar uso de EKS-Blueprint ou EKS-explicito(manifestos).
+- Configurar um projeto simples do EKS, sem o Bastion e outros recursos, na pasta 01.
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# EKS Blueprint - Example: ArgoCD
+
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/03-eks-via-blueprint-argocd
