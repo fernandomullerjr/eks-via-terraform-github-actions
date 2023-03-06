@@ -11,6 +11,8 @@ git reset -- 01-eks-cluster-terraform-simples/.terraform
 git reset -- 01-eks-cluster-terraform-simples/.terraform/*
 git reset -- 02-eks-via-blueprint/.terraform
 git reset -- 02-eks-via-blueprint/.terraform*
+git reset -- 03-eks-via-blueprint-argocd/.terraform
+git reset -- 03-eks-via-blueprint-argocd/.terraform*
 git commit -m "Projeto - eks-via-terraform-github-actions"
 eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
@@ -1507,3 +1509,139 @@ git status
 # EKS Blueprint - Example: ArgoCD
 
 /home/fernando/cursos/terraform/eks-via-terraform-github-actions/03-eks-via-blueprint-argocd
+
+
+- Erro durante terraform init
+
+~~~~bash
+
+- eks.self_managed_node_group in .terraform/modules/eks/modules/self-managed-node-group
+- eks.self_managed_node_group.user_data in .terraform/modules/eks/modules/_user_data
+- eks_blueprints_kubernetes_addons in
+Downloading registry.terraform.io/terraform-aws-modules/vpc/aws 3.19.0 for vpc...
+- vpc in .terraform/modules/vpc
+╷
+│ Error: Unreadable module directory
+│
+│ Unable to evaluate directory symlink: lstat ../../modules: no such file or directory
+╵
+
+╷
+│ Error: Failed to read module directory
+│
+│ Module directory  does not exist or cannot be read.
+╵
+
+╷
+│ Error: Unreadable module directory
+│
+│ Unable to evaluate directory symlink: lstat ../../modules: no such file or directory
+╵
+
+╷
+│ Error: Failed to read module directory
+│
+│ Module directory  does not exist or cannot be read.
+╵
+
+╷
+│ Error: Unreadable module directory
+│
+│ Unable to evaluate directory symlink: lstat ../../modules: no such file or directory
+╵
+
+╷
+│ Error: Failed to read module directory
+│
+│ Module directory  does not exist or cannot be read.
+╵
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/03-eks-via-blueprint-argocd$
+
+~~~~
+
+
+
+
+
+
+
+
+- Ajustando main.tf
+
+DE:
+module "eks_blueprints_kubernetes_addons" {
+  source = "../../modules/kubernetes-addons"
+
+PARA:
+module "eks_blueprints_kubernetes_addons" {
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons"
+
+ 
+
+
+- Testando novamente o Terraform init
+
+
+
+
+
+
+# PENDENTE
+- Seguir testando Blueprint de ArgoCD:
+    https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
+- Avaliar uso de EKS-Blueprint ou EKS-explicito(manifestos).
+- Explorar questões do data que pega o usuário atual, para aplicar roles, arn, etc
+- Ler artigo sobre Blueprint:
+    https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
+
+
+
+
+
+
+
+03-eks-via-blueprint-argocd
+Your current user or role does not have access to Kubernetes objects on this EKS cluster
+
+
+aws-ebs-csi-driver
+Add-on detailsInfo
+Status
+Degraded
+
+Health issues (1)
+Issue type
+Description
+	
+Affected resources
+InsufficientNumberOfReplicas	The add-on is unhealthy because it doesn't have the desired number of replicas.
+
+
+
+
+
+
+# PENDENTE
+- Seguir testando Blueprint de ArgoCD:
+    https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
+    ocorreu erro no cluster "03-eks-via-blueprint-argocd": Your current user or role does not have access to Kubernetes objects on this EKS cluster
+- Avaliar uso de EKS-Blueprint ou EKS-explicito(manifestos).
+- Explorar questões do data que pega o usuário atual, para aplicar roles, arn, etc
+- Ler artigo sobre Blueprint:
+    https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
+
