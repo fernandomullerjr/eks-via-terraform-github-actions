@@ -1633,6 +1633,163 @@ InsufficientNumberOfReplicas	The add-on is unhealthy because it doesn't have the
 - Seguir testando Blueprint de ArgoCD:
     https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
     ocorreu erro no cluster "03-eks-via-blueprint-argocd": Your current user or role does not have access to Kubernetes objects on this EKS cluster
+    Testar usando map-role, map-arn, etc
+- Avaliar uso de EKS-Blueprint ou EKS-explicito(manifestos).
+- Explorar questões do data que pega o usuário atual, para aplicar roles, arn, etc
+- Ler artigo sobre Blueprint:
+    https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
+
+
+
+Plan: 0 to add, 0 to change, 26 to destroy.
+
+Changes to Outputs:
+  - configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name 03-eks-via-blueprint-argocd" -> null
+module.eks_blueprints_kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]: Destroying... [id=argocd]
+module.eks_blueprints_kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]: Still destroying... [id=argocd, 10s elapsed]
+module.eks_blueprints_kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]: Still destroying... [id=argocd, 20s elapsed]
+module.eks_blueprints_kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]: Still destroying... [id=argocd, 30s elapsed]
+module.eks_blueprints_kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]: Still destroying... [id=argocd, 40s elapsed]
+module.eks_blueprints_kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]: Still destroying... [id=argocd, 50s elapsed]
+module.eks_blueprints_kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]: Still destroying... [id=argocd, 1m0s elapsed]
+module.eks_blueprints_kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]: Still destroying... [id=argocd, 1m10s elapsed]
+module.eks_blueprints_kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]: Still destroying... [id=argocd, 1m20s elapsed]
+module.eks_blueprints_kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]: Still destroying... [id=argocd, 1m30s elapsed]
+
+
+
+
+
+
+aws eks --region us-east-1 update-kubeconfig --name 03-eks-via-blueprint-argocd
+
+
+fernando@debian10x64:~$ kubectl get ns -A
+NAME              STATUS        AGE
+argocd            Terminating   46m
+default           Active        52m
+kube-node-lease   Active        52m
+kube-public       Active        52m
+kube-system       Active        52m
+fernando@debian10x64:~$
+
+
+kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found -n argocd
+
+fernando@debian10x64:~$ kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found -n argocd
+NAME                                SYNC STATUS   HEALTH STATUS
+application.argoproj.io/addons
+application.argoproj.io/workloads
+
+
+
+
+kubectl get APIService <version>.<api-resource>
+kubectl get APIService application.argoproj.io.addons
+
+
+
+
+
+
+kubectl get namespace <terminating-namespace> -o yaml
+kubectl get namespace argocd -o yaml
+
+
+fernando@debian10x64:~$ kubectl get namespace argocd -o yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: "2023-03-06T00:03:03Z"
+  deletionTimestamp: "2023-03-06T00:26:41Z"
+  labels:
+    kubernetes.io/metadata.name: argocd
+  name: argocd
+  resourceVersion: "6269"
+  uid: 6ed12455-d6c9-46ba-9b85-8dc02f98692d
+spec:
+  finalizers:
+  - kubernetes
+status:
+  conditions:
+  - lastTransitionTime: "2023-03-06T00:26:47Z"
+    message: All resources successfully discovered
+    reason: ResourcesDiscovered
+    status: "False"
+    type: NamespaceDeletionDiscoveryFailure
+  - lastTransitionTime: "2023-03-06T00:26:47Z"
+    message: All legacy kube types successfully parsed
+    reason: ParsedGroupVersions
+    status: "False"
+    type: NamespaceDeletionGroupVersionParsingFailure
+  - lastTransitionTime: "2023-03-06T00:26:47Z"
+    message: All content successfully deleted, may be waiting on finalization
+    reason: ContentDeleted
+    status: "False"
+    type: NamespaceDeletionContentFailure
+  - lastTransitionTime: "2023-03-06T00:26:47Z"
+    message: 'Some resources are remaining: applications.argoproj.io has 2 resource
+      instances'
+    reason: SomeResourcesRemain
+    status: "True"
+    type: NamespaceContentRemaining
+  - lastTransitionTime: "2023-03-06T00:26:47Z"
+    message: 'Some content in the namespace has finalizers remaining: resources-finalizer.argocd.argoproj.io
+      in 2 resource instances'
+    reason: SomeFinalizersRemain
+    status: "True"
+    type: NamespaceFinalizersRemaining
+  phase: Terminating
+fernando@debian10x64:~$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ kubectl get namespace <terminating-namespace> -o json >tmp.json
+ kubectl get namespace argocd -o json >tmp.json
+
+
+
+ curl -k -H "Content-Type: application/json" -X PUT --data-binary @tmp.json http://127.0.0.1:8001/api/v1/namespaces/argocd/finalize
+
+
+
+
+
+module.eks.aws_security_group.node[0]: Destruction complete after 2s
+module.vpc.aws_vpc.this[0]: Destroying... [id=vpc-020c6bb405d860b35]
+module.vpc.aws_vpc.this[0]: Destruction complete after 1s
+
+Destroy complete! Resources: 26 destroyed.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/03-eks-via-blueprint-argocd$
+
+
+
+
+
+# PENDENTE
+- Seguir testando Blueprint de ArgoCD:
+    https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
+    ocorreu erro no cluster "03-eks-via-blueprint-argocd": Your current user or role does not have access to Kubernetes objects on this EKS cluster
+    Testar usando map-role, map-arn, etc
 - Avaliar uso de EKS-Blueprint ou EKS-explicito(manifestos).
 - Explorar questões do data que pega o usuário atual, para aplicar roles, arn, etc
 - Ler artigo sobre Blueprint:
