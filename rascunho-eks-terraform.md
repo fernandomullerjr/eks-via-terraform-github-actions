@@ -1788,19 +1788,27 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/03-eks-
 
 
 # PENDENTE
+
+- Explorar questões do data que pega o usuário atual, para aplicar roles, arn, etc
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Avaliar uso de EKS-Blueprint ou EKS-explicito(manifestos).
 - Seguir testando Blueprint de ArgoCD:
     https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
     ocorreu erro no cluster "03-eks-via-blueprint-argocd": Your current user or role does not have access to Kubernetes objects on this EKS cluster
     Testar usando map-role, map-arn, etc
-- Avaliar uso de EKS-Blueprint ou EKS-explicito(manifestos).
-- Explorar questões do data que pega o usuário atual, para aplicar roles, arn, etc
 - Ler artigo sobre Blueprint:
     https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
-- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
-      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
 - Criar pipeline no Github Actions.
 - Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
 - Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
 - Criar branch com a versão final testada e completa.
 - Criar branch com a versão final testada e simples(sem Bastion).
 
+
+
+
+
+- Policy "min-iam-policy.json" do EKS Blueprint é via Workflow no Github, não é criada via TF diretão:
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/03-eks-via-blueprint-argocd/min-iam-policy.json
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/03-eks-via-blueprint-argocd/.terraform/modules/eks_blueprints_kubernetes_addons/docs/iam/minimum-iam-policy.md
