@@ -1900,6 +1900,11 @@ Changes to Outputs:
 # PENDENTE
 
 - Explorar questões do "data" que pega o usuário atual, para aplicar roles, arn, etc. Ver sobre MapRole, MapUser, mapear um grupo para ser mais fácil o dinamismo???
+      https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity
+      eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/data.tf
+- Verificar se o MapUser só tem no module eks, ou se tem para o resource "aws_eks_cluster" também, usar o "data.aws_caller_identity.current.arn" nesse mapeamento.
+- Ler artigo:
+      https://cloudly.engineer/2022/amazon-eks-iam-roles-and-policies-with-terraform/aws/
 - Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
       https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
 - Avaliar uso de EKS-Blueprint(Devido boas práticas) ou EKS-explicito(manifestos).
