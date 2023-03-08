@@ -1773,14 +1773,16 @@ fernando@debian10x64:~$
 
 
 
+- Destruindo o cluster EKS:
 
+~~~~bash
 module.eks.aws_security_group.node[0]: Destruction complete after 2s
 module.vpc.aws_vpc.this[0]: Destroying... [id=vpc-020c6bb405d860b35]
 module.vpc.aws_vpc.this[0]: Destruction complete after 1s
 
 Destroy complete! Resources: 26 destroyed.
 fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/03-eks-via-blueprint-argocd$
-
+~~~~
 
 
 
