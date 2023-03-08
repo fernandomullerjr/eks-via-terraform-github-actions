@@ -1792,13 +1792,14 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/03-eks-
 - Explorar questões do data que pega o usuário atual, para aplicar roles, arn, etc
 - Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
       https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
-- Avaliar uso de EKS-Blueprint ou EKS-explicito(manifestos).
+- Avaliar uso de EKS-Blueprint(Devido boas práticas) ou EKS-explicito(manifestos).
 - Seguir testando Blueprint de ArgoCD:
     https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
     ocorreu erro no cluster "03-eks-via-blueprint-argocd": Your current user or role does not have access to Kubernetes objects on this EKS cluster
     Testar usando map-role, map-arn, etc
 - Ler artigo sobre Blueprint:
     https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
+- Backend remoto, verificar como fazer para cessar a msg de Warning, para que as variáveis do par de chaves AWS sejam seguidos pelo local.
 - Criar pipeline no Github Actions.
 - Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
 - Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
@@ -1812,3 +1813,106 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/03-eks-
 - Policy "min-iam-policy.json" do EKS Blueprint é via Workflow no Github, não é criada via TF diretão:
 /home/fernando/cursos/terraform/eks-via-terraform-github-actions/03-eks-via-blueprint-argocd/min-iam-policy.json
 /home/fernando/cursos/terraform/eks-via-terraform-github-actions/03-eks-via-blueprint-argocd/.terraform/modules/eks_blueprints_kubernetes_addons/docs/iam/minimum-iam-policy.md
+
+
+
+
+~~~~bash
+aws_eks_node_group.eks_ng_public: Still creating... [1m10s elapsed]
+aws_eks_node_group.eks_ng_public: Still creating... [1m20s elapsed]
+aws_eks_node_group.eks_ng_public: Still creating... [1m30s elapsed]
+aws_eks_node_group.eks_ng_public: Still creating... [1m40s elapsed]
+aws_eks_node_group.eks_ng_public: Still creating... [1m50s elapsed]
+aws_eks_node_group.eks_ng_public: Creation complete after 1m56s [id=hr-stag-eksdemo1:hr-stag-eks-ng-public]
+
+Apply complete! Resources: 31 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+azs = tolist([
+  "us-east-1a",
+  "us-east-1b",
+  "us-east-1c",
+  "us-east-1d",
+  "us-east-1e",
+  "us-east-1f",
+])
+cluster_arn = "arn:aws:eks:us-east-1:261106957109:cluster/hr-stag-eksdemo1"
+cluster_certificate_authority_data = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUMvakNDQWVhZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJek1ETXdPREF4TkRRME1Gb1hEVE16TURNd05UQXhORFEwTUZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTkJPCm9TM2J2Q05HbFlLc1hKMThKbXNOSEwvbmZGZEZ1cEFYV3dqRTZKV0FSeWlXVEd1NHpGREp1ZDlibU92QjhDOGgKM2h1aGdkdGRoMzk1NEtISTlzZHo2REZ3TUJEZFRWb0tkeFhHN0k4MVJBWHhla0Faa0Yyb0VNWUdwWXF6UHNQMgp1ZWF0amlXOTczZkcxNlAwSHNtcmxYQXUvN3JkZlNNUEVEaDlRaktZNzZsZUxvTnI2OWxJNmdqZi9zS1JTSWJmClpvbjYyZHhDeVRRNFhXRlc1enJHWE41ajRockk3eDY2S1E0djdIZEdIdTF2MllDbnJCMW1ZZ0o1UjlsVmkzOGwKNnJ4cmRQejVINElWNDNTSXBKOEtPL3ZWMGpZV211SCtLWHpQTEliT0N1K3FpcUdISm1RYnhSZ3NCcG1HZ25xbQpPaHpLcks5cFp0enkwc0xiZUZNQ0F3RUFBYU5aTUZjd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZQTmRsbDhDcTVhenAyc25mbEZnRVZGT1ovQmFNQlVHQTFVZEVRUU8KTUF5Q0NtdDFZbVZ5Ym1WMFpYTXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBQi8vTzU3c3lZVkIvdnFBMDZRcwpubDRNSkV1Y2VBSVI1bWhxSWN1Qnh3eDFzd01EMTFXT2pHN1N2djh4L05hcUM2bWZ2S1A4SUMrSTNTM2Y3cGpoCjZzZTZDeEZheHA4d3ZnS1RiaTFWN1FYTmZtR3VUSGZzUE1TQVE3dWtKQnFPeE4xUUtQTVNvY0ZNMnFuWEJVNFMKUDJQUWVmbHAyV1J3aXJxQkZOL0JWVE91YjBzZzZDTllwNFl6S2YrcVBGYklyalJGREh4ODNSVTFkSlVuK1Y5WQpadVBwaUJUWnQvRkp6aG5WVHM5UTRldkw2dExkaVRpaGZMdkRBYTI1YUZEVVJ4M2Z4Skl6ZnhTVEh4bnA0aXh1CmZTUkRaUTR2RlJKTG5aQ2orUVhMR1gwcFZHYjJ0dDNTbi9JQmhNcHR1YVZwRlpDS0o1c3Fld2EzNlpjZUlZS2EKWm5nPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+cluster_endpoint = "https://7ED72F31628FAD1EC278B493B6175F3B.gr7.us-east-1.eks.amazonaws.com"
+cluster_iam_role_arn = "arn:aws:iam::261106957109:role/hr-stag-eks-master-role"
+cluster_iam_role_name = "hr-stag-eks-master-role"
+cluster_id = "hr-stag-eksdemo1"
+cluster_oidc_issuer_url = "https://oidc.eks.us-east-1.amazonaws.com/id/7ED72F31628FAD1EC278B493B6175F3B"
+cluster_primary_security_group_id = "sg-093cea0a18b92bb1b"
+cluster_version = "1.22"
+nat_public_ips = tolist([
+  "54.147.204.240",
+])
+node_group_public_arn = "arn:aws:eks:us-east-1:261106957109:nodegroup/hr-stag-eksdemo1/hr-stag-eks-ng-public/f6c35f74-4fea-fe64-e411-b769c918726d"
+node_group_public_id = "hr-stag-eksdemo1:hr-stag-eks-ng-public"
+node_group_public_status = "ACTIVE"
+node_group_public_version = "1.22"
+private_subnets = [
+  "subnet-08bb2ba5a9fd587bd",
+  "subnet-05d21cc7f34a70723",
+]
+public_subnets = [
+  "subnet-0dd542f90722515e4",
+  "subnet-039d45885c9238c85",
+]
+vpc_cidr_block = "10.0.0.0/16"
+vpc_id = "vpc-09f87b8ecd483f978"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples$
+
+~~~~
+
+
+
+
+
+
+
+
+- Criado arquivo data.tf e data-outputs.tf
+eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/data.tf
+eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/data-outputs.tf
+
+
+- Testando:
+
+~~~~bash
+──────────────────────────────────────────────────────────────────────
+
+Changes to Outputs:
+  + current_arn_teste = "arn:aws:iam::261106957109:user/fernandomullerjr8596"
+~~~~
+
+
+- Trouxe o arn conforme o esperado!
+- Trouxe o arn conforme o esperado!
+- Trouxe o arn conforme o esperado!
+- Trouxe o arn conforme o esperado!
+
+
+
+
+# PENDENTE
+
+- Explorar questões do "data" que pega o usuário atual, para aplicar roles, arn, etc. Ver sobre MapRole, MapUser, mapear um grupo para ser mais fácil o dinamismo???
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Avaliar uso de EKS-Blueprint(Devido boas práticas) ou EKS-explicito(manifestos).
+- Seguir testando Blueprint de ArgoCD:
+    https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
+    ocorreu erro no cluster "03-eks-via-blueprint-argocd": Your current user or role does not have access to Kubernetes objects on this EKS cluster
+    Testar usando map-role, map-arn, etc
+- Ler artigo sobre Blueprint:
+    https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
+- Backend remoto, verificar como fazer para cessar a msg de Warning, para que as variáveis do par de chaves AWS sejam seguidos pelo local.
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
+
