@@ -1,5 +1,6 @@
 locals {
   name            = basename(path.cwd)
+  #name            = "labteste"
   region          = data.aws_region.current.name
   cluster_version = "1.23"
 

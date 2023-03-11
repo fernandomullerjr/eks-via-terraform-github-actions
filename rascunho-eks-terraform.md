@@ -15,6 +15,7 @@ git reset -- 03-eks-via-blueprint-argocd/.terraform
 git reset -- 03-eks-via-blueprint-argocd/.terraform*
 git reset -- 04-eks-via-blueprint-iam-user-automatico/.terraform
 git reset -- 04-eks-via-blueprint-iam-user-automatico/.terraform*
+git reset -- 04-eks-via-blueprint-iam-user-automatico/terraform.tfstate
 git commit -m "Projeto - eks-via-terraform-github-actions"
 eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
@@ -1965,4 +1966,503 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-
 
 
 # Dia 10/03/2023
+
+
+
+~~~~bash
+
+module.eks_blueprints.module.aws_eks_managed_node_groups["mg_5"].aws_eks_node_group.managed_ng: Still creating... [2m20s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["mg_5"].aws_eks_node_group.managed_ng: Still creating... [2m30s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["mg_5"].aws_eks_node_group.managed_ng: Creation complete after 2m30s [id=04-eks-via-blueprint-iam-user-automatico:managed-ondemand-2023031102273164940000000a]
+╷
+│ Error: expected length of name to be in the range (1 - 64), got 04-eks-via-blueprint-iam-user-automatico-aws-load-balancer-controller-sa-irsa
+│
+│   with module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.module.irsa[0].aws_iam_role.irsa[0],
+│   on .terraform/modules/kubernetes_addons/modules/irsa/main.tf line 52, in resource "aws_iam_role" "irsa":
+│   52:   name        = try(coalesce(var.irsa_iam_role_name, format("%s-%s-%s", var.eks_cluster_id, trim(var.kubernetes_service_account, "-*"), "irsa")), null)
+│
+╵
+╷
+│ Error: expected length of name to be in the range (1 - 64), got 04-eks-via-blueprint-iam-user-automatico-aws-for-fluent-bit-sa-irsa
+│
+│   with module.kubernetes_addons.module.aws_for_fluent_bit[0].module.helm_addon.module.irsa[0].aws_iam_role.irsa[0],
+│   on .terraform/modules/kubernetes_addons/modules/irsa/main.tf line 52, in resource "aws_iam_role" "irsa":
+│   52:   name        = try(coalesce(var.irsa_iam_role_name, format("%s-%s-%s", var.eks_cluster_id, trim(var.kubernetes_service_account, "-*"), "irsa")), null)
+│
+╵
+╷
+│ Error: expected length of name to be in the range (1 - 64), got 04-eks-via-blueprint-iam-user-automatico-ebs-csi-controller-sa-irsa
+│
+│   with module.kubernetes_addons.module.aws_ebs_csi_driver[0].module.irsa_addon[0].aws_iam_role.irsa[0],
+│   on .terraform/modules/kubernetes_addons/modules/irsa/main.tf line 52, in resource "aws_iam_role" "irsa":
+│   52:   name        = try(coalesce(var.irsa_iam_role_name, format("%s-%s-%s", var.eks_cluster_id, trim(var.kubernetes_service_account, "-*"), "irsa")), null)
+│
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$ terraform destroy -au^C
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+~~~~
+
+
+
+
+Your current user or role does not have access to Kubernetes objects on this EKS cluster
+
+
+
+
+
+
+
+
+
+
+
+terraform state rm kubernetes_config_map.aws_auth
+
+
+
+
+terraform state rm kubernetes_config_map.aws_auth
+
+
+
+
+
+
+.eks_blueprints.module.aws_eks_managed_node_groups["mg_5"].aws_eks_node_group.managed_ng: Refreshing state... [id=04-eks-via-blueprint-iam-user-automatico:managed-ondemand-2023031102273164940000000a]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["addons"]: Refreshing state... [id=addons]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["workloads"]: Refreshing state... [id=workloads]
+╷
+│ Error: expected length of name to be in the range (1 - 64), got 04-eks-via-blueprint-iam-user-automatico-aws-load-balancer-controller-sa-irsa
+│
+│   with module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.module.irsa[0].aws_iam_role.irsa[0],
+│   on .terraform/modules/kubernetes_addons/modules/irsa/main.tf line 52, in resource "aws_iam_role" "irsa":
+│   52:   name        = try(coalesce(var.irsa_iam_role_name, format("%s-%s-%s", var.eks_cluster_id, trim(var.kubernetes_service_account, "-*"), "irsa")), null)
+│
+╵
+╷
+│ Error: expected length of name to be in the range (1 - 64), got 04-eks-via-blueprint-iam-user-automatico-ebs-csi-controller-sa-irsa
+│
+│   with module.kubernetes_addons.module.aws_ebs_csi_driver[0].module.irsa_addon[0].aws_iam_role.irsa[0],
+│   on .terraform/modules/kubernetes_addons/modules/irsa/main.tf line 52, in resource "aws_iam_role" "irsa":
+│   52:   name        = try(coalesce(var.irsa_iam_role_name, format("%s-%s-%s", var.eks_cluster_id, trim(var.kubernetes_service_account, "-*"), "irsa")), null)
+│
+╵
+╷
+│ Error: expected length of name to be in the range (1 - 64), got 04-eks-via-blueprint-iam-user-automatico-aws-for-fluent-bit-sa-irsa
+│
+│   with module.kubernetes_addons.module.aws_for_fluent_bit[0].module.helm_addon.module.irsa[0].aws_iam_role.irsa[0],
+│   on .terraform/modules/kubernetes_addons/modules/irsa/main.tf line 52, in resource "aws_iam_role" "irsa":
+│   52:   name        = try(coalesce(var.irsa_iam_role_name, format("%s-%s-%s", var.eks_cluster_id, trim(var.kubernetes_service_account, "-*"), "irsa")), null)
+│
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+
+
+
+
+terraform state rm module.kubernetes_addons.module.aws_load_balancer_controller[0]
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$ terraform state rm module.kubernetes_addons.module.aws_load_balancer_controller[0]
+Removed module.kubernetes_addons.module.aws_load_balancer_controller[0].data.aws_iam_policy_document.aws_lb
+Removed module.kubernetes_addons.module.aws_load_balancer_controller[0].aws_iam_policy.aws_load_balancer_controller
+Successfully removed 2 resource instance(s).
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+
+
+
+terraform state rm module.kubernetes_addons.module.aws_ebs_csi_driver[0]
+terraform state rm module.kubernetes_addons.module.aws_for_fluent_bit[0]
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$ terraform state rm module.kubernetes_addons.module.aws_ebs_csi_driver[0]
+
+Removed module.kubernetes_addons.module.aws_ebs_csi_driver[0].data.aws_eks_addon_version.this
+Removed module.kubernetes_addons.module.aws_ebs_csi_driver[0].data.aws_iam_policy_document.aws_ebs_csi_driver[0]
+Removed module.kubernetes_addons.module.aws_ebs_csi_driver[0].aws_iam_policy.aws_ebs_csi_driver[0]
+Successfully removed 3 resource instance(s).
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$ terraform state rm module.kubernetes_addons.module.aws_for_fluent_bit[0]
+
+Removed module.kubernetes_addons.module.aws_for_fluent_bit[0].data.aws_iam_policy_document.irsa
+Removed module.kubernetes_addons.module.aws_for_fluent_bit[0].data.aws_iam_policy_document.kms
+Removed module.kubernetes_addons.module.aws_for_fluent_bit[0].data.aws_iam_session_context.current
+Removed module.kubernetes_addons.module.aws_for_fluent_bit[0].aws_cloudwatch_log_group.aws_for_fluent_bit[0]
+Removed module.kubernetes_addons.module.aws_for_fluent_bit[0].aws_iam_policy.aws_for_fluent_bit
+Removed module.kubernetes_addons.module.aws_for_fluent_bit[0].module.kms[0].aws_kms_alias.this
+Removed module.kubernetes_addons.module.aws_for_fluent_bit[0].module.kms[0].aws_kms_key.this
+Removed module.kubernetes_addons.module.aws_for_fluent_bit[0].module.helm_addon.module.irsa[0].kubernetes_namespace_v1.irsa[0]
+Successfully removed 8 resource instance(s).
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+
+
+
+
+
+
+
+s_blueprints.module.aws_eks_teams[0].kubernetes_cluster_role.team["team-riker"]: Refreshing state... [id=team-riker-team-cluster-role]
+module.eks_blueprints.kubernetes_config_map.aws_auth[0]: Refreshing state... [id=kube-system/aws-auth]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Refreshing state... [id=04-eks-via-blueprint-iam-user-automatico-admin-access]
+╷
+│ Error: Get "http://localhost/api/v1/namespaces/kube-system/configmaps/aws-auth": dial tcp [::1]:80: connect: connection refused
+│
+│   with module.eks_blueprints.kubernetes_config_map.aws_auth[0],
+│   on .terraform/modules/eks_blueprints/aws-auth-configmap.tf line 1, in resource "kubernetes_config_map" "aws_auth":
+│    1: resource "kubernetes_config_map" "aws_auth" {
+│
+╵
+╷
+│ Error: Get "http://localhost/api/v1/namespaces/team-riker": dial tcp [::1]:80: connect: connection refused
+│
+│   with module.eks_blueprints.module.aws_eks_teams[0].kubernetes_namespace.team["team-riker"],
+│   on .terraform/modules/eks_blueprints/modules/aws-eks-teams/main.tf line 4, in resource "kubernetes_namespace" "team":
+│    4: resource "kubernetes_namespace" "team" {
+│
+╵
+╷
+│ Error: Get "http://localhost/apis/rbac.authorization.k8s.io/v1/clusterroles/team-riker-team-cluster-role": dial tcp [::1]:80: connect: connection refused
+│
+│   with module.eks_blueprints.module.aws_eks_teams[0].kubernetes_cluster_role.team["team-riker"],
+│   on .terraform/modules/eks_blueprints/modules/aws-eks-teams/main.tf line 53, in resource "kubernetes_cluster_role" "team":
+│   53: resource "kubernetes_cluster_role" "team" {
+│
+╵
+╷
+│ Error: Get "http://localhost/apis/rbac.authorization.k8s.io/v1/clusterrolebindings/team-riker-team-cluster-role-binding": dial tcp [::1]:80: connect: connection refused
+│
+│   with module.eks_blueprints.module.aws_eks_teams[0].kubernetes_cluster_role_binding.team["team-riker"],
+│   on .terraform/modules/eks_blueprints/modules/aws-eks-teams/main.tf line 66, in resource "kubernetes_cluster_role_binding" "team":
+│   66: resource "kubernetes_cluster_role_binding" "team" {
+│
+╵
+╷
+│ Error: Get "http://localhost/api/v1/namespaces/argocd": dial tcp [::1]:80: connect: connection refused
+│
+│   with module.kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0],
+│   on .terraform/modules/kubernetes_addons/modules/kubernetes-addons/argocd/main.tf line 10, in resource "kubernetes_namespace_v1" "this":
+│   10: resource "kubernetes_namespace_v1" "this" {
+│
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+
+
+
+
+
+
+
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["addons"]: Still destroying... [id=addons, 4m0s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["workloads"]: Still destroying... [id=workloads, 4m10s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["addons"]: Still destroying... [id=addons, 4m10s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["workloads"]: Still destroying... [id=workloads, 4m20s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["addons"]: Still destroying... [id=addons, 4m20s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["workloads"]: Still destroying... [id=workloads, 4m30s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["addons"]: Still destroying... [id=addons, 4m30s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["addons"]: Still destroying... [id=addons, 4m40s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["workloads"]: Still destroying... [id=workloads, 4m40s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["workloads"]: Still destroying... [id=workloads, 4m50s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["addons"]: Still destroying... [id=addons, 4m50s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["workloads"]: Still destroying... [id=workloads, 5m0s elapsed]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["addons"]: Still destroying... [id=addons, 5m0s elapsed]
+╷
+│ Warning: Resource targeting is in effect
+│
+│ You are creating a plan with the -target option, which means that the result of this plan may not represent all of the changes requested by the current configuration.
+│
+│ The -target option is not for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform specifically suggests to use
+│ it as part of an error message.
+╵
+╷
+│ Warning: Applied changes may be incomplete
+│
+│ The plan was created with the -target option in effect, so some changes requested in the configuration may have been ignored and the output values may not be fully updated. Run the
+│ following command to verify that no other changes are pending:
+│     terraform plan
+│
+│ Note that the -target option is not suitable for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform
+│ specifically suggests to use it as part of an error message.
+╵
+╷
+│ Error: uninstallation completed with 1 error(s): timed out waiting for the condition
+│
+│
+╵
+╷
+│ Error: uninstallation completed with 1 error(s): timed out waiting for the condition
+│
+│
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+
+
+
+
+aws eks --region <REGION> update-kubeconfig --name <CLUSTER_NAME>
+
+aws eks --region us-east-1 update-kubeconfig --name 04-eks-via-blueprint-iam-user-automatico
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# PENDENTE
+
+- Desativar addons no Blueprint. Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
+- Verificar se o MapUser só tem no module eks, ou se tem para o resource "aws_eks_cluster" também, usar o "data.aws_caller_identity.current.arn" nesse mapeamento.
+- Explorar questões do "data" que pega o usuário atual, para aplicar roles, arn, etc. Ver sobre MapRole, MapUser, mapear um grupo para ser mais fácil o dinamismo???
+      https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity
+      eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/data.tf
+- Ler artigo:
+      https://cloudly.engineer/2022/amazon-eks-iam-roles-and-policies-with-terraform/aws/
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Avaliar uso de EKS-Blueprint(Devido boas práticas) ou EKS-explicito(manifestos).
+- Seguir testando Blueprint de ArgoCD:
+    https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
+    ocorreu erro no cluster "03-eks-via-blueprint-argocd": Your current user or role does not have access to Kubernetes objects on this EKS cluster
+    Testar usando map-role, map-arn, etc
+- Ler artigo sobre Blueprint:
+    https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
+- Backend remoto, verificar como fazer para cessar a msg de Warning, para que as variáveis do par de chaves AWS sejam seguidos pelo local.
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
+
+
+
+
+
+
+
+
+
+
+
+
+
+    List resources:
+
+    terraform state list
+
+      data.terraform_remote_state.rg
+      azurerm_postgresql_database.postgresql_database
+      azurerm_postgresql_server.postgresql_server
+
+    Remove resource
+
+    terraform destroy -target azurerm_postgresql_database.postgresql_database -auto-approve
+
+Share
+Edit
+Follow
+edited Sep 30, 2021 at 21:10
+answered Sep 30, 2021 at 21:04 
+
+
+
+module.eks_blueprints.data.aws_caller_identity.current
+
+terraform destroy -target module.eks_blueprints.data.aws_caller_identity.current -auto-approve
+
+
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$ terraform state list
+data.aws_availability_zones.available
+data.aws_caller_identity.current
+data.aws_eks_cluster.cluster
+data.aws_eks_cluster_auth.this
+data.aws_region.current
+module.eks_blueprints.data.aws_caller_identity.current
+module.eks_blueprints.data.aws_iam_policy_document.eks_key
+module.eks_blueprints.data.aws_iam_session_context.current
+module.eks_blueprints.data.aws_partition.current
+module.eks_blueprints.data.aws_region.current
+module.kubernetes_addons.data.aws_caller_identity.current
+module.kubernetes_addons.data.aws_eks_cluster.eks_cluster
+module.kubernetes_addons.data.aws_partition.current
+module.kubernetes_addons.data.aws_region.current
+module.kubernetes_addons.time_sleep.dataplane
+module.vpc.aws_default_network_acl.this[0]
+module.vpc.aws_default_route_table.default[0]
+module.vpc.aws_default_security_group.this[0]
+module.vpc.aws_eip.nat[0]
+module.vpc.aws_internet_gateway.this[0]
+module.vpc.aws_nat_gateway.this[0]
+module.vpc.aws_route.private_nat_gateway[0]
+module.vpc.aws_route.public_internet_gateway[0]
+module.vpc.aws_route_table.private[0]
+module.vpc.aws_route_table.public[0]
+module.vpc.aws_route_table_association.private[0]
+module.vpc.aws_route_table_association.private[1]
+module.vpc.aws_route_table_association.private[2]
+module.vpc.aws_route_table_association.public[0]
+module.vpc.aws_route_table_association.public[1]
+module.vpc.aws_route_table_association.public[2]
+module.vpc.aws_subnet.private[0]
+module.vpc.aws_subnet.private[1]
+module.vpc.aws_subnet.private[2]
+module.vpc.aws_subnet.public[0]
+module.vpc.aws_subnet.public[1]
+module.vpc.aws_subnet.public[2]
+module.vpc.aws_vpc.this[0]
+module.eks_blueprints.module.aws_eks.data.aws_caller_identity.current
+module.eks_blueprints.module.aws_eks.data.aws_iam_policy_document.assume_role_policy[0]
+module.eks_blueprints.module.aws_eks.data.aws_partition.current
+module.eks_blueprints.module.aws_eks.aws_eks_cluster.this[0]
+module.eks_blueprints.module.aws_eks.aws_iam_role.this[0]
+module.eks_blueprints.module.aws_eks.aws_iam_role_policy_attachment.this["arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"]
+module.eks_blueprints.module.aws_eks.aws_iam_role_policy_attachment.this["arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"]
+module.eks_blueprints.module.aws_eks.aws_security_group.cluster[0]
+module.eks_blueprints.module.aws_eks.aws_security_group.node[0]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_443"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_kubelet"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["ingress_nodes_443"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_cluster_443"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_https"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_tcp"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_udp"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_tcp"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_udp"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_443"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_kubelet"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_tcp"]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_udp"]
+module.eks_blueprints.module.kms[0].aws_kms_key.this
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["addons"]
+module.kubernetes_addons.module.argocd[0].helm_release.argocd_application["workloads"]
+module.kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]
+module.eks_blueprints.module.aws_eks.module.kms.data.aws_caller_identity.current
+module.eks_blueprints.module.aws_eks.module.kms.data.aws_partition.current
+module.kubernetes_addons.module.argocd[0].module.helm_addon.helm_release.addon[0]
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+
+
+
+
+
+
+
+terraform destroy -target module.vpc.aws_default_network_acl.this[0] -auto-approve
+terraform destroy -target module.vpc.aws_default_route_table.default[0] -auto-approve
+terraform destroy -target module.vpc.aws_default_security_group.this[0] -auto-approve
+terraform destroy -target module.vpc.aws_eip.nat[0] -auto-approve
+terraform destroy -target module.vpc.aws_internet_gateway.this[0] -auto-approve
+terraform destroy -target module.vpc.aws_nat_gateway.this[0] -auto-approve
+terraform destroy -target module.vpc.aws_route.private_nat_gateway[0] -auto-approve
+terraform destroy -target module.vpc.aws_route.public_internet_gateway[0] -auto-approve
+terraform destroy -target module.vpc.aws_route_table.private[0] -auto-approve
+terraform destroy -target module.vpc.aws_route_table.public[0] -auto-approve
+terraform destroy -target module.vpc.aws_route_table_association.private[0] -auto-approve
+terraform destroy -target module.vpc.aws_route_table_association.private[1] -auto-approve
+terraform destroy -target module.vpc.aws_route_table_association.private[2] -auto-approve
+terraform destroy -target module.vpc.aws_route_table_association.public[0] -auto-approve
+terraform destroy -target module.vpc.aws_route_table_association.public[1] -auto-approve
+terraform destroy -target module.vpc.aws_route_table_association.public[2] -auto-approve
+terraform destroy -target module.vpc.aws_subnet.private[0] -auto-approve
+terraform destroy -target module.vpc.aws_subnet.private[1] -auto-approve
+terraform destroy -target module.vpc.aws_subnet.private[2] -auto-approve
+terraform destroy -target module.vpc.aws_subnet.public[0] -auto-approve
+terraform destroy -target module.vpc.aws_subnet.public[1] -auto-approve
+terraform destroy -target module.vpc.aws_subnet.public[2] -auto-approve
+terraform destroy -target module.vpc.aws_vpc.this[0] -auto-approve
+
+
+
+
+terraform destroy -target module.vpc.aws_default_network_acl.this[0] -auto-approve
+Destroy complete! Resources: 1 destroyed.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$ terraform destroy
+module.vpc.aws_vpc.this[0]: Refreshing state... [id=vpc-0f076c6ba1baf29f7]
+module.eks_blueprints.module.aws_eks.aws_iam_role.this[0]: Refreshing state... [id=04-eks-via-blueprint-iam-user-automatico-cluster-role]
+module.eks_blueprints.module.kms[0].aws_kms_key.this: Refreshing state... [id=395ca037-3115-4691-af54-0a8ea9cc3c67]
+module.eks_blueprints.module.aws_eks.aws_security_group.cluster[0]: Refreshing state... [id=sg-029df237d1209f3f7]
+module.vpc.aws_subnet.private[0]: Refreshing state... [id=subnet-0ef421ecfbbf971cb]
+module.vpc.aws_subnet.private[2]: Refreshing state... [id=subnet-0a58ed1f1fdb43eab]
+module.vpc.aws_subnet.private[1]: Refreshing state... [id=subnet-08b971d353d135952]
+module.eks_blueprints.module.aws_eks.aws_security_group.node[0]: Refreshing state... [id=sg-08267c84950017a08]
+module.eks_blueprints.module.aws_eks.aws_iam_role_policy_attachment.this["arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"]: Refreshing state... [id=04-eks-via-blueprint-iam-user-automatico-cluster-role-20230311021543951800000001]
+module.eks_blueprints.module.aws_eks.aws_iam_role_policy_attachment.this["arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"]: Refreshing state... [id=04-eks-via-blueprint-iam-user-automatico-cluster-role-20230311021544150300000002]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_443"]: Refreshing state... [id=sgrule-2528897206]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_https"]: Refreshing state... [id=sgrule-582038790]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_kubelet"]: Refreshing state... [id=sgrule-952679756]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_udp"]: Refreshing state... [id=sgrule-2549318]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["ingress_nodes_443"]: Refreshing state... [id=sgrule-488560762]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_udp"]: Refreshing state... [id=sgrule-2213621013]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_udp"]: Refreshing state... [id=sgrule-429240486]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_kubelet"]: Refreshing state... [id=sgrule-1812399288]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_tcp"]: Refreshing state... [id=sgrule-4251912216]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_tcp"]: Refreshing state... [id=sgrule-2759411113]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_443"]: Refreshing state... [id=sgrule-1654677646]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_cluster_443"]: Refreshing state... [id=sgrule-2349134884]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_tcp"]: Refreshing state... [id=sgrule-2549232320]
+module.eks_blueprints.module.aws_eks.aws_eks_cluster.this[0]: Refreshing state... [id=04-eks-via-blueprint-iam-user-automatico]
+module.kubernetes_addons.time_sleep.dataplane: Refreshing state... [id=2023-03-11T02:27:38Z]
+module.kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0]: Refreshing state... [id=argocd]
+╷
+│ Error: Get "http://localhost/api/v1/namespaces/argocd": dial tcp [::1]:80: connect: connection refused
+│
+│   with module.kubernetes_addons.module.argocd[0].kubernetes_namespace_v1.this[0],
+│   on .terraform/modules/kubernetes_addons/modules/kubernetes-addons/argocd/main.tf line 10, in resource "kubernetes_namespace_v1" "this":
+│   10: resource "kubernetes_namespace_v1" "this" {
+│
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# PENDENTE
+
+- Desativar addons no Blueprint. Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
+- Verificar se o MapUser só tem no module eks, ou se tem para o resource "aws_eks_cluster" também, usar o "data.aws_caller_identity.current.arn" nesse mapeamento.
+- Explorar questões do "data" que pega o usuário atual, para aplicar roles, arn, etc. Ver sobre MapRole, MapUser, mapear um grupo para ser mais fácil o dinamismo???
+      https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity
+      eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/data.tf
+- Ler artigo:
+      https://cloudly.engineer/2022/amazon-eks-iam-roles-and-policies-with-terraform/aws/
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Avaliar uso de EKS-Blueprint(Devido boas práticas) ou EKS-explicito(manifestos).
+- Seguir testando Blueprint de ArgoCD:
+    https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
+    ocorreu erro no cluster "03-eks-via-blueprint-argocd": Your current user or role does not have access to Kubernetes objects on this EKS cluster
+    Testar usando map-role, map-arn, etc
+- Ler artigo sobre Blueprint:
+    https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
+- Backend remoto, verificar como fazer para cessar a msg de Warning, para que as variáveis do par de chaves AWS sejam seguidos pelo local.
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
+
+
 
