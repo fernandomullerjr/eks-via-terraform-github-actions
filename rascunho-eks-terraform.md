@@ -2442,6 +2442,8 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-
 # PENDENTE
 
 - Desativar addons no Blueprint. Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
+- Antes de subir outro Blueprint com ArgoCD, ver instruções para destroy quando tem argocd:
+    /home/fernando/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico/.terraform/modules/eks_blueprints/examples/gitops/argocd/README.md
 - Verificar se o MapUser só tem no module eks, ou se tem para o resource "aws_eks_cluster" também, usar o "data.aws_caller_identity.current.arn" nesse mapeamento.
 - Explorar questões do "data" que pega o usuário atual, para aplicar roles, arn, etc. Ver sobre MapRole, MapUser, mapear um grupo para ser mais fácil o dinamismo???
       https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity
