@@ -2468,3 +2468,18 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/04-eks-
 
 
 
+
+
+
+
+# Dia 11/03/2023
+
+You can find three TF filesystem values:
+
+    path.module: Directory path of the module where path.module is referenced.
+    path.root: Directory path of the root module.
+    path.cwd: Current working directory.
+
+
+# ATENÇÃO
+- Cuidar o name para o projeto
