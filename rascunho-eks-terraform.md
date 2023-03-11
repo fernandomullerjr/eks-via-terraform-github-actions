@@ -1897,6 +1897,39 @@ Changes to Outputs:
 
 
 
+
+
+
+
+aws_iam_role.eks_nodegroup_role: Destruction complete after 1s
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 10s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 20s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 30s elapsed]
+aws_eks_cluster.eks_cluster: Still destroying... [id=hr-stag-eksdemo1, 40s elapsed]
+aws_eks_cluster.eks_cluster: Destruction complete after 45s
+aws_iam_role_policy_attachment.eks-AmazonEKSVPCResourceController: Destroying... [id=hr-stag-eks-master-role-20230308013747968000000001]
+aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy: Destroying... [id=hr-stag-eks-master-role-20230308013747988300000003]
+module.vpc.aws_subnet.public[0]: Destroying... [id=subnet-0dd542f90722515e4]
+module.vpc.aws_subnet.public[1]: Destroying... [id=subnet-039d45885c9238c85]
+aws_iam_role_policy_attachment.eks-AmazonEKSVPCResourceController: Destruction complete after 0s
+aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy: Destruction complete after 0s
+aws_iam_role.eks_master_role: Destroying... [id=hr-stag-eks-master-role]
+aws_iam_role.eks_master_role: Destruction complete after 0s
+module.vpc.aws_subnet.public[1]: Destruction complete after 0s
+module.vpc.aws_subnet.public[0]: Destruction complete after 0s
+module.vpc.aws_vpc.this[0]: Destroying... [id=vpc-09f87b8ecd483f978]
+module.vpc.aws_vpc.this[0]: Destruction complete after 1s
+
+Apply complete! Resources: 0 added, 0 changed, 31 destroyed.
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples$ date
+Tue 07 Mar 2023 11:28:44 PM -03
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples$
+
+
+
+
+
 # PENDENTE
 
 - Explorar questões do "data" que pega o usuário atual, para aplicar roles, arn, etc. Ver sobre MapRole, MapUser, mapear um grupo para ser mais fácil o dinamismo???
@@ -1920,4 +1953,14 @@ Changes to Outputs:
 - Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
 - Criar branch com a versão final testada e completa.
 - Criar branch com a versão final testada e simples(sem Bastion).
+
+
+
+
+
+
+
+
+
+# Dia 10/03/2023
 
