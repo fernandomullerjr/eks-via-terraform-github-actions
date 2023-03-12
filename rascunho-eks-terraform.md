@@ -3237,6 +3237,20 @@ Your current user or role does not have access to Kubernetes objects on this EKS
 
 
 
+## Destroy
+
+To teardown and remove the resources created in this example:
+
+```sh
+kubectl delete deployment inflate
+terraform destroy -target="module.eks_blueprints_kubernetes_addons" -auto-approve
+terraform destroy -target="module.eks" -auto-approve
+terraform destroy -auto-approve
+```
+
+
+- Efeutado destroy
+
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3262,6 +3276,8 @@ Your current user or role does not have access to Kubernetes objects on this EKS
         - Aplicar no Cluster a estrutura RBAC.
         - Editar trust policy da role, permitindo usuário do IAM.
         - Editar ConfigMap "configmap/aws-auth", colocando os mapeamentos para a Role e para o usuário do IAM.
+- Avaliar opção usando "Teams", conforme o blog:
+    https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
 - Verificar se o MapUser só tem no module eks, ou se tem para o resource "aws_eks_cluster" também, usar o "data.aws_caller_identity.current.arn" nesse mapeamento.
 - Explorar questões do "data" que pega o usuário atual, para aplicar roles, arn, etc. Ver sobre MapRole, MapUser, mapear um grupo para ser mais fácil o dinamismo???
       https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity
@@ -3271,6 +3287,8 @@ Your current user or role does not have access to Kubernetes objects on this EKS
 - Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
       https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
 - Avaliar uso de EKS-Blueprint(Devido boas práticas) ou EKS-explicito(manifestos).
+- Documentar sobre como cortar o username via comando aws:
+    https://stackoverflow.com/questions/42310893/getting-iam-username-in-terraform
 - Seguir testando Blueprint de ArgoCD:
     https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
     ocorreu erro no cluster "03-eks-via-blueprint-argocd": Your current user or role does not have access to Kubernetes objects on this EKS cluster
@@ -3285,3 +3303,82 @@ Your current user or role does not have access to Kubernetes objects on this EKS
 - Criar branch com a versão final testada e simples(sem Bastion).
 
 
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Dia 12/03/2023
+
+- Tentar configurar a role e a policy, ajustar Trust Policy, via tf.
+- Ver como pegar o User Name via tf.
+
+fernando@debian10x64:~$ aws sts get-caller-identity --output text --query 'Arn'
+arn:aws:iam::261106957109:user/fernandomullerjr8596
+fernando@debian10x64:~$ aws sts get-caller-identity --output text --query 'Arn' | cut -d"/" -f2
+fernandomullerjr8596
+fernando@debian10x64:~$
+
+
+- 2 Soluções:
+
+If instead you have a bunch of modules that people then source to use those instead then you could do something ugly like this in the modules that create the EC2 instances:
+
+~~~~h
+resource "aws_instance" "instance" {
+    ami = "ami-123456"
+    instance_type = "t2.micro"
+    tags {
+        Name = "HelloWorld"
+    }
+    lifecycle {
+        ignore_changes = [ "tags.Owner" ]
+    }
+    provisioner "local-exec" {
+        command = <<EOF
+owner=`aws sts get-caller-identity --output text --query 'Arn' | cut -d"/" -f2`
+aws ec2 create-tags --resources ${self.id} --tags Key=Owner,Value=$${owner}
+EOF
+    }
+}
+~~~~
+
+The above Terraform will create an EC2 instance as normal but then ignore the "Owner" tag. After creating the instance it will run a local shell script that fetches the IAM account name/role for the user and then create an "Owner" tag for the instance using that value.
+
+
+
+To handle multiple instances (using count), you can refer the below code:
+
+~~~~h
+resource "aws_instance" "instance" {
+    count           = "${var.instance_number}"
+    ami             = "ami-xxxxxx"
+    instance_type   = "${var.instance_type}"
+    security_groups = "${concat(list("sg-xxxxxx"),var.security_groups)}"
+    disable_api_termination = "${var.termination_protection}"
+    subnet_id       = "${var.subnet_id}"
+    iam_instance_profile = "test_role"
+    tags {
+            Name        = "prod-${var.cluster_name}-${var.service_name}-${count.index+1}"
+            Environment = "prod"
+            Product     = "${var.cluster_name}"
+    }
+    lifecycle {
+        ignore_changes = [ "tags.LaunchedBy" ]
+    }
+    provisioner "local-exec" {
+        command = <<EOF
+launched_by=`aws iam get-user --profile prod | python -mjson.tool | grep UserName | awk '{print $2;exit; }'`
+aws ec2 create-tags --resources ${self.id} --tags Key=LaunchedBy,Value=$${launched_by}
+EOF
+    }
+}
+~~~~
