@@ -47,7 +47,11 @@ git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch 08-AWS-EKS
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# Comandos e detalhes úteis
+# OBS
+- Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
+- Seguir o README no Apply e no Destroy.
+
+# Comandos e detalhes úteis - Projeto 01
 - Para subir o projeto é necessário alterar o nome da AWS Key nas variáveis. Criar uma Key na mesma região que o projeto vai ser deployado.
 - Necessário ajustar o valor da chave no arquivo "eks-via-terraform-github-actions/08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/private-key/eks-terraform-key.pem"
 - Projeto usa uma EC2 Amazon Linux 2, cuidar para utilizar o usuário ec2-user nas conexões via SSH.
@@ -3087,6 +3091,152 @@ Enter `yes` at command prompt to apply
 
 
 
+~~~~bash
+terraform init
+terraform apply -target module.vpc
+terraform apply -target module.eks
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [1m40s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Creation complete after 1m49s [id=eks-karpenter:aws-ebs-csi-driver]
+╷
+│ Warning: Applied changes may be incomplete
+│
+│ The plan was created with the -target option in effect, so some changes requested in the configuration may have been ignored and the output values may not be fully updated. Run the
+│ following command to verify that no other changes are pending:
+│     terraform plan
+│
+│ Note that the -target option is not suitable for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform
+│ specifically suggests to use it as part of an error message.
+╵
+
+Apply complete! Resources: 28 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-karpenter"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/06-eks-karpenter$
+
+~~~~
+
+
+~~~~bash
+
+fernando@debian10x64:~$ aws eks --region us-east-1 update-kubeconfig --name eks-karpenter
+Updated context arn:aws:eks:us-east-1:261106957109:cluster/eks-karpenter in /home/fernando/.kube/config
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$ kubectl get pods -A
+NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE
+kube-system   coredns-74dd99f49d-7gtgm              1/1     Running   0          2m28s
+kube-system   coredns-74dd99f49d-t8r4q              1/1     Running   0          2m28s
+kube-system   ebs-csi-controller-687b766666-5jckt   6/6     Running   0          2m27s
+kube-system   ebs-csi-controller-687b766666-rrx4q   6/6     Running   0          2m27s
+fernando@debian10x64:~$ date
+Sat 11 Mar 2023 10:00:38 PM -03
+fernando@debian10x64:~$
+
+~~~~
+
+~~~~bash
+
+kubectl_manifest.rbac_teste: Creation complete after 1s [id=/apis/rbac.authorization.k8s.io/v1/clusterroles/eks-console-dashboard-full-access-clusterrole]
+kubectl_manifest.karpenter_example_deployment: Creation complete after 1s [id=/apis/apps/v1/namespaces/default/deployments/inflate]
+kubectl_manifest.karpenter_node_template: Creation complete after 1s [id=/apis/karpenter.k8s.aws/v1alpha1/awsnodetemplates/default]
+kubectl_manifest.karpenter_provisioner: Creation complete after 1s [id=/apis/karpenter.sh/v1alpha5/provisioners/default]
+╷
+│ Warning: "default_secret_name" is no longer applicable for Kubernetes v1.24.0 and above
+│
+│   with module.eks_blueprints_kubernetes_addons.module.karpenter[0].module.helm_addon.module.irsa[0].kubernetes_service_account_v1.irsa[0],
+│   on .terraform/modules/eks_blueprints_kubernetes_addons/modules/irsa/main.tf line 30, in resource "kubernetes_service_account_v1" "irsa":
+│   30: resource "kubernetes_service_account_v1" "irsa" {
+│
+│ Starting from version 1.24.0 Kubernetes does not automatically generate a token for service accounts, in this case, "default_secret_name" will be empty
+╵
+
+Apply complete! Resources: 35 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-karpenter"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/06-eks-karpenter$
+
+~~~~
+
+~~~~bash
+
+fernando@debian10x64:~$ kubectl get pods -A
+NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE
+karpenter     karpenter-7b786469d4-vwflq            1/1     Running   0          109s
+karpenter     karpenter-7b786469d4-xtnkf            1/1     Running   0          109s
+kube-system   coredns-74dd99f49d-7gtgm              1/1     Running   0          5m33s
+kube-system   coredns-74dd99f49d-t8r4q              1/1     Running   0          5m33s
+kube-system   ebs-csi-controller-687b766666-5jckt   6/6     Running   0          5m32s
+kube-system   ebs-csi-controller-687b766666-rrx4q   6/6     Running   0          5m32s
+fernando@debian10x64:~$ date
+Sat 11 Mar 2023 10:03:43 PM -03
+fernando@debian10x64:~$
+
+~~~~
+
+~~~~bash
+
+fernando@debian10x64:~$ kubectl describe configmap aws-auth -n kube-system
+Name:         aws-auth
+Namespace:    kube-system
+Labels:       <none>
+Annotations:  <none>
+
+Data
+====
+mapAccounts:
+----
+[]
+
+mapRoles:
+----
+- "groups":
+  - "system:bootstrappers"
+  - "system:nodes"
+  - "system:node-proxier"
+  "rolearn": "arn:aws:iam::261106957109:role/karpenter-20230312004423011400000002"
+  "username": "system:node:{{SessionName}}"
+- "groups":
+  - "system:bootstrappers"
+  - "system:nodes"
+  - "system:node-proxier"
+  "rolearn": "arn:aws:iam::261106957109:role/kube-system-20230312004423008000000001"
+  "username": "system:node:{{SessionName}}"
+- "groups":
+  - "system:bootstrappers"
+  - "system:nodes"
+  "rolearn": "arn:aws:iam::261106957109:role/Karpenter-eks-karpenter-2023031200545004950000000c"
+  "username": "system:node:{{EC2PrivateDNSName}}"
+
+mapUsers:
+----
+- "groups":
+  - "system:masters"
+  - "eks-console-dashboard-full-access-group"
+  "userarn": "arn:aws:iam::261106957109:user/fernandomullerjr8596"
+  "username": "AIDATZSZP7M2XLMGQUA5D"
+
+
+BinaryData
+====
+
+Events:  <none>
+fernando@debian10x64:~$
+
+~~~~
+
+
+- Cluster apresenta:
+
+eks-karpenter
+Your current user or role does not have access to Kubernetes objects on this EKS cluster
+
+
+
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3094,9 +3244,24 @@ Enter `yes` at command prompt to apply
 
 # PENDENTE
 
+## Obs
+- Seguir o README no Apply e no Destroy.
+- Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
+
+## Para o projeto - 04
 - Desativar addons no Blueprint. Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
 - Antes de subir outro Blueprint com ArgoCD, ver instruções para destroy quando tem argocd:
     /home/fernando/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico/.terraform/modules/eks_blueprints/examples/gitops/argocd/README.md
+
+## Seguindo
+- Verificar como aplicar os steps do KB que resolve erro na console do EKS. Como aplicar o ajuste no aws-auth(ConfigMap) usando aws_caller_identity?? Aplicar manifesto RBAC no cluster. Verificar se a role e o Trust Policy é necessário mesmo.
+    Efetuar steps do KB via tf:
+        - Criando policy "my-console-viewer-policy"
+        - Criando a Role "my-console-viewer-role"
+        - Atrelar a policy "my-console-viewer-policy" na  Role "my-console-viewer-role".
+        - Aplicar no Cluster a estrutura RBAC.
+        - Editar trust policy da role, permitindo usuário do IAM.
+        - Editar ConfigMap "configmap/aws-auth", colocando os mapeamentos para a Role e para o usuário do IAM.
 - Verificar se o MapUser só tem no module eks, ou se tem para o resource "aws_eks_cluster" também, usar o "data.aws_caller_identity.current.arn" nesse mapeamento.
 - Explorar questões do "data" que pega o usuário atual, para aplicar roles, arn, etc. Ver sobre MapRole, MapUser, mapear um grupo para ser mais fácil o dinamismo???
       https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity
