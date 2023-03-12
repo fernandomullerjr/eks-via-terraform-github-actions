@@ -16,6 +16,10 @@ git reset -- 03-eks-via-blueprint-argocd/.terraform*
 git reset -- 04-eks-via-blueprint-iam-user-automatico/.terraform
 git reset -- 04-eks-via-blueprint-iam-user-automatico/.terraform*
 git reset -- 04-eks-via-blueprint-iam-user-automatico/terraform.tfstate
+git reset -- 05-eks-karpenter/.terraform
+git reset -- 05-eks-karpenter/.terraform*
+git reset -- 05-eks-karpenter/terraform.tfstate
+git reset -- 05-eks-karpenter/terraform.tfstate.backup
 git commit -m "Projeto - eks-via-terraform-github-actions"
 eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
@@ -2483,3 +2487,424 @@ You can find three TF filesystem values:
 
 # ATENÇÃO
 - Cuidar o name para o projeto
+- Source
+
+
+
+# EKS KARPENTER
+
+- Seguindo material obtido no Github:
+https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/karpenter
+<https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/karpenter>
+
+
+- Ajustando o source no main.tf:
+
+~~~~h
+module "eks_blueprints_kubernetes_addons" {
+  #source = "../../modules/kubernetes-addons" 
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons"
+~~~~
+
+
+## Deploy
+
+To provision this example:
+
+```sh
+terraform init
+terraform apply -target module.vpc
+terraform apply -target module.eks
+terraform apply
+```
+
+
+- Aplicado o target vpc:
+
+~~~~bash
+
+terraform apply -target module.vpc
+
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m20s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m30s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Creation complete after 1m37s [id=nat-0c0439a760a1b5312]
+module.vpc.aws_route.private_nat_gateway[0]: Creating...
+module.vpc.aws_route.private_nat_gateway[0]: Creation complete after 1s [id=r-rtb-0f78c605a17f694231080289494]
+╷
+│ Warning: Applied changes may be incomplete
+│
+│ The plan was created with the -target option in effect, so some changes requested in the configuration may have been ignored and the output values may not be fully updated. Run the
+│ following command to verify that no other changes are pending:
+│     terraform plan
+│
+│ Note that the -target option is not suitable for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform
+│ specifically suggests to use it as part of an error message.
+╵
+
+Apply complete! Resources: 23 added, 0 changed, 0 destroyed.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/05-eks-karpenter$
+~~~~
+
+
+
+
+~~~~bash
+
+module.eks.module.fargate_profile["karpenter"].aws_eks_fargate_profile.this[0]: Still creating... [5m10s elapsed]
+module.eks.module.fargate_profile["karpenter"].aws_eks_fargate_profile.this[0]: Creation complete after 5m18s [id=eks-karpenter:karpenter]
+module.eks.kubernetes_config_map_v1_data.aws_auth[0]: Creating...
+module.eks.aws_eks_addon.this["coredns"]: Creating...
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Creating...
+module.eks.aws_eks_addon.this["kube-proxy"]: Creating...
+module.eks.aws_eks_addon.this["kube-proxy"]: Creation complete after 3s [id=eks-karpenter:kube-proxy]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [10s elapsed]
+module.eks.aws_eks_addon.this["coredns"]: Still creating... [10s elapsed]
+module.eks.aws_eks_addon.this["coredns"]: Still creating... [20s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [20s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [30s elapsed]
+module.eks.aws_eks_addon.this["coredns"]: Still creating... [30s elapsed]
+module.eks.aws_eks_addon.this["coredns"]: Still creating... [40s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [40s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [50s elapsed]
+module.eks.aws_eks_addon.this["coredns"]: Still creating... [50s elapsed]
+module.eks.aws_eks_addon.this["coredns"]: Still creating... [1m0s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [1m0s elapsed]
+module.eks.aws_eks_addon.this["coredns"]: Still creating... [1m10s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [1m10s elapsed]
+module.eks.aws_eks_addon.this["coredns"]: Creation complete after 1m17s [id=eks-karpenter:coredns]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Creation complete after 1m18s [id=eks-karpenter:aws-ebs-csi-driver]
+╷
+│ Warning: Applied changes may be incomplete
+│
+│ The plan was created with the -target option in effect, so some changes requested in the configuration may have been ignored and the output values may not be fully updated. Run the
+│ following command to verify that no other changes are pending:
+│     terraform plan
+│
+│ Note that the -target option is not suitable for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform
+│ specifically suggests to use it as part of an error message.
+╵
+╷
+│ Error: The configmap "aws-auth" does not exist
+│
+│   with module.eks.kubernetes_config_map_v1_data.aws_auth[0],
+│   on .terraform/modules/eks/main.tf line 550, in resource "kubernetes_config_map_v1_data" "aws_auth":
+│  550: resource "kubernetes_config_map_v1_data" "aws_auth" {
+│
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/05-eks-karpenter$
+
+~~~~
+
+
+
+
+
+
+
+
+- Efetuando novo apply do mesmo comando:
+terraform apply -target module.eks
+
+~~~~bash
+
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Refreshing state... [id=eks-karpenter:aws-ebs-csi-driver]
+module.eks.aws_eks_addon.before_compute["vpc-cni"]: Refreshing state... [id=eks-karpenter:vpc-cni]
+module.eks.aws_eks_addon.this["coredns"]: Refreshing state... [id=eks-karpenter:coredns]
+module.eks.aws_eks_addon.this["kube-proxy"]: Refreshing state... [id=eks-karpenter:kube-proxy]
+
+Note: Objects have changed outside of Terraform
+
+Terraform detected the following changes made outside of Terraform since the last "terraform apply":
+
+  # module.eks.aws_eks_cluster.this[0] has changed
+  ~ resource "aws_eks_cluster" "this" {
+        id                        = "eks-karpenter"
+        name                      = "eks-karpenter"
+        tags                      = {
+            "Blueprint"              = "eks-karpenter"
+            "GithubRepo"             = "github.com/aws-ia/terraform-aws-eks-blueprints"
+            "karpenter.sh/discovery" = "eks-karpenter"
+        }
+        # (11 unchanged attributes hidden)
+
+
+
+
+      ~ vpc_config {
+          + security_group_ids        = []
+            # (6 unchanged attributes hidden)
+        }
+        # (3 unchanged blocks hidden)
+    }
+
+  # module.eks.aws_iam_role.this[0] has changed
+  ~ resource "aws_iam_role" "this" {
+        id                    = "eks-karpenter-cluster-20230311233554606600000002"
+      ~ managed_policy_arns   = [
+          + "arn:aws:iam::261106957109:policy/eks-karpenter-cluster-ClusterEncryption2023031123362046670000000a",
+          + "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+          + "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController",
+        ]
+        name                  = "eks-karpenter-cluster-20230311233554606600000002"
+        tags                  = {
+            "Blueprint"              = "eks-karpenter"
+            "GithubRepo"             = "github.com/aws-ia/terraform-aws-eks-blueprints"
+            "karpenter.sh/discovery" = "eks-karpenter"
+        }
+        # (9 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+  # module.eks.module.fargate_profile["karpenter"].aws_eks_fargate_profile.this[0] has changed
+  ~ resource "aws_eks_fargate_profile" "this" {
+        id                     = "eks-karpenter:karpenter"
+        tags                   = {
+            "Blueprint"              = "eks-karpenter"
+            "GithubRepo"             = "github.com/aws-ia/terraform-aws-eks-blueprints"
+            "karpenter.sh/discovery" = "eks-karpenter"
+        }
+        # (7 unchanged attributes hidden)
+
+      + selector {
+          + labels    = {}
+          + namespace = "karpenter"
+        }
+      - selector {
+          - namespace = "karpenter" -> null
+        }
+
+        # (1 unchanged block hidden)
+    }
+
+  # module.eks.module.fargate_profile["karpenter"].aws_iam_role.this[0] has changed
+  ~ resource "aws_iam_role" "this" {
+        id                    = "karpenter-20230311233554605800000001"
+      ~ managed_policy_arns   = [
+          + "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy",
+          + "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+        ]
+        name                  = "karpenter-20230311233554605800000001"
+        tags                  = {
+            "Blueprint"              = "eks-karpenter"
+            "GithubRepo"             = "github.com/aws-ia/terraform-aws-eks-blueprints"
+            "karpenter.sh/discovery" = "eks-karpenter"
+        }
+        # (10 unchanged attributes hidden)
+    }
+
+  # module.eks.module.fargate_profile["kube_system"].aws_eks_fargate_profile.this[0] has changed
+  ~ resource "aws_eks_fargate_profile" "this" {
+        id                     = "eks-karpenter:kube-system"
+        tags                   = {
+            "Blueprint"              = "eks-karpenter"
+            "GithubRepo"             = "github.com/aws-ia/terraform-aws-eks-blueprints"
+            "karpenter.sh/discovery" = "eks-karpenter"
+        }
+        # (7 unchanged attributes hidden)
+
+      + selector {
+          + labels    = {}
+          + namespace = "kube-system"
+        }
+      - selector {
+          - namespace = "kube-system" -> null
+        }
+
+        # (1 unchanged block hidden)
+    }
+
+  # module.eks.module.fargate_profile["kube_system"].aws_iam_role.this[0] has changed
+  ~ resource "aws_iam_role" "this" {
+        id                    = "kube-system-20230311233554607000000003"
+      ~ managed_policy_arns   = [
+          + "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy",
+          + "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+        ]
+        name                  = "kube-system-20230311233554607000000003"
+        tags                  = {
+            "Blueprint"              = "eks-karpenter"
+            "GithubRepo"             = "github.com/aws-ia/terraform-aws-eks-blueprints"
+            "karpenter.sh/discovery" = "eks-karpenter"
+        }
+        # (10 unchanged attributes hidden)
+    }
+
+
+Unless you have made equivalent changes to your configuration, or ignored the relevant attributes using ignore_changes, the following plan may include actions to undo or respond to
+these changes.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # module.eks.kubernetes_config_map_v1_data.aws_auth[0] will be created
+  + resource "kubernetes_config_map_v1_data" "aws_auth" {
+      + data          = {
+          + "mapAccounts" = jsonencode([])
+          + "mapRoles"    = <<-EOT
+                - "groups":
+                  - "system:bootstrappers"
+                  - "system:nodes"
+                  - "system:node-proxier"
+                  "rolearn": "arn:aws:iam::261106957109:role/karpenter-20230311233554605800000001"
+                  "username": "system:node:{{SessionName}}"
+                - "groups":
+                  - "system:bootstrappers"
+                  - "system:nodes"
+                  - "system:node-proxier"
+                  "rolearn": "arn:aws:iam::261106957109:role/kube-system-20230311233554607000000003"
+                  "username": "system:node:{{SessionName}}"
+                - "groups":
+                  - "system:bootstrappers"
+                  - "system:nodes"
+                  "rolearn": "arn:aws:iam::261106957109:role/Karpenter-eks-karpenter-2023031123490594750000000c"
+                  "username": "system:node:{{EC2PrivateDNSName}}"
+            EOT
+          + "mapUsers"    = jsonencode([])
+        }
+      + field_manager = "Terraform"
+      + force         = true
+      + id            = (known after apply)
+
+      + metadata {
+          + name      = "aws-auth"
+          + namespace = "kube-system"
+        }
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+╷
+│ Warning: Resource targeting is in effect
+│
+│ You are creating a plan with the -target option, which means that the result of this plan may not represent all of the changes requested by the current configuration.
+│
+│ The -target option is not for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform specifically suggests to use
+│ it as part of an error message.
+╵
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+module.eks.kubernetes_config_map_v1_data.aws_auth[0]: Creating...
+module.eks.kubernetes_config_map_v1_data.aws_auth[0]: Creation complete after 1s [id=kube-system/aws-auth]
+╷
+│ Warning: Applied changes may be incomplete
+│
+│ The plan was created with the -target option in effect, so some changes requested in the configuration may have been ignored and the output values may not be fully updated. Run the
+│ following command to verify that no other changes are pending:
+│     terraform plan
+│
+│ Note that the -target option is not suitable for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform
+│ specifically suggests to use it as part of an error message.
+╵
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-karpenter"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/05-eks-karpenter$
+
+~~~~
+
+
+aws eks --region us-east-1 update-kubeconfig --name eks-karpenter
+
+~~~~bash
+aws eks --region us-east-1 update-kubeconfig --name eks-karpenter
+fernando@debian10x64:~$ kubectl get pods -A
+NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE
+kube-system   coredns-74dd99f49d-5tshf              1/1     Running   0          6m1s
+kube-system   coredns-74dd99f49d-rhx89              1/1     Running   0          6m1s
+kube-system   ebs-csi-controller-687b766666-n2m6m   6/6     Running   0          5m59s
+kube-system   ebs-csi-controller-687b766666-qkjpd   6/6     Running   0          5m59s
+fernando@debian10x64:~$
+fernando@debian10x64:~$ date
+Sat 11 Mar 2023 09:01:08 PM -03
+fernando@debian10x64:~$
+~~~~
+
+
+
+
+
+
+- Seguindo o README, restante do DEPLOY, falta o apply sem target:
+terraform apply
+
+~~~~bash
+
+module.eks_blueprints_kubernetes_addons.module.karpenter[0].aws_sqs_queue_policy.this[0]: Still creating... [50s elapsed]
+module.eks_blueprints_kubernetes_addons.module.karpenter[0].module.helm_addon.helm_release.addon[0]: Still creating... [50s elapsed]
+module.karpenter.aws_sqs_queue_policy.this[0]: Still creating... [1m10s elapsed]
+module.eks_blueprints_kubernetes_addons.module.karpenter[0].aws_sqs_queue_policy.this[0]: Still creating... [1m0s elapsed]
+module.karpenter.aws_sqs_queue_policy.this[0]: Creation complete after 1m11s [id=https://sqs.us-east-1.amazonaws.com/261106957109/Karpenter-eks-karpenter]
+module.eks_blueprints_kubernetes_addons.module.karpenter[0].module.helm_addon.helm_release.addon[0]: Still creating... [1m0s elapsed]
+module.eks_blueprints_kubernetes_addons.module.karpenter[0].aws_sqs_queue_policy.this[0]: Creation complete after 1m6s [id=https://sqs.us-east-1.amazonaws.com/261106957109/karpenter-eks-karpenter]
+module.eks_blueprints_kubernetes_addons.module.karpenter[0].module.helm_addon.helm_release.addon[0]: Still creating... [1m10s elapsed]
+module.eks_blueprints_kubernetes_addons.module.karpenter[0].module.helm_addon.helm_release.addon[0]: Creation complete after 1m13s [id=karpenter]
+kubectl_manifest.karpenter_provisioner: Creating...
+kubectl_manifest.karpenter_example_deployment: Creating...
+kubectl_manifest.karpenter_node_template: Creating...
+kubectl_manifest.karpenter_example_deployment: Creation complete after 1s [id=/apis/apps/v1/namespaces/default/deployments/inflate]
+kubectl_manifest.karpenter_node_template: Creation complete after 1s [id=/apis/karpenter.k8s.aws/v1alpha1/awsnodetemplates/default]
+kubectl_manifest.karpenter_provisioner: Creation complete after 1s [id=/apis/karpenter.sh/v1alpha5/provisioners/default]
+╷
+│ Warning: "default_secret_name" is no longer applicable for Kubernetes v1.24.0 and above
+│
+│   with module.eks_blueprints_kubernetes_addons.module.karpenter[0].module.helm_addon.module.irsa[0].kubernetes_service_account_v1.irsa[0],
+│   on .terraform/modules/eks_blueprints_kubernetes_addons/modules/irsa/main.tf line 30, in resource "kubernetes_service_account_v1" "irsa":
+│   30: resource "kubernetes_service_account_v1" "irsa" {
+│
+│ Starting from version 1.24.0 Kubernetes does not automatically generate a token for service accounts, in this case, "default_secret_name" will be empty
+╵
+
+Apply complete! Resources: 34 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-karpenter"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/05-eks-karpenter$
+
+fernando@debian10x64:~$
+fernando@debian10x64:~$ kubectl get pods -A
+NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE
+karpenter     karpenter-7b786469d4-qtc5j            1/1     Running   0          4m9s
+karpenter     karpenter-7b786469d4-wpk92            1/1     Running   0          4m9s
+kube-system   coredns-74dd99f49d-5tshf              1/1     Running   0          11m
+kube-system   coredns-74dd99f49d-rhx89              1/1     Running   0          11m
+kube-system   ebs-csi-controller-687b766666-n2m6m   6/6     Running   0          11m
+kube-system   ebs-csi-controller-687b766666-qkjpd   6/6     Running   0          11m
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$ date
+Sat 11 Mar 2023 09:06:19 PM -03
+fernando@debian10x64:~$
+
+fernando@debian10x64:~$ kubectl get nodes
+NAME                                  STATUS   ROLES    AGE     VERSION
+fargate-ip-10-0-10-85.ec2.internal    Ready    <none>   3m45s   v1.24.9-eks-300e41d
+fargate-ip-10-0-11-55.ec2.internal    Ready    <none>   11m     v1.24.9-eks-300e41d
+fargate-ip-10-0-12-13.ec2.internal    Ready    <none>   11m     v1.24.9-eks-300e41d
+fargate-ip-10-0-12-172.ec2.internal   Ready    <none>   3m54s   v1.24.9-eks-300e41d
+fargate-ip-10-0-12-177.ec2.internal   Ready    <none>   11m     v1.24.9-eks-300e41d
+fargate-ip-10-0-12-183.ec2.internal   Ready    <none>   10m     v1.24.9-eks-300e41d
+fernando@debian10x64:~$
+
+~~~~
+
+
+
+
+~~~~bash
+~~~~
+
+~~~~bash
+~~~~
