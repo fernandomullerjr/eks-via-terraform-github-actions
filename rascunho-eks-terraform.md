@@ -20,6 +20,10 @@ git reset -- 05-eks-karpenter/.terraform
 git reset -- 05-eks-karpenter/.terraform*
 git reset -- 05-eks-karpenter/terraform.tfstate
 git reset -- 05-eks-karpenter/terraform.tfstate.backup
+git reset -- 06-eks-karpenter/.terraform
+git reset -- 06-eks-karpenter/.terraform*
+git reset -- 06-eks-karpenter/terraform.tfstate
+git reset -- 06-eks-karpenter/terraform.tfstate.backup
 git commit -m "Projeto - eks-via-terraform-github-actions"
 eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
@@ -2903,8 +2907,216 @@ fernando@debian10x64:~$
 
 
 
-~~~~bash
-~~~~
+
+
+
+- Destruindo
+
+
+## Destroy
+
+To teardown and remove the resources created in this example:
+
+```sh
+kubectl delete deployment inflate
+terraform destroy -target="module.eks_blueprints_kubernetes_addons" -auto-approve
+terraform destroy -target="module.eks" -auto-approve
+terraform destroy -auto-approve
+```
+
+
 
 ~~~~bash
+kubectl delete deployment inflate
+terraform destroy -target="module.eks_blueprints_kubernetes_addons" -auto-approve
+dule.karpenter[0].aws_sqs_queue_policy.this[0]: Destruction complete after 27s
+module.eks_blueprints_kubernetes_addons.module.karpenter[0].aws_iam_policy.karpenter: Destruction complete after 0s
+module.eks_blueprints_kubernetes_addons.module.karpenter[0].aws_sqs_queue.this[0]: Destroying... [id=https://sqs.us-east-1.amazonaws.com/261106957109/karpenter-eks-karpenter]
+module.eks_blueprints_kubernetes_addons.module.karpenter[0].aws_sqs_queue.this[0]: Destruction complete after 4s
+module.eks_blueprints_kubernetes_addons.time_sleep.dataplane: Destroying... [id=2023-03-12T00:01:16Z]
+module.eks_blueprints_kubernetes_addons.time_sleep.dataplane: Destruction complete after 0s
+╷
+│ Warning: Resource targeting is in effect
+│
+│ You are creating a plan with the -target option, which means that the result of this plan may not represent all of the changes requested by the current configuration.
+│
+│ The -target option is not for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform specifically suggests to use
+│ it as part of an error message.
+╵
+╷
+│ Warning: Applied changes may be incomplete
+│
+│ The plan was created with the -target option in effect, so some changes requested in the configuration may have been ignored and the output values may not be fully updated. Run the
+│ following command to verify that no other changes are pending:
+│     terraform plan
+│
+│ Note that the -target option is not suitable for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform
+│ specifically suggests to use it as part of an error message.
+╵
+
+Destroy complete! Resources: 20 destroyed.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/05-eks-karpenter$
+
 ~~~~
+
+
+~~~~bash
+terraform destroy -target="module.eks" -auto-approve
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=eks-karpenter, 1m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=eks-karpenter, 2m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=eks-karpenter, 2m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=eks-karpenter, 2m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=eks-karpenter, 2m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Destruction complete after 2m37s
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSClusterPolicy"]: Destroying... [id=eks-karpenter-cluster-20230311233554606600000002-20230311233556595700000008]
+module.eks.module.kms.aws_kms_key.this[0]: Destroying... [id=c31cb608-c3be-4228-92b4-51c8f569f4d1]
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSVPCResourceController"]: Destroying... [id=eks-karpenter-cluster-20230311233554606600000002-20230311233556597400000009]
+module.eks.aws_cloudwatch_log_group.this[0]: Destroying... [id=/aws/eks/eks-karpenter/cluster]
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSVPCResourceController"]: Destruction complete after 1s
+module.eks.aws_cloudwatch_log_group.this[0]: Destruction complete after 1s
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSClusterPolicy"]: Destruction complete after 1s
+module.eks.module.kms.aws_kms_key.this[0]: Destruction complete after 1s
+module.eks.aws_iam_role.this[0]: Destroying... [id=eks-karpenter-cluster-20230311233554606600000002]
+module.eks.aws_iam_role.this[0]: Destruction complete after 1s
+╷
+│ Warning: Resource targeting is in effect
+│
+│ You are creating a plan with the -target option, which means that the result of this plan may not represent all of the changes requested by the current configuration.
+│
+│ The -target option is not for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform specifically suggests to use
+│ it as part of an error message.
+╵
+╷
+│ Warning: Applied changes may be incomplete
+│
+│ The plan was created with the -target option in effect, so some changes requested in the configuration may have been ignored and the output values may not be fully updated. Run the
+│ following command to verify that no other changes are pending:
+│     terraform plan
+│
+│ Note that the -target option is not suitable for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform
+│ specifically suggests to use it as part of an error message.
+╵
+
+Destroy complete! Resources: 42 destroyed.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/05-eks-karpenter$
+
+
+terraform destroy -auto-approve
+
+
+module.vpc.aws_eip.nat[0]: Destroying... [id=eipalloc-0ea0e6b7f2311041f]
+module.vpc.aws_internet_gateway.this[0]: Destroying... [id=igw-09f6285f97cb1523f]
+module.vpc.aws_subnet.public[2]: Destroying... [id=subnet-029b7f63345340824]
+module.vpc.aws_subnet.public[0]: Destroying... [id=subnet-042b84ba49bb7dd22]
+module.vpc.aws_subnet.public[1]: Destroying... [id=subnet-0227bd279c20c77fd]
+module.vpc.aws_subnet.public[1]: Destruction complete after 1s
+module.vpc.aws_subnet.public[2]: Destruction complete after 1s
+module.vpc.aws_internet_gateway.this[0]: Destruction complete after 1s
+module.vpc.aws_subnet.public[0]: Destruction complete after 1s
+module.vpc.aws_vpc.this[0]: Destroying... [id=vpc-045cc5105b1725d06]
+module.vpc.aws_eip.nat[0]: Destruction complete after 1s
+module.vpc.aws_vpc.this[0]: Destruction complete after 1s
+╷
+│ Warning: EC2 Default Network ACL (acl-0ab396060962862bd) not deleted, removing from state
+│
+│
+╵
+
+Destroy complete! Resources: 23 destroyed.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/05-eks-karpenter$
+
+~~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# EKS com KARPENTER usando RBAC automatico
+
+- Criar nova pasta, agora a 06, onde vai ser o eks + karpenter + iam-user + RBAC juntos.
+
+ aws_auth_users = [
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user1"
+      username = "user1"
+      groups   = ["system:masters"]
+    },
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user2"
+      username = "user2"
+      groups   = ["system:masters"]
+    },
+  ]
+
+
+
+resource "kubectl_manifest" "rbac_teste" {
+  yaml_body = <<-YAML
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: eks-console-dashboard-full-access-clusterrole
+    rules:
+
+
+
+## Deploy
+
+To provision this example:
+
+```sh
+terraform init
+terraform apply -target module.vpc
+terraform apply -target module.eks
+terraform apply
+```
+
+Enter `yes` at command prompt to apply
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# PENDENTE
+
+- Desativar addons no Blueprint. Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
+- Antes de subir outro Blueprint com ArgoCD, ver instruções para destroy quando tem argocd:
+    /home/fernando/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico/.terraform/modules/eks_blueprints/examples/gitops/argocd/README.md
+- Verificar se o MapUser só tem no module eks, ou se tem para o resource "aws_eks_cluster" também, usar o "data.aws_caller_identity.current.arn" nesse mapeamento.
+- Explorar questões do "data" que pega o usuário atual, para aplicar roles, arn, etc. Ver sobre MapRole, MapUser, mapear um grupo para ser mais fácil o dinamismo???
+      https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity
+      eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/data.tf
+- Ler artigo:
+      https://cloudly.engineer/2022/amazon-eks-iam-roles-and-policies-with-terraform/aws/
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Avaliar uso de EKS-Blueprint(Devido boas práticas) ou EKS-explicito(manifestos).
+- Seguir testando Blueprint de ArgoCD:
+    https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
+    ocorreu erro no cluster "03-eks-via-blueprint-argocd": Your current user or role does not have access to Kubernetes objects on this EKS cluster
+    Testar usando map-role, map-arn, etc
+- Ler artigo sobre Blueprint:
+    https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
+- Backend remoto, verificar como fazer para cessar a msg de Warning, para que as variáveis do par de chaves AWS sejam seguidos pelo local.
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
+
+
