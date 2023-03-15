@@ -3461,3 +3461,8 @@ mas ele grava num contexto local, não é possível usar numa variável.
 - Criar branch com a versão final testada e completa.
 - Criar branch com a versão final testada e simples(sem Bastion).
 
+
+
+
+
+

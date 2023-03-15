@@ -42,6 +42,15 @@ module "eks_blueprints" {
     }
   ]
 
+ # List of map_users
+  map_users = [
+    {
+      userarn  = data.aws_caller_identity.current.arn     # The ARN of the IAM user to add.
+      username = "opsuser"                                            # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+
   # EKS MANAGED NODE GROUPS
   managed_node_groups = {
     T3A_MICRO = {

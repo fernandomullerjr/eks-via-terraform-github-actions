@@ -926,3 +926,487 @@ Let's see how we can leverage the roles associated with our created Teams, in th
 
 
 
+
+
+
+
+
+
+## PARCIAL
+
+- Efetuando plan, após ter aplicado somente estre trecho ao main.tf:
+
+
+  # teams
+  platform_teams = {
+    admin = {
+      users = [
+        data.aws_caller_identity.current.arn
+      ]
+    }
+  }
+
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+  ~ update in-place
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # module.eks_blueprints.kubernetes_config_map.aws_auth[0] will be updated in-place
+  ~ resource "kubernetes_config_map" "aws_auth" {
+      ~ data        = {
+          ~ "mapRoles"    = <<-EOT
+                - "groups":
+                  - "system:bootstrappers"
+                  - "system:nodes"
+                  "rolearn": "arn:aws:iam::261106957109:role/eks-lab-managed-ondemand"
+                  "username": "system:node:{{EC2PrivateDNSName}}"
+                - "groups":
+                  - "system:masters"
+              +   "rolearn": "arn:aws:iam::261106957109:role/eks-lab-admin-access"
+              +   "username": "admin"
+              + - "groups":
+              +   - "system:masters"
+                  "rolearn": "arn:aws:iam::261106957109:role/TeamRole"
+                  "username": "ops-role"
+            EOT
+            # (2 unchanged elements hidden)
+        }
+        id          = "kube-system/aws-auth"
+        # (2 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+  # module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].data.aws_iam_policy_document.managed_ng_assume_role_policy will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "managed_ng_assume_role_policy"  {
+      ~ id      = "3778018924" -> (known after apply)
+      ~ json    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "ec2.amazonaws.com"
+                        }
+                      - Sid       = "EKSWorkerAssumeRole"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+      - version = "2012-10-17" -> null
+
+      ~ statement {
+          - effect        = "Allow" -> null
+          - not_actions   = [] -> null
+          - not_resources = [] -> null
+          - resources     = [] -> null
+            # (2 unchanged attributes hidden)
+
+            # (1 unchanged block hidden)
+        }
+    }
+
+  # module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role.managed_ng[0] will be updated in-place
+  ~ resource "aws_iam_role" "managed_ng" {
+      ~ assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "ec2.amazonaws.com"
+                        }
+                      - Sid       = "EKSWorkerAssumeRole"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        id                    = "eks-lab-managed-ondemand"
+        name                  = "eks-lab-managed-ondemand"
+        tags                  = {
+            "Blueprint"  = "eks-lab"
+            "GithubRepo" = "github.com/aws-ia/terraform-aws-eks-blueprints"
+        }
+        # (9 unchanged attributes hidden)
+    }
+
+  # module.eks_blueprints.module.aws_eks_teams[0].aws_iam_policy.platform_team_eks_access[0] will be created
+  + resource "aws_iam_policy" "platform_team_eks_access" {
+      + arn         = (known after apply)
+      + description = "Platform Team EKS Console Access"
+      + id          = (known after apply)
+      + name        = "eks-lab-PlatformTeamEKSAccess"
+      + path        = "/"
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = [
+                          + "ssm:GetParameter",
+                          + "eks:ListUpdates",
+                          + "eks:ListNodegroups",
+                          + "eks:ListFargateProfiles",
+                          + "eks:ListClusters",
+                          + "eks:DescribeNodegroup",
+                          + "eks:DescribeCluster",
+                          + "eks:AccessKubernetesApi",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "arn:aws:eks:us-east-1:261106957109:cluster/eks-lab"
+                      + Sid      = "AllowPlatformTeamEKSAccess"
+                    },
+                  + {
+                      + Action   = "eks:ListClusters"
+                      + Effect   = "Allow"
+                      + Resource = "*"
+                      + Sid      = "AllowListClusters"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + policy_id   = (known after apply)
+      + tags        = {
+          + "Blueprint"  = "eks-lab"
+          + "GithubRepo" = "github.com/aws-ia/terraform-aws-eks-blueprints"
+        }
+      + tags_all    = {
+          + "Blueprint"  = "eks-lab"
+          + "GithubRepo" = "github.com/aws-ia/terraform-aws-eks-blueprints"
+        }
+    }
+
+  # module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"] will be created
+  + resource "aws_iam_role" "platform_team" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + AWS = [
+                              + "arn:aws:iam::261106957109:user/fernandomullerjr8596",
+                            ]
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "eks-lab-admin-access"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags                  = {
+          + "Blueprint"  = "eks-lab"
+          + "GithubRepo" = "github.com/aws-ia/terraform-aws-eks-blueprints"
+        }
+      + tags_all              = {
+          + "Blueprint"  = "eks-lab"
+          + "GithubRepo" = "github.com/aws-ia/terraform-aws-eks-blueprints"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy {
+          + name   = (known after apply)
+          + policy = (known after apply)
+        }
+    }
+
+Plan: 2 to add, 2 to change, 0 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$
+
+
+
+
+
+
+
+- Aplicado
+
+
+Plan: 2 to add, 2 to change, 0 to destroy.
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_policy.platform_team_eks_access[0]: Creating...
+module.eks_blueprints.kubernetes_config_map.aws_auth[0]: Modifying... [id=kube-system/aws-auth]
+module.eks_blueprints.kubernetes_config_map.aws_auth[0]: Modifications complete after 1s [id=kube-system/aws-auth]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].data.aws_iam_policy_document.managed_ng_assume_role_policy: Reading... [id=3778018924]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].data.aws_iam_policy_document.managed_ng_assume_role_policy: Read complete after 0s [id=3778018924]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_policy.platform_team_eks_access[0]: Creation complete after 1s [id=arn:aws:iam::261106957109:policy/eks-lab-PlatformTeamEKSAccess]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Creating...
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Creation complete after 1s [id=eks-lab-admin-access]
+
+Apply complete! Resources: 2 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0cb7025b568a7efea"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$
+
+
+
+
+
+
+
+
+
+
+
+
+
+- Mesmo assim, ocorre o erro:
+
+Your current user or role does not have access to Kubernetes objects on this EKS cluster
+
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$ aws eks --region us-east-1 update-kubeconfig --name eks-lab
+Added new context arn:aws:eks:us-east-1:261106957109:cluster/eks-lab to /home/fernando/.kube/config
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$ kubectl get configmap -A
+NAMESPACE         NAME                                 DATA   AGE
+default           kube-root-ca.crt                     1      12m
+kube-node-lease   kube-root-ca.crt                     1      12m
+kube-public       kube-root-ca.crt                     1      12m
+kube-system       aws-auth                             3      7m32s
+kube-system       coredns                              1      12m
+kube-system       cp-vpc-resource-controller           0      12m
+kube-system       eks-certificates-controller          0      12m
+kube-system       extension-apiserver-authentication   6      12m
+kube-system       kube-proxy                           1      12m
+kube-system       kube-proxy-config                    1      12m
+kube-system       kube-root-ca.crt                     1      12m
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$ kubectl describe configmap aws-auth -n kube-system
+Name:         aws-auth
+Namespace:    kube-system
+Labels:       app.kubernetes.io/created-by=terraform-aws-eks-blueprints
+              app.kubernetes.io/managed-by=terraform-aws-eks-blueprints
+Annotations:  <none>
+
+Data
+====
+mapAccounts:
+----
+[]
+
+mapRoles:
+----
+- "groups":
+  - "system:bootstrappers"
+  - "system:nodes"
+  "rolearn": "arn:aws:iam::261106957109:role/eks-lab-managed-ondemand"
+  "username": "system:node:{{EC2PrivateDNSName}}"
+- "groups":
+  - "system:masters"
+  "rolearn": "arn:aws:iam::261106957109:role/eks-lab-admin-access"
+  "username": "admin"
+- "groups":
+  - "system:masters"
+  "rolearn": "arn:aws:iam::261106957109:role/TeamRole"
+  "username": "ops-role"
+
+mapUsers:
+----
+[]
+
+
+BinaryData
+====
+
+Events:  <none>
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$ ^C
+
+
+
+
+# PENDENTE
+
+
+- AJUSTANDO
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab/main.tf
+
+https://aws-ia.github.io/terraform-aws-eks-blueprints/node-groups/
+
+ # List of map_users
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::<aws-account-id>:user/<username>"      # The ARN of the IAM user to add.
+      username = "opsuser"                                            # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+
+
+
+- eDITADO:
+
+
+  map_users = [
+    {
+      userarn  = data.aws_caller_identity.current.arn     # The ARN of the IAM user to add.
+      username = "opsuser"                                            # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+
+
+
+- Plan
+
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # module.eks_blueprints.kubernetes_config_map.aws_auth[0] will be updated in-place
+  ~ resource "kubernetes_config_map" "aws_auth" {
+      ~ data        = {
+          ~ "mapUsers"    = <<-EOT
+              - []
+              + - "groups":
+              +   - "system:masters"
+              +   "userarn": "arn:aws:iam::261106957109:user/fernandomullerjr8596"
+              +   "username": "opsuser"
+            EOT
+            # (2 unchanged elements hidden)
+        }
+        id          = "kube-system/aws-auth"
+        # (2 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+  # module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].data.aws_iam_policy_document.managed_ng_assume_role_policy will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "managed_ng_assume_role_policy"  {
+      ~ id      = "3778018924" -> (known after apply)
+      ~ json    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "ec2.amazonaws.com"
+                        }
+                      - Sid       = "EKSWorkerAssumeRole"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+      - version = "2012-10-17" -> null
+
+      ~ statement {
+          - effect        = "Allow" -> null
+          - not_actions   = [] -> null
+          - not_resources = [] -> null
+          - resources     = [] -> null
+            # (2 unchanged attributes hidden)
+
+            # (1 unchanged block hidden)
+        }
+    }
+
+  # module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role.managed_ng[0] will be updated in-place
+  ~ resource "aws_iam_role" "managed_ng" {
+      ~ assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "ec2.amazonaws.com"
+                        }
+                      - Sid       = "EKSWorkerAssumeRole"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        id                    = "eks-lab-managed-ondemand"
+        name                  = "eks-lab-managed-ondemand"
+        tags                  = {
+            "Blueprint"  = "eks-lab"
+            "GithubRepo" = "github.com/aws-ia/terraform-aws-eks-blueprints"
+        }
+        # (9 unchanged attributes hidden)
+    }
+
+Plan: 0 to add, 2 to change, 0 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$
+
+
+
+
+
+- Aplicado
+
+
+Plan: 0 to add, 2 to change, 0 to destroy.
+module.eks_blueprints.kubernetes_config_map.aws_auth[0]: Modifying... [id=kube-system/aws-auth]
+module.eks_blueprints.kubernetes_config_map.aws_auth[0]: Modifications complete after 1s [id=kube-system/aws-auth]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].data.aws_iam_policy_document.managed_ng_assume_role_policy: Reading... [id=3778018924]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].data.aws_iam_policy_document.managed_ng_assume_role_policy: Read complete after 0s [id=3778018924]
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0cb7025b568a7efea"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$
+
+
+
+
+
+
+
+- Segue com erro:
+
+Your current user or role does not have access to Kubernetes objects on this EKS cluster
+This may be due to the current user or role not having Kubernetes RBAC permissions to describe cluster resources or not having an entry in the cluster’s auth config map.Learn more 
+
+
+
+
+We can now safely delete our EKS Cluster
+
+1
+terraform destroy -target=module.eks_blueprints -auto-approve
+
+View Terraform Output
+
+Next, delete the remaining modules from the main.tf
+Finally we can delete VPC and all remaining services
+
+1
+terraform destroy -auto-approve
