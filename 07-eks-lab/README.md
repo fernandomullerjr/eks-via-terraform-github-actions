@@ -7,7 +7,14 @@ https://catalog.workshops.aws/eks-blueprints-terraform/en-US/030-provision-eks-c
 
 
 
+# RESUMO
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -auto-approve
 
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
 
 
 
@@ -1589,5 +1596,128 @@ Outputs:
 configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
 vpc_id = "vpc-0d44fe109e4cd1482"
 fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$
+
+
+
+
+aplicando novamente
+
+ge, 0 to destroy.
+
+Changes to Outputs:
+  + configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+  + vpc_id            = "vpc-0d44fe109e4cd1482"
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["Blueprint"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["GithubRepo"]: Creating...
+module.eks_blueprints.module.kms[0].aws_kms_alias.this: Creating...
+module.vpc.aws_default_security_group.this[0]: Creating...
+module.vpc.aws_default_network_acl.this[0]: Creating...
+module.eks_blueprints.module.aws_eks.aws_iam_openid_connect_provider.oidc_provider[0]: Creating...
+module.vpc.aws_default_route_table.default[0]: Creating...
+module.vpc.aws_internet_gateway.this[0]: Creating...
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_policy.platform_team_eks_access[0]: Creating...
+module.vpc.aws_route_table.public[0]: Creating...
+module.eks_blueprints.module.kms[0].aws_kms_alias.this: Creation complete after 0s [id=alias/eks-lab]
+module.vpc.aws_subnet.public[2]: Creating...
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["GithubRepo"]: Creation complete after 1s [id=sg-097787fc6ec7914b4,GithubRepo]
+module.vpc.aws_subnet.public[0]: Creating...
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["Blueprint"]: Creation complete after 1s [id=sg-097787fc6ec7914b4,Blueprint]
+module.vpc.aws_subnet.public[1]: Creating...
+module.eks_blueprints.module.aws_eks.aws_iam_openid_connect_provider.oidc_provider[0]: Creation complete after 1s [id=arn:aws:iam::261106957109:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/4595A6C8421EA3271502E6BFE65234E8]
+module.vpc.aws_route_table.private[0]: Creating...
+module.vpc.aws_default_route_table.default[0]: Creation complete after 1s [id=rtb-04e1b49736c0981f0]
+module.vpc.aws_eip.nat[0]: Creating...
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_policy.platform_team_eks_access[0]: Creation complete after 1s [id=arn:aws:iam::261106957109:policy/eks-lab-PlatformTeamEKSAccess]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Creating...
+module.vpc.aws_internet_gateway.this[0]: Creation complete after 1s [id=igw-0366ba5b63c5865ac]
+module.vpc.aws_route_table.public[0]: Creation complete after 1s [id=rtb-0152f2771d93cb234]
+module.vpc.aws_route.public_internet_gateway[0]: Creating...
+module.vpc.aws_default_security_group.this[0]: Creation complete after 2s [id=sg-06993bc5012a47eb9]
+module.vpc.aws_route_table.private[0]: Creation complete after 1s [id=rtb-032dc66d35ad28942]
+module.vpc.aws_route_table_association.private[1]: Creating...
+module.vpc.aws_route_table_association.private[0]: Creating...
+module.vpc.aws_route_table_association.private[2]: Creating...
+module.vpc.aws_eip.nat[0]: Creation complete after 1s [id=eipalloc-03ac7d8bc157b88cd]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Creation complete after 1s [id=eks-lab-admin-access]
+kubectl_manifest.rbac_teste: Creating...
+module.vpc.aws_route.public_internet_gateway[0]: Creation complete after 1s [id=r-rtb-0152f2771d93cb2341080289494]
+module.vpc.aws_route_table_association.private[0]: Creation complete after 1s [id=rtbassoc-02fab5956d1dd118c]
+module.vpc.aws_route_table_association.private[1]: Creation complete after 1s [id=rtbassoc-0eaf3599daffd030c]
+module.vpc.aws_route_table_association.private[2]: Creation complete after 1s [id=rtbassoc-0af4e7d28d8c444e3]
+module.vpc.aws_default_network_acl.this[0]: Creation complete after 3s [id=acl-0d45a73346227e49e]
+kubectl_manifest.rbac_teste: Creation complete after 1s [id=/apis/rbac.authorization.k8s.io/v1/clusterroles/eks-console-dashboard-full-access-clusterrole]
+module.vpc.aws_subnet.public[2]: Still creating... [10s elapsed]
+module.vpc.aws_subnet.public[0]: Still creating... [10s elapsed]
+module.vpc.aws_subnet.public[1]: Still creating... [10s elapsed]
+module.vpc.aws_subnet.public[2]: Creation complete after 12s [id=subnet-06ae07e1c9f5e0201]
+module.vpc.aws_subnet.public[0]: Creation complete after 11s [id=subnet-019349fb03917fbae]
+module.vpc.aws_subnet.public[1]: Creation complete after 11s [id=subnet-099895018ab13eaf7]
+module.vpc.aws_route_table_association.public[1]: Creating...
+module.vpc.aws_route_table_association.public[2]: Creating...
+module.vpc.aws_nat_gateway.this[0]: Creating...
+module.vpc.aws_route_table_association.public[0]: Creating...
+module.vpc.aws_route_table_association.public[1]: Creation complete after 1s [id=rtbassoc-063cad50a44030d00]
+module.vpc.aws_route_table_association.public[0]: Creation complete after 1s [id=rtbassoc-06f577e03c01889bf]
+module.vpc.aws_route_table_association.public[2]: Creation complete after 1s [id=rtbassoc-0524751b8cd1968b4]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [10s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [20s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [30s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [40s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [50s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m0s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m10s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m20s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m30s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m40s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Creation complete after 1m47s [id=nat-0b262572cddf103b3]
+module.vpc.aws_route.private_nat_gateway[0]: Creating...
+module.vpc.aws_route.private_nat_gateway[0]: Creation complete after 2s [id=r-rtb-032dc66d35ad289421080289494]
+
+Apply complete! Resources: 26 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0d44fe109e4cd1482"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$
+
 ~~~~
 
+
+
+
+
+
+
+fernando@debian10x64:~$ kubectl get nodes
+NAME                          STATUS   ROLES    AGE     VERSION
+ip-10-0-10-68.ec2.internal    Ready    <none>   5m16s   v1.23.16-eks-48e63af
+ip-10-0-11-248.ec2.internal   Ready    <none>   5m16s   v1.23.16-eks-48e63af
+ip-10-0-12-212.ec2.internal   Ready    <none>   5m      v1.23.16-eks-48e63af
+fernando@debian10x64:~$
+
+fernando@debian10x64:~$ kubectl get clusterroles -A | grep console
+eks-console-dashboard-full-access-clusterrole                          2023-03-17T02:00:09Z
+fernando@debian10x64:~$
+
+
+
+
+fernando@debian10x64:~$ kubectl auth can-i "*" "*"
+
+yes
+fernando@debian10x64:~$
+
+
+
+# penndente
+tentar
+https://antonputra.com/kubernetes/add-iam-user-and-iam-role-to-eks/#add-iam-role-to-eks-cluster
+ler
+https://echorand.me/posts/user-management-aws-eks-cluster/
+tshoot, assumerole
+
+
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
