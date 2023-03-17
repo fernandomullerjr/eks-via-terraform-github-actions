@@ -1389,6 +1389,19 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-
 
 
 
+- Trecho do map user atual, que não funcionou:
+
+~~~~h
+ # List of map_users
+  map_users = [
+    {
+      userarn  = data.aws_caller_identity.current.arn     # The ARN of the IAM user to add.
+      username = "opsuser"                                            # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    }
+  ]
+~~~~
+
 
 - Segue com erro:
 
@@ -1409,4 +1422,23 @@ Next, delete the remaining modules from the main.tf
 Finally we can delete VPC and all remaining services
 
 1
+terraform destroy -auto-approve
+
+
+
+
+
+
+
+
+
+
+# Dia 16/03/2023
+
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -auto-approve
+
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
 terraform destroy -auto-approve

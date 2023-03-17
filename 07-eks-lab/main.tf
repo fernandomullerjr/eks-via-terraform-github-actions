@@ -47,7 +47,7 @@ module "eks_blueprints" {
     {
       userarn  = data.aws_caller_identity.current.arn     # The ARN of the IAM user to add.
       username = "opsuser"                                            # The user name within Kubernetes to map to the IAM role
-      groups   = ["system:masters"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+      groups   = ["system:masters", "eks-console-dashboard-full-access-group"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
     }
   ]
 
@@ -111,4 +111,135 @@ module "vpc" {
   }
 
     tags = local.tags
+}
+
+
+
+# Manifestos
+
+resource "kubectl_manifest" "rbac_teste" {
+  yaml_body = <<-YAML
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: eks-console-dashboard-full-access-clusterrole
+    rules:
+    - apiGroups:
+      - ""
+      resources:
+      - nodes
+      - namespaces
+      - pods
+      - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - persistentvolumeclaims
+      - podtemplates
+      - replicationcontrollers
+      - resourcequotas
+      - secrets
+      - serviceaccounts
+      - services
+      verbs:
+      - get
+      - list
+    - apiGroups:
+      - apps
+      resources:
+      - deployments
+      - daemonsets
+      - statefulsets
+      - replicasets
+      verbs:
+      - get
+      - list
+    - apiGroups:
+      - batch
+      resources:
+      - jobs
+      - cronjobs
+      verbs:
+      - get
+      - list
+    - apiGroups:
+      - coordination.k8s.io
+      resources:
+      - leases
+      verbs:
+      - get
+      - list
+    - apiGroups:
+      - discovery.k8s.io
+      resources:
+      - endpointslices
+      verbs:
+      - get
+      - list
+    - apiGroups:
+      - events.k8s.io
+      resources:
+      - events
+      verbs:
+      - get
+      - list
+    - apiGroups:
+      - extensions
+      resources:
+      - daemonsets
+      - deployments
+      - ingresses
+      - networkpolicies
+      - replicasets
+      verbs:
+      - get
+      - list
+    - apiGroups:
+      - networking.k8s.io
+      resources:
+      - ingresses
+      - networkpolicies
+      verbs:
+      - get
+      - list
+    - apiGroups:
+      - policy
+      resources:
+      - poddisruptionbudgets
+      verbs:
+      - get
+      - list
+    - apiGroups:
+      - rbac.authorization.k8s.io
+      resources:
+      - rolebindings
+      - roles
+      verbs:
+      - get
+      - list
+    - apiGroups:
+      - storage.k8s.io
+      resources:
+      - csistoragecapacities
+      verbs:
+      - get
+      - list
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: eks-console-dashboard-full-access-binding
+    subjects:
+    - kind: Group
+      name: eks-console-dashboard-full-access-group
+      apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: ClusterRole
+      name: eks-console-dashboard-full-access-clusterrole
+      apiGroup: rbac.authorization.k8s.io
+  YAML
+
+  depends_on = [
+    module.eks_blueprints
+  ]
 }
