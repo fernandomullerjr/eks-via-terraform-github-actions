@@ -1442,3 +1442,152 @@ terraform apply -auto-approve
 terraform destroy -target=module.eks_blueprints -auto-approve
 terraform destroy -target=module.vpc -auto-approve
 terraform destroy -auto-approve
+
+
+
+~~~~bash
+
+
+Plan: 34 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + configure_kubectl = (known after apply)
+module.eks_blueprints.module.aws_eks.aws_security_group.cluster[0]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group.node[0]: Creating...
+module.eks_blueprints.module.kms[0].aws_kms_key.this: Creating...
+module.eks_blueprints.module.aws_eks.aws_iam_role.this[0]: Creating...
+module.eks_blueprints.module.aws_eks.aws_iam_role.this[0]: Creation complete after 2s [id=eks-lab-cluster-role]
+module.eks_blueprints.module.aws_eks.aws_iam_role_policy_attachment.this["arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_iam_role_policy_attachment.this["arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_iam_role_policy_attachment.this["arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"]: Creation complete after 0s [id=eks-lab-cluster-role-20230317013929736600000003]
+module.eks_blueprints.module.aws_eks.aws_iam_role_policy_attachment.this["arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"]: Creation complete after 0s [id=eks-lab-cluster-role-20230317013929940200000004]
+module.eks_blueprints.module.aws_eks.aws_security_group.node[0]: Creation complete after 4s [id=sg-01cae2ddc371e80cf]
+module.eks_blueprints.module.aws_eks.aws_security_group.cluster[0]: Creation complete after 4s [id=sg-069a99ab54f0fa83d]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_443"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_udp"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["ingress_nodes_443"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_kubelet"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_kubelet"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_443"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_udp"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_cluster_443"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_udp"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_udp"]: Creation complete after 1s [id=sgrule-1248809104]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_443"]: Creation complete after 1s [id=sgrule-1564356326]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_tcp"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_tcp"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_kubelet"]: Creation complete after 2s [id=sgrule-185849198]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_https"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["ingress_nodes_443"]: Creation complete after 2s [id=sgrule-713150079]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_tcp"]: Creating...
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_udp"]: Creation complete after 2s [id=sgrule-4063929015]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_kubelet"]: Creation complete after 2s [id=sgrule-1134052351]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_443"]: Creation complete after 3s [id=sgrule-517676681]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_cluster_443"]: Creation complete after 4s [id=sgrule-4274022729]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_udp"]: Creation complete after 5s [id=sgrule-3950591054]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_tcp"]: Creation complete after 5s [id=sgrule-1696513576]
+module.eks_blueprints.module.kms[0].aws_kms_key.this: Still creating... [10s elapsed]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_tcp"]: Creation complete after 6s [id=sgrule-888239517]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_https"]: Creation complete after 6s [id=sgrule-3945744515]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_tcp"]: Creation complete after 7s [id=sgrule-1449460056]
+module.eks_blueprints.module.kms[0].aws_kms_key.this: Still creating... [20s elapsed]
+module.eks_blueprints.module.kms[0].aws_kms_key.this: Creation complete after 24s [id=46e1d037-58f1-4013-b0c8-daead745c5e9]
+module.eks_blueprints.module.kms[0].aws_kms_alias.this: Creating...
+module.eks_blueprints.module.aws_eks.aws_eks_cluster.this[0]: Creating...
+module.eks_blueprints.module.kms[0].aws_kms_alias.this: Creation complete after 0s [id=alias/eks-lab]
+module.eks_blueprints.module.aws_eks.aws_eks_cluster.this[0]: Still creating... [10s elapsed]
+module.eks_blueprints.module.aws_eks.aws_eks_cluster.this[0]: Still creating... [20s elapsed]
+module.eks_blueprints.module.aws_eks.aws_eks_cluster.this[0]: Still creating... [9m51s elapsed]
+module.eks_blueprints.module.aws_eks.aws_eks_cluster.this[0]: Still creating... [10m1s elapsed]
+module.eks_blueprints.module.aws_eks.aws_eks_cluster.this[0]: Still creating... [10m11s elapsed]
+module.eks_blueprints.module.aws_eks.aws_eks_cluster.this[0]: Creation complete after 10m12s [id=eks-lab]
+module.eks_blueprints.module.aws_eks.data.tls_certificate.this[0]: Reading...
+module.eks_blueprints.data.aws_eks_cluster.cluster[0]: Reading...
+data.aws_eks_cluster_auth.this: Reading...
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["GithubRepo"]: Creating...
+data.aws_eks_cluster_auth.this: Read complete after 0s [id=eks-lab]
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["Blueprint"]: Creating...
+module.eks_blueprints.data.aws_eks_cluster.cluster[0]: Read complete after 0s [id=eks-lab]
+module.eks_blueprints.data.http.eks_cluster_readiness[0]: Reading...
+module.eks_blueprints.module.aws_eks.data.tls_certificate.this[0]: Read complete after 1s [id=8cb781b6037f4703f17f42d8de4a2c2aa78474ab]
+module.eks_blueprints.module.aws_eks.aws_iam_openid_connect_provider.oidc_provider[0]: Creating...
+module.eks_blueprints.data.http.eks_cluster_readiness[0]: Read complete after 1s [id=https://4595A6C8421EA3271502E6BFE65234E8.yl4.us-east-1.eks.amazonaws.com/healthz]
+module.eks_blueprints.module.aws_eks_teams[0].data.aws_eks_cluster.eks_cluster: Reading...
+module.eks_blueprints.kubernetes_config_map.aws_auth[0]: Creating...
+module.eks_blueprints.module.aws_eks_teams[0].data.aws_eks_cluster.eks_cluster: Read complete after 0s [id=eks-lab]
+module.eks_blueprints.module.aws_eks_teams[0].data.aws_iam_policy_document.platform_team_eks_access[0]: Reading...
+module.eks_blueprints.module.aws_eks_teams[0].data.aws_iam_policy_document.platform_team_eks_access[0]: Read complete after 0s [id=2071923746]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_policy.platform_team_eks_access[0]: Creating...
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["GithubRepo"]: Creation complete after 1s [id=sg-097787fc6ec7914b4,GithubRepo]
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["Blueprint"]: Creation complete after 1s [id=sg-097787fc6ec7914b4,Blueprint]
+module.eks_blueprints.kubernetes_config_map.aws_auth[0]: Creation complete after 1s [id=kube-system/aws-auth]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].data.aws_iam_policy_document.managed_ng_assume_role_policy: Reading...
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].data.aws_iam_policy_document.managed_ng_assume_role_policy: Read complete after 0s [id=3778018924]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role.managed_ng[0]: Creating...
+module.eks_blueprints.module.aws_eks.aws_iam_openid_connect_provider.oidc_provider[0]: Creation complete after 1s [id=arn:aws:iam::261106957109:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/4595A6C8421EA3271502E6BFE65234E8]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_policy.platform_team_eks_access[0]: Creation complete after 1s [id=arn:aws:iam::261106957109:policy/eks-lab-PlatformTeamEKSAccess]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Creating...
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role.managed_ng[0]: Creation complete after 0s [id=eks-lab-managed-ondemand]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]: Creating...
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]: Creating...
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_instance_profile.managed_ng[0]: Creating...
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]: Creating...
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]: Creating...
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]: Creation complete after 1s [id=eks-lab-managed-ondemand-20230317015006719000000005]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]: Creation complete after 1s [id=eks-lab-managed-ondemand-20230317015006746000000006]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Creation complete after 1s [id=eks-lab-admin-access]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]: Creation complete after 1s [id=eks-lab-managed-ondemand-20230317015006881700000007]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]: Creation complete after 1s [id=eks-lab-managed-ondemand-20230317015006930500000008]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_iam_instance_profile.managed_ng[0]: Creation complete after 1s [id=eks-lab-managed-ondemand]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Creating...
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [10s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [20s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [30s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [40s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [50s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [1m0s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [1m11s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [1m21s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [1m31s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [1m41s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [1m51s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [2m1s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [2m11s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Still creating... [2m21s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].aws_eks_node_group.managed_ng: Creation complete after 2m21s [id=eks-lab:managed-ondemand-20230317015007446200000009]
+╷
+│ Warning: Resource targeting is in effect
+│
+│ You are creating a plan with the -target option, which means that the result of this plan may not represent all of the changes requested by the current configuration.
+│
+│ The -target option is not for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform specifically suggests to use
+│ it as part of an error message.
+╵
+╷
+│ Warning: Applied changes may be incomplete
+│
+│ The plan was created with the -target option in effect, so some changes requested in the configuration may have been ignored and the output values may not be fully updated. Run the
+│ following command to verify that no other changes are pending:
+│     terraform plan
+│
+│ Note that the -target option is not suitable for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform
+│ specifically suggests to use it as part of an error message.
+╵
+
+Apply complete! Resources: 34 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0d44fe109e4cd1482"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$
+
+Apply complete! Resources: 34 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0d44fe109e4cd1482"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$
+~~~~
+
