@@ -1732,3 +1732,24 @@ terraform destroy -auto-approve
 terraform apply -target=module.vpc -auto-approve
 terraform apply -target=module.eks_blueprints -auto-approve
 terraform apply -auto-approve
+
+
+
+
+
+
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
+
+
+https://echorand.me/posts/user-management-aws-eks-cluster/
+
+
+# penndente
+tentar
+https://antonputra.com/kubernetes/add-iam-user-and-iam-role-to-eks/#add-iam-role-to-eks-cluster
+ler, tentar AssumeRole, abaixo:
+https://echorand.me/posts/user-management-aws-eks-cluster/
+tshoot, assumerole

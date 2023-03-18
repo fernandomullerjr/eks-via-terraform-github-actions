@@ -39,6 +39,11 @@ module "eks_blueprints" {
       rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/TeamRole"
       username = "ops-role" # The user name within Kubernetes to map to the IAM role
       groups   = ["system:masters"] # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    },
+    {
+      rolearn  = "arn:aws:iam::261106957109:role/eks-admin"
+      username = "eks-admin"
+      groups   = ["system:masters"]
     }
   ]
 
