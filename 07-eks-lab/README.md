@@ -1721,3 +1721,14 @@ tshoot, assumerole
 terraform destroy -target=module.eks_blueprints -auto-approve
 terraform destroy -target=module.vpc -auto-approve
 terraform destroy -auto-approve
+
+
+
+
+
+
+# Dia 18/03/2023
+
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -auto-approve
