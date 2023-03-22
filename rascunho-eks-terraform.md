@@ -3467,6 +3467,11 @@ mas ele grava num contexto local, não é possível usar numa variável.
 
 
 
+# SOLUÇÃO
+- Para usuários comuns, adicionar o arn do usuário normal.
+- Para usuário root, adicionar arn "arn:aws:iam::261106957109:root" ao invés do arn do usuário com nome do usuário.
+
+
 
 
 
@@ -3494,6 +3499,8 @@ mas ele grava num contexto local, não é possível usar numa variável.
     /home/fernando/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico/.terraform/modules/eks_blueprints/examples/gitops/argocd/README.md
 
 ## Seguindo
+- Testar opção com modules e estrutura estilo Airflow:
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/outros-materiais/dados-airflow-infra
 - Necessário jogar o valor do username do usuário iam para uma variável ou locals.
 - Avaliar criação de Role + Policy + Trust Policy via TF.
 - Verificar como aplicar os steps do KB que resolve erro na console do EKS. Como aplicar o ajuste no aws-auth(ConfigMap) usando aws_caller_identity?? Aplicar manifesto RBAC no cluster. Verificar se a role e o Trust Policy é necessário mesmo.

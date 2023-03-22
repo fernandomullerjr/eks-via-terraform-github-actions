@@ -1,0 +1,1 @@
+{"Path":"/devops/testando/dados-airflow-infra","Version":"2.0","Modules":[{"Key":"master","Source":"./modules/master","Dir":"modules/master"},{"Key":"nodes","Source":"./modules/nodes","Dir":"modules/nodes"},{"Key":"network","Source":"./modules/network","Dir":"modules/network"}]}

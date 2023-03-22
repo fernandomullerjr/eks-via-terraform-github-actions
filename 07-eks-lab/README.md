@@ -1933,6 +1933,10 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-
 
 
 
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
 
 
 # SOLUÇÃO
