@@ -1768,3 +1768,81 @@ tshoot, assumerole
 terraform apply -target=module.vpc -auto-approve
 terraform apply -target=module.eks_blueprints -auto-approve
 terraform apply -auto-approve
+
+
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::261106957109:root"
+            },
+            "Action": "sts:AssumeRole",
+            "Condition": {}
+        }
+    ]
+}
+
+
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": ["arn:aws:iam::261106957109:root", "arn:aws:iam::261106957109:user/fernandomullerjr8596"]     
+            },
+            "Action": "sts:AssumeRole",
+            "Condition": {}
+        }
+    ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+- Mapeando o usuário fernando-devops, funcionou na hora.
+
+
+ # List of map_users
+  map_users = [
+    {
+      userarn  = data.aws_caller_identity.current.arn     # The ARN of the IAM user to add.
+      username = "fernandomullerjr8596"                                            # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters", "eks-console-dashboard-full-access-group"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    },
+    {
+      userarn  = "arn:aws:iam::261106957109:user/fernando-devops"     # The ARN of the IAM user to add.
+      username = "fernando-devops"                                            # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters", "eks-console-dashboard-full-access-group"]
+    }
+  ]
+
+  # EKS MANAGED NODE GROUPS
+  managed_node_groups = {
+    T3A_MICRO = {
+      node_group_name = local.node_group_name
+      instance_types  = ["t3a.micro"]
+      subnet_ids      = module.vpc.private_subnets
+    }
+  }
+
+  # teams
+  platform_teams = {
+    admin = {
+      users = [
+        data.aws_caller_identity.current.arn, "arn:aws:iam::261106957109:user/fernando-devops"
+      ]
+    }
+  }

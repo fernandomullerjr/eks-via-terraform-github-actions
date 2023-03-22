@@ -53,6 +53,11 @@ module "eks_blueprints" {
       userarn  = data.aws_caller_identity.current.arn     # The ARN of the IAM user to add.
       username = "fernandomullerjr8596"                                            # The user name within Kubernetes to map to the IAM role
       groups   = ["system:masters", "eks-console-dashboard-full-access-group"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
+    },
+    {
+      userarn  = "arn:aws:iam::261106957109:user/fernando-devops"     # The ARN of the IAM user to add.
+      username = "fernando-devops"                                            # The user name within Kubernetes to map to the IAM role
+      groups   = ["system:masters", "eks-console-dashboard-full-access-group"]
     }
   ]
 
@@ -69,7 +74,7 @@ module "eks_blueprints" {
   platform_teams = {
     admin = {
       users = [
-        data.aws_caller_identity.current.arn
+        data.aws_caller_identity.current.arn, "arn:aws:iam::261106957109:user/fernando-devops"
       ]
     }
   }
