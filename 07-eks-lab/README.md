@@ -1753,3 +1753,18 @@ https://antonputra.com/kubernetes/add-iam-user-and-iam-role-to-eks/#add-iam-role
 ler, tentar AssumeRole, abaixo:
 https://echorand.me/posts/user-management-aws-eks-cluster/
 tshoot, assumerole
+
+
+
+
+
+
+
+
+
+# Dia 21/03/2023
+
+
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -auto-approve
