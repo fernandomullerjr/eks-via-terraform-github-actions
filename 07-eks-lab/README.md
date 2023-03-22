@@ -1813,6 +1813,9 @@ terraform apply -auto-approve
 
 
 - Mapeando o usuário fernando-devops, funcionou na hora.
+- Mapeando o usuário fernando-devops, funcionou na hora.
+- Mapeando o usuário fernando-devops, funcionou na hora.
+- Mapeando o usuário fernando-devops, funcionou na hora.
 
 
  # List of map_users
@@ -1846,3 +1849,110 @@ terraform apply -auto-approve
       ]
     }
   }
+
+
+
+
+
+
+
+
+Exemplos:
+
+arn:aws:iam::123456789012:root
+arn:aws:iam::123456789012:user/JohnDoe
+arn:aws:iam::123456789012:user/division_abc/subdivision_xyz/JaneDoe
+arn:aws:iam::123456789012:group/Developers
+arn:aws:iam::123456789012:group/division_abc/subdivision_xyz/product_A/Developers
+arn:aws:iam::123456789012:role/S3Access
+
+
+
+
+
+arn:aws:iam::123456789012:root
+arn:aws:iam::261106957109:root
+
+
+
+
+
+- Novo teste, adicionando o usuário root separado, ao invés do arn do usuário fernandomullerjr8596 que é o root:
+
+
+
+ # module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"] will be updated in-place
+  ~ resource "aws_iam_role" "platform_team" {
+      ~ assume_role_policy    = jsonencode(
+          ~ {
+              ~ Statement = [
+                  ~ {
+                      ~ Principal = {
+                          ~ AWS = [
+                              - "arn:aws:iam::261106957109:user/fernando-devops",
+                                "arn:aws:iam::261106957109:user/fernandomullerjr8596",
+                              + "arn:aws:iam::261106957109:user/fernando-devops",
+                              + "arn:aws:iam::261106957109:root",
+                            ]
+                        }
+                        # (2 unchanged elements hidden)
+                    },
+                ]
+                # (1 unchanged element hidden)
+            }
+        )
+        id                    = "eks-lab-admin-access"
+        name                  = "eks-lab-admin-access"
+        tags                  = {
+            "Blueprint"  = "eks-lab"
+            "GithubRepo" = "github.com/aws-ia/terraform-aws-eks-blueprints"
+        }
+        # (8 unchanged attributes hidden)
+    }
+
+Plan: 0 to add, 3 to change, 0 to destroy.
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Modifying... [id=eks-lab-admin-access]
+module.eks_blueprints.kubernetes_config_map.aws_auth[0]: Modifying... [id=kube-system/aws-auth]
+module.eks_blueprints.kubernetes_config_map.aws_auth[0]: Modifications complete after 1s [id=kube-system/aws-auth]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].data.aws_iam_policy_document.managed_ng_assume_role_policy: Reading... [id=3778018924]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_MICRO"].data.aws_iam_policy_document.managed_ng_assume_role_policy: Read complete after 0s [id=3778018924]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Modifications complete after 1s [id=eks-lab-admin-access]
+
+Apply complete! Resources: 0 added, 2 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0f2f54998d4c039ac"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/07-eks-lab$
+
+
+
+
+
+
+
+
+
+
+# SOLUÇÃO
+- Para usuários comuns, adicionar o arn do usuário normal.
+- Para usuário root, adicionar arn "arn:aws:iam::261106957109:root" ao invés do arn do usuário com nome do usuário.
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# PENDENTE
+
+## Obs
+- Seguir o README no Apply e no Destroy.
+- Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
+
+## Para o projeto 07
+- Criar uma v2, agora que foi encontrada a solução.
+- Efetuar testes adicionais com usuários comuns, que não seja o fernando-devops, para ver se ele não tomou erro devido estrutura que tinha via KB.

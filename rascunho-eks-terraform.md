@@ -3463,3 +3463,75 @@ mas ele grava num contexto local, não é possível usar numa variável.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# PENDENTE
+
+## Obs
+- Seguir o README no Apply e no Destroy.
+- Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
+
+## Para o projeto 07
+- Criar uma v2, agora que foi encontrada a solução.
+- Efetuar testes adicionais com usuários comuns, que não seja o fernando-devops, para ver se ele não tomou erro devido estrutura que tinha via KB.
+
+## Para o projeto - 04
+- Desativar addons no Blueprint. Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
+- Antes de subir outro Blueprint com ArgoCD, ver instruções para destroy quando tem argocd:
+    /home/fernando/cursos/terraform/eks-via-terraform-github-actions/04-eks-via-blueprint-iam-user-automatico/.terraform/modules/eks_blueprints/examples/gitops/argocd/README.md
+
+## Seguindo
+- Necessário jogar o valor do username do usuário iam para uma variável ou locals.
+- Avaliar criação de Role + Policy + Trust Policy via TF.
+- Verificar como aplicar os steps do KB que resolve erro na console do EKS. Como aplicar o ajuste no aws-auth(ConfigMap) usando aws_caller_identity?? Aplicar manifesto RBAC no cluster. Verificar se a role e o Trust Policy é necessário mesmo.
+    Efetuar steps do KB via tf:
+        - Criando policy "my-console-viewer-policy"
+        - Criando a Role "my-console-viewer-role"
+        - Atrelar a policy "my-console-viewer-policy" na  Role "my-console-viewer-role".
+        - Aplicar no Cluster a estrutura RBAC.
+        - Editar trust policy da role, permitindo usuário do IAM.
+        - Editar ConfigMap "configmap/aws-auth", colocando os mapeamentos para a Role e para o usuário do IAM.
+- Avaliar opção usando "Teams", conforme o blog:
+    https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
+- Verificar se o MapUser só tem no module eks, ou se tem para o resource "aws_eks_cluster" também, usar o "data.aws_caller_identity.current.arn" nesse mapeamento.
+- Explorar questões do "data" que pega o usuário atual, para aplicar roles, arn, etc. Ver sobre MapRole, MapUser, mapear um grupo para ser mais fácil o dinamismo???
+      https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity
+      eks-via-terraform-github-actions/01-eks-cluster-terraform-simples/data.tf
+- Ler artigo:
+      https://cloudly.engineer/2022/amazon-eks-iam-roles-and-policies-with-terraform/aws/
+- Automatizar a criação da Role, Policy, atrelar policy, criação de RBAC para console, edição do ConfigMap.
+      https://docs.aws.amazon.com/eks/latest/userguide/view-kubernetes-resources.html#view-kubernetes-resources-permissions
+- Avaliar uso de EKS-Blueprint(Devido boas práticas) ou EKS-explicito(manifestos).
+- Documentar sobre como cortar o username via comando aws:
+    https://stackoverflow.com/questions/42310893/getting-iam-username-in-terraform
+- Seguir testando Blueprint de ArgoCD:
+    https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/examples/argocd
+    ocorreu erro no cluster "03-eks-via-blueprint-argocd": Your current user or role does not have access to Kubernetes objects on this EKS cluster
+    Testar usando map-role, map-arn, etc
+- Ler artigo sobre Blueprint:
+    https://medium.com/everything-full-stack/iac-gitops-with-eks-blueprints-7a28ad1f702a
+- Backend remoto, verificar como fazer para cessar a msg de Warning, para que as variáveis do par de chaves AWS sejam seguidos pelo local.
+- Criar pipeline no Github Actions.
+- Pipeline que faça o deploy de um EKS simples quando houver um PR para a branch "devops-eks-simples".
+- Pipeline que faça o deploy de um EKS completo(com Bastion e Chave SSH), quando houver um PR para a branch "devops-eks-completo".
+- Criar branch com a versão final testada e completa.
+- Criar branch com a versão final testada e simples(sem Bastion).
+
+
+
+
+
+
