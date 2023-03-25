@@ -1,7 +1,7 @@
 
 <h1 align="center"> Projetos em EKS via Terraform </h1>
 
-![Amazon EKS + Terraform](https://miro.medium.com/v2/resize:fit:1400/1*OiZVkI8MZqKnAFPlaGavXw.png)
+![Amazon EKS + Terraform](https://github.com/fernandomullerjr/eks-via-terraform-github-actions/blob/main/outros-materiais/imagens/amazon-eks-plus-terraform.png?raw=true)
 
 - Projeto que efetua o deploy de um cluster EKS usando o Terraform.
 
