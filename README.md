@@ -13,21 +13,9 @@
 </p>
 
 
-## :hammer: Old
-
-- ` [Lab07 - EKS via Blueprint - Sem Github Actions](07-eks-blueprint/README.md)`: <br/>
-Projeto que cria um Cluster EKS via Terraform, usando Blueprint do EKS.<br/>
-Já efetua a criação da estrutura de RBAC (ClusterRole, ClusterRoleBinding, ClusterRole), aplicando os devidos manifestos.<br/>
-Também adiciona 2 usuários(usuário root e um usuário comum) como administradores, fazendo uso do "Teams", que é um recurso que facilita a criação de acesso ao cluster.<br/>
-- `Funcionalidade 2`: descrição da funcionalidade 2
-- `Funcionalidade 2a`: descrição da funcionalidade 2a relacionada à funcionalidade 2
-- `Funcionalidade 3`: descrição da funcionalidade 3
-
-
-
 ## :hammer: Projetos - EKS + Terraform
 
-[Lab07 - EKS via Blueprint - Sem Github Actions](07-eks-blueprint/README.md)
+[Lab07 - EKS via Blueprint + RBAC - Sem Github Actions](07-eks-blueprint/README.md)
 <details> 
   <summary><b>Detalhes sobre o projeto</b> <em>(clique para visualizar)</em></summary>
 Projeto que cria um Cluster EKS via Terraform, usando Blueprint do EKS.<br/>
