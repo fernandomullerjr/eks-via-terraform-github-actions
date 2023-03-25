@@ -9,7 +9,7 @@
 
 :small_blue_diamond: [Descrição do projeto](#descrição-do-projeto)
 
-:small_blue_diamond: [Funcionalidades](#funcionalidades)
+:small_blue_diamond: [:hammer: Lab07 - EKS via Blueprint - Sem Github Actions](#lab07-eks-via-blueprint)
 
 :small_blue_diamond: [Deploy da Aplicação](#deploy-da-aplicação-dash)
 
@@ -40,7 +40,7 @@ Também adiciona 2 usuários(usuário root e um usuário comum) como administrad
 
 
 
-### 1 EKS via Blueprint - Sem Github Actions
+## [:hammer: Lab07 - EKS via Blueprint - Sem Github Actions](07-eks-blueprint/README.md)
 
 <details> 
   <summary><b>1 EKS via Blueprint - Detalhes</b> <em>(clique para visualizar)</em></summary>

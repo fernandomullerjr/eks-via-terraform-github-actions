@@ -24,10 +24,10 @@ git reset -- 06-eks-karpenter/.terraform
 git reset -- 06-eks-karpenter/.terraform*
 git reset -- 06-eks-karpenter/terraform.tfstate
 git reset -- 06-eks-karpenter/terraform.tfstate.backup
-git reset -- 07-eks-lab/.terraform
-git reset -- 07-eks-lab/.terraform*
-git reset -- 07-eks-lab/terraform.tfstate
-git reset -- 07-eks-lab/terraform.tfstate.backup
+git reset -- 07-eks-blueprint/.terraform
+git reset -- 07-eks-blueprint/.terraform*
+git reset -- 07-eks-blueprint/terraform.tfstate
+git reset -- 07-eks-blueprint/terraform.tfstate.backup
 git commit -m "Projeto - eks-via-terraform-github-actions"
 eval $(ssh-agent -s)
 ssh-add /home/fernando/.ssh/chave-debian10-github
