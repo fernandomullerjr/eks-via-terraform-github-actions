@@ -132,7 +132,7 @@ module "vpc" {
 
 # Manifestos
 
-resource "kubectl_manifest" "rbac_teste" {
+resource "kubectl_manifest" "rbac" {
   yaml_body = <<-YAML
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
