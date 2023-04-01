@@ -1,0 +1,1 @@
+{"Path":"/home/fernando/cursos/terraform/eks-via-terraform-github-actions/01-eks-cluster-terraform-simples","Version":"2.0","Modules":[{"Key":"vpc","Source":"registry.terraform.io/terraform-aws-modules/vpc/aws","Version":"3.11.0","Dir":".infracost/terraform_modules/ddf6d30b124fafdef20fb7a08a946c19"}]}

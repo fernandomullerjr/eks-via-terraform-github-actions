@@ -22,3 +22,6 @@ Projeto que cria um Cluster EKS via Terraform, usando Blueprint do EKS.<br/>
 Já efetua a criação da estrutura de RBAC (ClusterRole, ClusterRoleBinding, ClusterRole), aplicando os devidos manifestos.<br/>
 Também adiciona 2 usuários(usuário root e um usuário comum) como administradores, fazendo uso do "Teams", que é um recurso que facilita a criação de acesso ao cluster.<br/>
 </details>
+
+
+> Status do Projeto: :warning: (em desenvolvimento, em breve serão adicionados novos projetos de exemplo)
