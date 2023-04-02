@@ -13,6 +13,8 @@ git reset -- 02-eks-via-blueprint/.terraform
 git reset -- 02-eks-via-blueprint/.terraform*
 git reset -- 03-eks-via-blueprint-argocd/.terraform
 git reset -- 03-eks-via-blueprint-argocd/.terraform*
+git reset -- 03-eks-via-blueprint-argocd/terraform.tfstate
+git reset -- 03-eks-via-blueprint-argocd/terraform.tfstate.backup
 git reset -- 04-eks-via-blueprint-iam-user-automatico/.terraform
 git reset -- 04-eks-via-blueprint-iam-user-automatico/.terraform*
 git reset -- 04-eks-via-blueprint-iam-user-automatico/terraform.tfstate
