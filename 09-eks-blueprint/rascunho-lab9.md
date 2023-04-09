@@ -307,6 +307,22 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-
 
 
 
+
+# PENDENTE
+
+- Tratar erros, provavel familia t3a.micro não suporta muitos Pods, ENI, etc. Então o "prometheus-server" e o "Node-exporter" apresentam erro no schedular.
+- Subir Prometheus e Grafana via Helm
+https://docs.aws.amazon.com/eks/latest/userguide/prometheus.html
+https://archive.eksworkshop.com/intermediate/240_monitoring/
+- Testar métricas, endpoints
+
+
+
+
+
+
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -318,12 +334,48 @@ terraform apply -target=module.eks_blueprints -auto-approve
 terraform apply -auto-approve
 
 
+- Verificando a capacidade de Pods por familia de EC2:
+
+https://github.com/awslabs/amazon-eks-ami/blob/master/files/eni-max-pods.txt
+
+t3a.micro 4
+t3a.small 8
+t3a.medium 17
+
+- Valores por hora:
+
+t3a.nano	0,0047 USD	2	0,5 GiB	Somente EBS	Até 5 gigabits
+t3a.micro	0,0094 USD	2	1 GiB	Somente EBS	Até 5 gigabits
+t3a.small	0,0188 USD	2	2 GiB	Somente EBS	Até 5 gigabits
+t3a.medium	0,0376 USD	2	4 GiB	Somente EBS	Até 5 gigabits
+t3a.large	0,0752 USD	2	8 GiB	Somente EBS	Até 5 gigabits
 
 
-# PENDENTE
 
-- Tratar erros, provavel familia t3a.micro não suporta muitos Pods, ENI, etc. Então o "prometheus-server" e o "Node-exporter" apresentam erro no schedular.
-- Subir Prometheus e Grafana via Helm
-https://docs.aws.amazon.com/eks/latest/userguide/prometheus.html
-https://archive.eksworkshop.com/intermediate/240_monitoring/
-- Testar métricas, endpoints
+- Ajustando o manifesto, para utilizar a familia [t3a.medium] ao invés da micro:
+
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/main.tf
+
+~~~~h
+  # EKS MANAGED NODE GROUPS
+  managed_node_groups = {
+    T3A_NODE = {
+      node_group_name = local.node_group_name
+      instance_types  = ["t3a.medium"]
+      subnet_ids      = module.vpc.private_subnets
+    }
+  }
+~~~~
+
+
+
+- Aplicando eks:
+
+terraform apply -target=module.eks_blueprints -auto-approve
+
+
+
+terraform apply -auto-approve
+
+
+21:32h
