@@ -1237,6 +1237,33 @@ fernando@debian10x64:~$
 
 
 
+
+
+# PENDENTE
+
+- Values de referencia:
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/bkp-antes/values.yaml
+
+- Chart do Prometheus
+https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
+
+- Quando utilizando Persistence, os Pods do Prometheus-Server e do AlertManager não sobem.
+Pode ser devido o GP2 e o PVC que eles tentam utilizar.
+Tentar aplicar solução, criando o PVC tbm:
+https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-setup-it-by-helm-in-kubernetes-cluster-on-ranch
+<https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-setup-it-by-helm-in-kubernetes-cluster-on-ranch>
+
+- Helm via Terraform, verificar como fazer o Terraform aplicar o chart do Prometheus.
+usar o values v2 personalizado.
+
+- Expor Prometheus ao mundo, verificar como fazer para export o Prometheus que está no AWS EKS.
+
+
+
+
+
+
+~~~~bash
 Get the Prometheus server URL by running these commands in the same shell:
   export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
   kubectl --namespace prometheus port-forward $POD_NAME 9090
@@ -1244,15 +1271,72 @@ Get the Prometheus server URL by running these commands in the same shell:
 ######   WARNING: Persistence is disabled!!! You will lose your data when   #####
 ######            the Server pod is terminated.                             #####
 #################################################################################
+~~~~
+
+
+- Expondo via port-forward:
+
+~~~~bash
+fernando@debian10x64:~$ export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
+fernando@debian10x64:~$   kubectl --namespace prometheus port-forward $POD_NAME 9090
+Forwarding from 127.0.0.1:9090 -> 9090
+Forwarding from [::1]:9090 -> 9090
+Handling connection for 9090
+Handling connection for 9090
+Handling connection for 9090
+Handling connection for 9090
+~~~~
+
+
+
+- Acessível via VM do Debian:
+http://localhost:9090
+
+
+
+- Não é possível acessar via:
+http://192.168.92.129:9090
+http://192.168.0.110:9090
 
 
 
 
 
+- Services
 
-# PENDENTE
-- Quando utilizando Persistence, os Pods do Prometheus-Server e do AlertManager não sobem.
-Pode ser devido o GP2 e o PVC que eles tentam utilizar.
-Tentar aplicar solução, criando o PVC tbm:
-https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-setup-it-by-helm-in-kubernetes-cluster-on-ranch
-<https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-setup-it-by-helm-in-kubernetes-cluster-on-ranch>
+~~~~bash
+fernando@debian10x64:~$ kubectl get svc -n prometheus
+NAME                                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+prometheus-alertmanager               ClusterIP   172.20.81.52     <none>        9093/TCP   74m
+prometheus-alertmanager-headless      ClusterIP   None             <none>        9093/TCP   74m
+prometheus-kube-state-metrics         ClusterIP   172.20.254.89    <none>        8080/TCP   74m
+prometheus-prometheus-node-exporter   ClusterIP   172.20.101.207   <none>        9100/TCP   74m
+prometheus-prometheus-pushgateway     ClusterIP   172.20.179.43    <none>        9091/TCP   74m
+prometheus-server                     ClusterIP   172.20.236.225   <none>        80/TCP     74m
+fernando@debian10x64:~$
+~~~~
+
+
+
+
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v3.yaml
+
+DE:
+    type: ClusterIP
+PARA:
+    type: nodePort
+
+
+helm upgrade -i prometheus prometheus-community/prometheus \
+    --namespace prometheus \
+    --values /home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v3.yaml
+
+
+- Erro
+
+
+fernando@debian10x64:~$ helm upgrade -i prometheus prometheus-community/prometheus \
+>     --namespace prometheus \
+>     --values /home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v3.yaml
+Error: UPGRADE FAILED: cannot patch "prometheus-server" with kind Service: Service "prometheus-server" is invalid: spec.type: Unsupported value: "nodePort": supported values: "ClusterIP", "ExternalName", "LoadBalancer", "NodePort"
+fernando@debian10x64:~$
