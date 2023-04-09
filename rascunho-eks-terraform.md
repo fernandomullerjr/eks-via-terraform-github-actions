@@ -11,6 +11,8 @@ git reset -- 01-eks-cluster-terraform-simples/.terraform
 git reset -- 01-eks-cluster-terraform-simples/.terraform/*
 git reset -- 02-eks-via-blueprint/.terraform
 git reset -- 02-eks-via-blueprint/.terraform*
+git reset -- 02-eks-via-blueprint/terraform.tfstate
+git reset -- 02-eks-via-blueprint/terraform.tfstate.backup
 git reset -- 03-eks-via-blueprint-argocd/.terraform
 git reset -- 03-eks-via-blueprint-argocd/.terraform*
 git reset -- 03-eks-via-blueprint-argocd/terraform.tfstate

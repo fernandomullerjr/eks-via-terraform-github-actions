@@ -1,6 +1,6 @@
 
 
-# LAB 09 - EKS via Blueprint - Sem Github Actions
+# LAB 09 - EKS via Blueprint + Prometheus + Grafana - Sem Github Actions
 
 ## Descrição
 Projeto que cria um Cluster EKS via Terraform, usando Blueprint do EKS.<br/>

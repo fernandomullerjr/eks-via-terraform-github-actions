@@ -144,7 +144,7 @@ PARA:
 
 
 
-
+~~~~bash
 fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ kubectl get nodes
 NAME                          STATUS     ROLES    AGE   VERSION
 ip-10-0-10-13.ec2.internal    Ready      <none>   58m   v1.23.17-eks-a59e1f0
@@ -163,13 +163,14 @@ ip-10-0-11-48.ec2.internal    Ready    <none>   2m44s   v1.23.17-eks-a59e1f0
 ip-10-0-12-158.ec2.internal   Ready    <none>   2m44s   v1.23.17-eks-a59e1f0
 ip-10-0-12-229.ec2.internal   Ready    <none>   60m     v1.23.17-eks-a59e1f0
 fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+~~~~
 
 
 
 
 - Mesmo com mais Nodes, ocorrem erros para Schedular os Pods:
 
-
+~~~~bash
 default       60m         Normal    Starting                  node/ip-10-0-12-229.ec2.internal
 prometheus    0s          Warning   FailedScheduling          pod/prometheus-server-5fc6895768-q4btl                    0/5 nodes are available: 1 node(s) didn't find available persistent volumes to bind, 4 Too many pods.
 
@@ -190,6 +191,7 @@ From
 Message
 Warning	FailedScheduling	7 minutes ago	default-scheduler	0/3 nodes are available: 1 Too many pods, 2 node(s) didn't match Pod's node affinity/selector.
 Warning	FailedScheduling	a minute ago	default-scheduler	0/5 nodes are available: 1 Too many pods, 4 node(s) didn't match Pod's node affinity/selector.
+~~~~
 
 
 
@@ -200,8 +202,9 @@ Warning	FailedScheduling	a minute ago	default-scheduler	0/5 nodes are available:
 
 
 
+- Affinity
 
-
+~~~~YAML
 spec:
   affinity:
     nodeAffinity:
@@ -213,11 +216,11 @@ spec:
             values:
             - ip-10-0-11-11.ec2.internal
   automountServiceAccountToken: false
+~~~~
 
 
 
-
-
+~~~~bash
 fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ kubectl get pods -n prometheus
 NAME                                                 READY   STATUS    RESTARTS   AGE
 prometheus-alertmanager-0                            0/1     Pending   0          25m
@@ -245,12 +248,13 @@ prometheus-prometheus-node-exporter-wzmfn            1/1     Running   0        
 prometheus-prometheus-pushgateway-6445c657fc-fdsdt   1/1     Running   0          27m
 prometheus-server-5fc6895768-q4btl                   0/2     Pending   0          27m
 fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
-
+~~~~
 
 
 
 - Provável quantidade elevada de Pods no t3a.micro, apenas DaemonSet do Node-exporter nao sobe todos num Node apenas.
 
+~~~~bash
 /5 nodes are available: 1 node(s) didn't find available persistent volumes to bind, 4 Too many pods.
 prometheus    0s          Warning   FailedScheduling          pod/prometheus-prometheus-node-exporter-rvplh             0/5 nodes are available: 1 Too many pods, 4 node(s) didn't match Pod's node affinity/selector.
 prometheus    0s          Normal    ExternalProvisioning      persistentvolumeclaim/prometheus-server                   waiting for a volume to be created, either by external provisioner "ebs.csi.aws.com" or manually created by system administrator
@@ -261,7 +265,7 @@ prometheus    0s          Warning   FailedScheduling          pod/prometheus-ser
 prometheus    0s          Warning   FailedScheduling          pod/prometheus-prometheus-node-exporter-rvplh             0/5 nodes are available: 1 Too many pods, 4 node(s) didn't match Pod's node affinity/selector.
 prometheus    0s          Warning   FailedScheduling          pod/prometheus-server-5fc6895768-q4btl                    0/5 nodes are available: 1 node(s) didn't find available persistent volumes to bind, 4 Too many pods.
 prometheus    0s          Warning   FailedScheduling          pod/prometheus-prometheus-node-exporter-rvplh             0/5 nodes are available: 1 Too many pods, 4 node(s) didn't match Pod's node affinity/selector.
-
+~~~~
 
 
 
@@ -269,6 +273,50 @@ prometheus    0s          Warning   FailedScheduling          pod/prometheus-pro
 - Subindo para 7
 Node group configuration update in progress
 managed-ondemand-20230401224215077500000009 configuration is now being updated. This process may take several minutes.
+
+
+- Efetuando destroy
+
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
+exceptional situations such as recovering from errors or mistakes, or when Terraform
+│ specifically suggests to use it as part of an error message.
+╵
+
+Destroy complete! Resources: 23 destroyed.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform destroy -auto-approve
+]
+Changes to Outputs:
+  - configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab" -> null
+  - vpc_id            = "vpc-0ed9e220a20ab86ad" -> null
+
+You can apply this plan to save these new output values to the Terraform state, without changing any real infrastructure.
+
+Destroy complete! Resources: 0 destroyed.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ ]
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Dia 08/04/2023
+
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -auto-approve
+
 
 
 
