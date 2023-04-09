@@ -378,4 +378,214 @@ terraform apply -target=module.eks_blueprints -auto-approve
 terraform apply -auto-approve
 
 
+
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0a522b806f302ae0a"
+
 21:32h
+
+
+
+
+
+
+
+
+https://catalog.workshops.aws/eks-blueprints-terraform/en-US/050-observability/2-metrics-kube-prometheus-stack
+
+
+
+### Metrics
+
+Metrics with Kube Prometheus Stack
+
+Another add-on that is available on EKS Blueprints for Terraform is Kube Prometheus Stack. This particular add-on when enabled installs Prometheus instance, Prometheus operator, kube-state-metrics, node-exporter, alertmanager as well as Grafana instance with preconfigured dashboards. This stack is meant for cluster monitoring, so it is pre-configured to collect metrics from all Kubernetes components. In addition to that it delivers a default set of dashboards and alerting rules. More on kube-prometheus-stack 
+
+.
+
+Add following configuration under kubernetes_addons section in your main.tf file:
+
+~~~~h
+module "kubernetes_addons" {
+source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.22.0/modules/kubernetes-addons"
+... ommitted content for brevity ...
+
+  enable_aws_load_balancer_controller  = true
+  enable_amazon_eks_aws_ebs_csi_driver = true
+  enable_aws_for_fluentbit             = true
+  enable_metrics_server                = true
+  enable_argo_rollouts                 = true 
+  enable_kube_prometheus_stack         = true # <-- Add this line
+
+... ommitted content for brevity ...
+}
+~~~~
+
+
+And, apply changes:
+
+# Always a good practice to use a dry-run command
+
+terraform plan
+
+# Apply changes to provision the Platform Team
+
+terraform apply -auto-approve
+
+
+
+
+
+
+
+
+
+- Editado:
+
+~~~~h
+# Prometheus Stack, usando addons
+
+module "kubernetes_addons" {
+source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.21.0/modules/kubernetes-addons"
+  enable_metrics_server                = true
+  enable_kube_prometheus_stack         = true # <-- Add this line
+}
+~~~~
+
+
+
+And, apply changes:
+
+# Always a good practice to use a dry-run command
+
+terraform plan
+
+# Apply changes to provision the Platform Team
+
+terraform apply -auto-approve
+
+
+
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform plan
+╷
+│ Error: Module not installed
+│
+│   on main.tf line 94:
+│   94: module "kubernetes_addons" {
+│
+│ This module is not yet installed. Run "terraform init" to install all modules required by this configuration.
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+
+
+- Erros durante o terraform init
+- Não é possível baixar o kubernetes_addons, pede autenticação no Github do ondat:
+
+Downloading registry.terraform.io/ondat/ondat-addon/eksblueprints 0.1.2 for kubernetes_addons.ondat...
+Username for 'https://github.com':
+
+
+
+- Removendo do main.tf
+
+~~~~h
+# Prometheus Stack, usando addons
+
+module "kubernetes_addons" {
+source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.22.0/modules/kubernetes-addons"
+  enable_metrics_server                = true
+  enable_kube_prometheus_stack         = true # <-- Add this line
+}
+~~~~
+
+
+
+- Usando o Addon do site abaixo não funcionou:
+https://catalog.workshops.aws/eks-blueprints-terraform/en-US/050-observability/2-metrics-kube-prometheus-stack#metrics-with-kube-prometheus-stack
+<https://catalog.workshops.aws/eks-blueprints-terraform/en-US/050-observability/2-metrics-kube-prometheus-stack#metrics-with-kube-prometheus-stack>
+
+
+
+
+
+- Efetuando o Deploy via Helm, usando o site abaixo:
+https://docs.aws.amazon.com/eks/latest/userguide/prometheus.html
+<https://docs.aws.amazon.com/eks/latest/userguide/prometheus.html>
+
+
+kubectl create namespace prometheus
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm upgrade -i prometheus prometheus-community/prometheus \
+    --namespace prometheus \
+    --set alertmanager.persistentVolume.storageClass="gp2",server.persistentVolume.storageClass="gp2"
+
+
+~~~~bash
+
+fernando@debian10x64:~$ helm ls -A
+NAME    NAMESPACE       REVISION        UPDATED STATUS  CHART   APP VERSION
+fernando@debian10x64:~$ kubectl create namespace prometheus
+namespace/prometheus created
+fernando@debian10x64:~$ helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+"prometheus-community" already exists with the same configuration, skipping
+fernando@debian10x64:~$ helm upgrade -i prometheus prometheus-community/prometheus \
+>     --namespace prometheus \
+>     --set alertmanager.persistentVolume.storageClass="gp2",server.persistentVolume.storageClass="gp2"
+Release "prometheus" does not exist. Installing it now.
+NAME: prometheus
+LAST DEPLOYED: Sat Apr  8 22:07:24 2023
+NAMESPACE: prometheus
+STATUS: deployed
+REVISION: 1
+NOTES:
+The Prometheus server can be accessed via port 80 on the following DNS name from within your cluster:
+prometheus-server.prometheus.svc.cluster.local
+
+
+Get the Prometheus server URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace prometheus port-forward $POD_NAME 9090
+
+
+The Prometheus alertmanager can be accessed via port  on the following DNS name from within your cluster:
+prometheus-%!s(<nil>).prometheus.svc.cluster.local
+
+
+Get the Alertmanager URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus,component=" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace prometheus port-forward $POD_NAME 9093
+#################################################################################
+######   WARNING: Pod Security Policy has been disabled by default since    #####
+######            it deprecated after k8s 1.25+. use                        #####
+######            (index .Values "prometheus-node-exporter" "rbac"          #####
+###### .          "pspEnabled") with (index .Values                         #####
+######            "prometheus-node-exporter" "rbac" "pspAnnotations")       #####
+######            in case you still need it.                                #####
+#################################################################################
+
+
+The Prometheus PushGateway can be accessed via port 9091 on the following DNS name from within your cluster:
+prometheus-prometheus-pushgateway.prometheus.svc.cluster.local
+
+
+Get the PushGateway URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus-pushgateway,component=pushgateway" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace prometheus port-forward $POD_NAME 9091
+
+For more information on running Prometheus, visit:
+https://prometheus.io/
+fernando@debian10x64:~$
+
+fernando@debian10x64:~$ helm ls -A
+NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION
+prometheus      prometheus      1               2023-04-08 22:07:24.961575886 -0300 -03 deployed        prometheus-20.0.2       v2.43.0
+fernando@debian10x64:~$ date
+Sat 08 Apr 2023 10:07:57 PM -03
+fernando@debian10x64:~$
+
+~~~~

@@ -89,6 +89,15 @@ module "eks_blueprints" {
 
 
 
+# Prometheus Stack, usando addons
+
+module "kubernetes_addons" {
+source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.22.0/modules/kubernetes-addons"
+  enable_metrics_server                = true
+  enable_kube_prometheus_stack         = true # <-- Add this line
+}
+
+
 # VPC
 
 module "vpc" {
