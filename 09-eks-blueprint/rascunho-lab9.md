@@ -589,3 +589,670 @@ Sat 08 Apr 2023 10:07:57 PM -03
 fernando@debian10x64:~$
 
 ~~~~
+
+
+
+
+
+
+
+
+
+Get the Prometheus server URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace prometheus port-forward $POD_NAME 9090
+
+
+
+Get the Alertmanager URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus,component=" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace prometheus port-forward $POD_NAME 9093
+
+
+
+kubectl get pods --namespace prometheus
+kubectl get all --namespace prometheus
+
+
+~~~~bash
+
+fernando@debian10x64:~$ kubectl get pods --namespace prometheus
+NAME                                                 READY   STATUS    RESTARTS   AGE
+prometheus-alertmanager-0                            0/1     Pending   0          3m25s
+prometheus-kube-state-metrics-5d888875ff-tfbtg       1/1     Running   0          3m25s
+prometheus-prometheus-node-exporter-475t9            1/1     Running   0          3m25s
+prometheus-prometheus-node-exporter-7sdpr            1/1     Running   0          3m25s
+prometheus-prometheus-node-exporter-d2582            1/1     Running   0          3m25s
+prometheus-prometheus-pushgateway-6445c657fc-4fr9x   1/1     Running   0          3m25s
+prometheus-server-5fc6895768-s8cbc                   0/2     Pending   0          3m25s
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$ kubectl get all --namespace prometheus
+NAME                                                     READY   STATUS    RESTARTS   AGE
+pod/prometheus-alertmanager-0                            0/1     Pending   0          3m55s
+pod/prometheus-kube-state-metrics-5d888875ff-tfbtg       1/1     Running   0          3m55s
+pod/prometheus-prometheus-node-exporter-475t9            1/1     Running   0          3m55s
+pod/prometheus-prometheus-node-exporter-7sdpr            1/1     Running   0          3m55s
+pod/prometheus-prometheus-node-exporter-d2582            1/1     Running   0          3m55s
+pod/prometheus-prometheus-pushgateway-6445c657fc-4fr9x   1/1     Running   0          3m55s
+pod/prometheus-server-5fc6895768-s8cbc                   0/2     Pending   0          3m55s
+
+NAME                                          TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+service/prometheus-alertmanager               ClusterIP   172.20.47.77     <none>        9093/TCP   3m56s
+service/prometheus-alertmanager-headless      ClusterIP   None             <none>        9093/TCP   3m56s
+service/prometheus-kube-state-metrics         ClusterIP   172.20.63.159    <none>        8080/TCP   3m56s
+service/prometheus-prometheus-node-exporter   ClusterIP   172.20.29.203    <none>        9100/TCP   3m56s
+service/prometheus-prometheus-pushgateway     ClusterIP   172.20.126.248   <none>        9091/TCP   3m56s
+service/prometheus-server                     ClusterIP   172.20.124.28    <none>        80/TCP     3m56s
+
+NAME                                                 DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/prometheus-prometheus-node-exporter   3         3         3       3            3           <none>          3m56s
+
+NAME                                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/prometheus-kube-state-metrics       1/1     1            1           3m56s
+deployment.apps/prometheus-prometheus-pushgateway   1/1     1            1           3m56s
+deployment.apps/prometheus-server                   0/1     1            0           3m56s
+
+NAME                                                           DESIRED   CURRENT   READY   AGE
+replicaset.apps/prometheus-kube-state-metrics-5d888875ff       1         1         1       3m56s
+replicaset.apps/prometheus-prometheus-pushgateway-6445c657fc   1         1         1       3m56s
+replicaset.apps/prometheus-server-5fc6895768                   1         1         0       3m56s
+
+NAME                                       READY   AGE
+statefulset.apps/prometheus-alertmanager   0/1     3m56s
+fernando@debian10x64:~$
+
+~~~~
+
+
+
+
+
+
+
+fernando@debian10x64:~$ export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$ kubectl --namespace prometheus port-forward $POD_NAME 9090
+error: unable to forward port because pod is not running. Current status=Pending
+fernando@debian10x64:~$
+
+
+kubectl describe pod prometheus-server-5fc6895768-s8cbc --namespace prometheus
+prometheus-server-5fc6895768-s8cbc
+kubectl get pod prometheus-server-5fc6895768-s8cbc --namespace prometheus
+
+
+fernando@debian10x64:~$ kubectl get pod prometheus-server-5fc6895768-s8cbc --namespace prometheus
+NAME                                 READY   STATUS    RESTARTS   AGE
+prometheus-server-5fc6895768-s8cbc   0/2     Pending   0          6m53s
+fernando@debian10x64:~$
+
+
+kubectl logs prometheus-server-5fc6895768-s8cbc --namespace prometheus
+
+
+
+
+
+
+
+
+
+
+
+
+
+I had same issues as you. I found two ways to solve this:
+
+    edit values.yaml under persistentVolumes.enabled=false this will allow you to use emptyDir "this applies to Prometheus-Server and AlertManager"
+
+    If you can't change values.yaml you will have to create the PV before deploying the chart so that the pod can bind to the volume otherwise it will stay in the pending state forever
+
+
+
+
+
+
+fernando@debian10x64:~$ helm ls -A
+NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION
+prometheus      prometheus      1               2023-04-08 22:07:24.961575886 -0300 -03 deployed        prometheus-20.0.2       v2.43.0
+fernando@debian10x64:~$ helm uninstall prometheus -n prometheus
+release "prometheus" uninstalled
+fernando@debian10x64:~$
+
+
+
+
+
+kubectl create namespace prometheus
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm upgrade -i prometheus prometheus-community/prometheus \
+    --namespace prometheus \
+    --set persistentVolumes.enabled=false
+
+
+
+
+
+
+
+
+fernando@debian10x64:~$ kubectl get pv --namespace prometheus
+No resources found
+fernando@debian10x64:~$ kubectl get pvc --namespace prometheus
+NAME                                STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+prometheus-server                   Pending                                      gp2            57s
+storage-prometheus-alertmanager-0   Pending                                      gp2            15m
+fernando@debian10x64:~$
+
+
+
+
+
+
+
+helm upgrade meu-ingress-controller ingress-nginx/ingress-nginx --namespace nginx-ingress --values values.yaml	Atualizar informações dos recursos via comando Upgrade	Upgrade	Release
+
+
+
+helm upgrade -i prometheus prometheus-community/prometheus \
+    --namespace prometheus \
+    --values /home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v1.yaml
+
+
+
+fernando@debian10x64:~$ helm upgrade -i prometheus prometheus-community/prometheus \
+>     --namespace prometheus \
+>     --values /home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v1.yaml
+Release "prometheus" has been upgraded. Happy Helming!
+NAME: prometheus
+LAST DEPLOYED: Sat Apr  8 22:31:28 2023
+NAMESPACE: prometheus
+STATUS: deployed
+REVISION: 2
+
+
+
+
+
+
+- Subiu o Prometheus Server
+- Não subiu o AlertManager
+
+kubectl get pods --namespace prometheus
+kubectl get all --namespace prometheus
+
+~~~~bash
+
+fernando@debian10x64:~$ kubectl get pods --namespace prometheus
+
+NAME                                                 READY   STATUS    RESTARTS   AGE
+prometheus-alertmanager-0                            0/1     Pending   0          10m
+prometheus-kube-state-metrics-5d888875ff-xrmgm       1/1     Running   0          10m
+prometheus-prometheus-node-exporter-ctz5z            1/1     Running   0          10m
+prometheus-prometheus-node-exporter-p2xrb            1/1     Running   0          10m
+prometheus-prometheus-node-exporter-xllms            1/1     Running   0          10m
+prometheus-prometheus-pushgateway-6445c657fc-ljj5f   1/1     Running   0          10m
+prometheus-server-8d48c685-58kpw                     2/2     Running   0          62s
+fernando@debian10x64:~$ kubectl get all --namespace prometheus
+NAME                                                     READY   STATUS    RESTARTS   AGE
+pod/prometheus-alertmanager-0                            0/1     Pending   0          10m
+pod/prometheus-kube-state-metrics-5d888875ff-xrmgm       1/1     Running   0          10m
+pod/prometheus-prometheus-node-exporter-ctz5z            1/1     Running   0          10m
+pod/prometheus-prometheus-node-exporter-p2xrb            1/1     Running   0          10m
+pod/prometheus-prometheus-node-exporter-xllms            1/1     Running   0          10m
+pod/prometheus-prometheus-pushgateway-6445c657fc-ljj5f   1/1     Running   0          10m
+pod/prometheus-server-8d48c685-58kpw                     2/2     Running   0          64s
+
+NAME                                          TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+service/prometheus-alertmanager               ClusterIP   172.20.36.53     <none>        9093/TCP   10m
+service/prometheus-alertmanager-headless      ClusterIP   None             <none>        9093/TCP   10m
+service/prometheus-kube-state-metrics         ClusterIP   172.20.232.0     <none>        8080/TCP   10m
+service/prometheus-prometheus-node-exporter   ClusterIP   172.20.225.180   <none>        9100/TCP   10m
+service/prometheus-prometheus-pushgateway     ClusterIP   172.20.244.106   <none>        9091/TCP   10m
+service/prometheus-server                     ClusterIP   172.20.163.226   <none>        80/TCP     10m
+
+NAME                                                 DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/prometheus-prometheus-node-exporter   3         3         3       3            3           <none>          10m
+
+NAME                                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/prometheus-kube-state-metrics       1/1     1            1           10m
+deployment.apps/prometheus-prometheus-pushgateway   1/1     1            1           10m
+deployment.apps/prometheus-server                   1/1     1            1           10m
+
+NAME                                                           DESIRED   CURRENT   READY   AGE
+replicaset.apps/prometheus-kube-state-metrics-5d888875ff       1         1         1       10m
+replicaset.apps/prometheus-prometheus-pushgateway-6445c657fc   1         1         1       10m
+replicaset.apps/prometheus-server-5fc6895768                   0         0         0       10m
+replicaset.apps/prometheus-server-8d48c685                     1         1         1       65s
+
+NAME                                       READY   AGE
+statefulset.apps/prometheus-alertmanager   0/1     10m
+fernando@debian10x64:~$ ^C
+
+~~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- Verificando o values do AlertManager antes:
+
+~~~~YAML
+
+fernando@debian10x64:~$ helm show values prometheus-community/alertmanager
+# Default values for alertmanager.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: quay.io/prometheus/alertmanager
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+extraArgs: {}
+
+## Additional Alertmanager Secret mounts
+# Defines additional mounts with secrets. Secrets must be manually created in the namespace.
+extraSecretMounts: []
+  # - name: secret-files
+  #   mountPath: /etc/secrets
+  #   subPath: ""
+  #   secretName: alertmanager-secret-files
+  #   readOnly: true
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+automountServiceAccountToken: true
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+# Sets priorityClassName in alertmanager pod
+priorityClassName: ""
+
+podSecurityContext:
+  fsGroup: 65534
+dnsConfig: {}
+  # nameservers:
+  #   - 1.2.3.4
+  # searches:
+  #   - ns1.svc.cluster-domain.example
+  #   - my.dns.search.suffix
+  # options:
+  #   - name: ndots
+  #     value: "2"
+  #   - name: edns0
+securityContext:
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  runAsUser: 65534
+  runAsNonRoot: true
+  runAsGroup: 65534
+
+additionalPeers: []
+
+## Additional InitContainers to initialize the pod
+##
+extraInitContainers: []
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+service:
+  annotations: {}
+  type: ClusterIP
+  port: 9093
+  clusterPort: 9094
+  loadBalancerIP: ""  # Assign ext IP when Service type is LoadBalancer
+  loadBalancerSourceRanges: []  # Only allow access to loadBalancerIP from these IPs
+  # if you want to force a specific nodePort. Must be use with service.type=NodePort
+  # nodePort:
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: alertmanager.domain.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - alertmanager.domain.com
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 10m
+  #   memory: 32Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+## Pod anti-affinity can prevent the scheduler from placing Alertmanager replicas on the same node.
+## The default value "soft" means that the scheduler should *prefer* to not schedule two replica pods onto the same node but no guarantee is provided.
+## The value "hard" means that the scheduler is *required* to not schedule two replica pods onto the same node.
+## The value "" will disable pod anti-affinity so that no anti-affinity rules will be configured.
+##
+podAntiAffinity: ""
+
+## If anti-affinity is enabled sets the topologyKey to use for anti-affinity.
+## This can be changed to, for example, failure-domain.beta.kubernetes.io/zone
+##
+podAntiAffinityTopologyKey: kubernetes.io/hostname
+
+## Topology spread constraints rely on node labels to identify the topology domain(s) that each Node is in.
+## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: failure-domain.beta.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+  #   labelSelector:
+  #     matchLabels:
+  #       app.kubernetes.io/instance: alertmanager
+
+statefulSet:
+  annotations: {}
+
+podAnnotations: {}
+podLabels: {}
+
+# Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+podDisruptionBudget: {}
+  # maxUnavailable: 1
+  # minAvailable: 1
+
+command: []
+
+persistence:
+  enabled: true
+  ## Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ## set, choosing the default provisioner.
+  ##
+  # storageClass: "-"
+  accessModes:
+    - ReadWriteOnce
+  size: 50Mi
+
+config:
+  global: {}
+    # slack_api_url: ''
+
+  templates:
+    - '/etc/alertmanager/*.tmpl'
+
+  receivers:
+    - name: default-receiver
+      # slack_configs:
+      #  - channel: '@you'
+      #    send_resolved: true
+
+  route:
+    group_wait: 10s
+    group_interval: 5m
+    receiver: default-receiver
+    repeat_interval: 3h
+
+## Monitors ConfigMap changes and POSTs to a URL
+## Ref: https://github.com/jimmidyson/configmap-reload
+##
+configmapReload:
+  ## If false, the configmap-reload container will not be deployed
+  ##
+  enabled: false
+
+  ## configmap-reload container name
+  ##
+  name: configmap-reload
+
+  ## configmap-reload container image
+  ##
+  image:
+    repository: jimmidyson/configmap-reload
+    tag: v0.8.0
+    pullPolicy: IfNotPresent
+
+  # containerPort: 9533
+
+  ## configmap-reload resource requests and limits
+  ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources: {}
+
+templates: {}
+#   alertmanager.tmpl: |-
+
+## Optionally specify extra list of additional volumeMounts
+extraVolumeMounts: []
+  # - name: extras
+  #   mountPath: /usr/share/extras
+  #   readOnly: true
+
+## Optionally specify extra list of additional volumes
+extraVolumes: []
+  # - name: extras
+  #   emptyDir: {}
+
+## Optionally specify extra environment variables to add to alertmanager container
+extraEnv: []
+  # - name: FOO
+  #   value: BAR
+
+fernando@debian10x64:~$
+
+~~~~
+
+
+
+
+
+
+
+
+
+
+
+- Ajustando:
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v2.yaml
+
+~~~~YAML
+
+## alertmanager sub-chart configurable values
+## Please see https://github.com/prometheus-community/helm-charts/tree/main/charts/alertmanager
+##
+alertmanager:
+  ## If false, alertmanager will not be installed
+  ##
+  enabled: true
+
+  persistence:
+    enabled: false
+~~~~
+
+
+
+helm upgrade -i prometheus prometheus-community/prometheus \
+    --namespace prometheus \
+    --values /home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v2.yaml
+
+
+fernando@debian10x64:~$ helm upgrade -i prometheus prometheus-community/prometheus \
+>     --namespace prometheus \
+>     --values /home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v2.yaml
+Error: UPGRADE FAILED: cannot patch "prometheus-alertmanager" with kind StatefulSet: StatefulSet.apps "prometheus-alertmanager" is invalid: spec: Forbidden: updates to statefulset spec for fields other than 'replicas', 'template', 'updateStrategy', 'persistentVolumeClaimRetentionPolicy' and 'minReadySeconds' are forbidden
+fernando@debian10x64:~$
+
+
+
+helm uninstall prometheus --namespace prometheus
+fernando@debian10x64:~$ helm uninstall prometheus --namespace prometheus
+release "prometheus" uninstalled
+fernando@debian10x64:~$
+
+
+
+helm upgrade -i prometheus prometheus-community/prometheus \
+    --namespace prometheus \
+    --values /home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v2.yaml
+
+
+
+
+
+kubectl get pods --namespace prometheus
+kubectl get all --namespace prometheus
+
+
+
+- Agora subiram todos os Pods, usando a v2 do values:
+
+~~~~bash
+
+fernando@debian10x64:~$ kubectl get pods --namespace prometheus
+
+NAME                                                 READY   STATUS    RESTARTS   AGE
+prometheus-alertmanager-0                            1/1     Running   0          18s
+prometheus-kube-state-metrics-5d888875ff-449sh       1/1     Running   0          18s
+prometheus-prometheus-node-exporter-mqcm4            1/1     Running   0          18s
+prometheus-prometheus-node-exporter-sfh67            1/1     Running   0          18s
+prometheus-prometheus-node-exporter-xfv7p            1/1     Running   0          18s
+prometheus-prometheus-pushgateway-6445c657fc-98jbs   0/1     Running   0          18s
+prometheus-server-8d48c685-pccz8                     1/2     Running   0          18s
+fernando@debian10x64:~$ kubectl get all --namespace prometheus
+NAME                                                     READY   STATUS    RESTARTS   AGE
+pod/prometheus-alertmanager-0                            1/1     Running   0          20s
+pod/prometheus-kube-state-metrics-5d888875ff-449sh       1/1     Running   0          20s
+pod/prometheus-prometheus-node-exporter-mqcm4            1/1     Running   0          20s
+pod/prometheus-prometheus-node-exporter-sfh67            1/1     Running   0          20s
+pod/prometheus-prometheus-node-exporter-xfv7p            1/1     Running   0          20s
+pod/prometheus-prometheus-pushgateway-6445c657fc-98jbs   0/1     Running   0          20s
+pod/prometheus-server-8d48c685-pccz8                     1/2     Running   0          20s
+
+NAME                                          TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+service/prometheus-alertmanager               ClusterIP   172.20.81.52     <none>        9093/TCP   21s
+service/prometheus-alertmanager-headless      ClusterIP   None             <none>        9093/TCP   21s
+service/prometheus-kube-state-metrics         ClusterIP   172.20.254.89    <none>        8080/TCP   21s
+service/prometheus-prometheus-node-exporter   ClusterIP   172.20.101.207   <none>        9100/TCP   21s
+service/prometheus-prometheus-pushgateway     ClusterIP   172.20.179.43    <none>        9091/TCP   21s
+service/prometheus-server                     ClusterIP   172.20.236.225   <none>        80/TCP     21s
+
+NAME                                                 DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/prometheus-prometheus-node-exporter   3         3         3       3            3           <none>          20s
+
+NAME                                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/prometheus-kube-state-metrics       1/1     1            1           21s
+deployment.apps/prometheus-prometheus-pushgateway   1/1     1            1           21s
+deployment.apps/prometheus-server                   0/1     1            0           21s
+
+NAME                                                           DESIRED   CURRENT   READY   AGE
+replicaset.apps/prometheus-kube-state-metrics-5d888875ff       1         1         1       21s
+replicaset.apps/prometheus-prometheus-pushgateway-6445c657fc   1         1         1       21s
+replicaset.apps/prometheus-server-8d48c685                     1         1         0       21s
+
+NAME                                       READY   AGE
+statefulset.apps/prometheus-alertmanager   1/1     21s
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$ kubectl get pods --namespace prometheus
+NAME                                                 READY   STATUS    RESTARTS   AGE
+prometheus-alertmanager-0                            1/1     Running   0          36s
+prometheus-kube-state-metrics-5d888875ff-449sh       1/1     Running   0          36s
+prometheus-prometheus-node-exporter-mqcm4            1/1     Running   0          36s
+prometheus-prometheus-node-exporter-sfh67            1/1     Running   0          36s
+prometheus-prometheus-node-exporter-xfv7p            1/1     Running   0          36s
+prometheus-prometheus-pushgateway-6445c657fc-98jbs   1/1     Running   0          36s
+prometheus-server-8d48c685-pccz8                     1/2     Running   0          36s
+fernando@debian10x64:~$
+fernando@debian10x64:~$ date
+Sat 08 Apr 2023 10:46:03 PM -03
+fernando@debian10x64:~$
+
+~~~~
+
+
+
+
+
+
+
+
+
+
+
+
+Get the Prometheus server URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace prometheus port-forward $POD_NAME 9090
+#################################################################################
+######   WARNING: Persistence is disabled!!! You will lose your data when   #####
+######            the Server pod is terminated.                             #####
+#################################################################################
+
+
+
+
+
+
+# PENDENTE
+- Quando utilizando Persistence, os Pods do Prometheus-Server e do AlertManager não sobem.
+Pode ser devido o GP2 e o PVC que eles tentam utilizar.
+Tentar aplicar solução, criando o PVC tbm:
+https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-setup-it-by-helm-in-kubernetes-cluster-on-ranch
+<https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-setup-it-by-helm-in-kubernetes-cluster-on-ranch>
