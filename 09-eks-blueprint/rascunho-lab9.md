@@ -1241,11 +1241,18 @@ fernando@debian10x64:~$
 
 # PENDENTE
 
+## Material de apoio:
 - Values de referencia:
 /home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/bkp-antes/values.yaml
 
 - Chart do Prometheus
 https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
+
+## Continuar em:
+- Expor Prometheus ao mundo, verificar como fazer para expor o Prometheus que está no AWS EKS.
+expondo via service:
+https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/exposing-prometheus-and-alertmanager.md
+Necessário ajustar o cluster EKS, para que tenha Nodes publicos numa Subnet Publica, para ter um External IP.
 
 - Quando utilizando Persistence, os Pods do Prometheus-Server e do AlertManager não sobem.
 Pode ser devido o GP2 e o PVC que eles tentam utilizar.
@@ -1254,9 +1261,7 @@ https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-se
 <https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-setup-it-by-helm-in-kubernetes-cluster-on-ranch>
 
 - Helm via Terraform, verificar como fazer o Terraform aplicar o chart do Prometheus.
-usar o values v2 personalizado.
-
-- Expor Prometheus ao mundo, verificar como fazer para export o Prometheus que está no AWS EKS.
+usar o values personalizado.
 
 
 
@@ -1340,3 +1345,283 @@ fernando@debian10x64:~$ helm upgrade -i prometheus prometheus-community/promethe
 >     --values /home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v3.yaml
 Error: UPGRADE FAILED: cannot patch "prometheus-server" with kind Service: Service "prometheus-server" is invalid: spec.type: Unsupported value: "nodePort": supported values: "ClusterIP", "ExternalName", "LoadBalancer", "NodePort"
 fernando@debian10x64:~$
+
+
+
+
+- Ajustando
+
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v3.yaml
+
+DE:
+    type: nodePort
+PARA:
+    type: NodePort
+
+
+
+~~~~bash
+
+fernando@debian10x64:~$ helm upgrade -i prometheus prometheus-community/prometheus     --namespace prometheus     --values /home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/helm-editado/values_v3.yaml
+Release "prometheus" has been upgraded. Happy Helming!
+NAME: prometheus
+LAST DEPLOYED: Sun Apr  9 00:12:34 2023
+NAMESPACE: prometheus
+STATUS: deployed
+REVISION: 3
+NOTES:
+The Prometheus server can be accessed via port 80 on the following DNS name from within your cluster:
+prometheus-server.prometheus.svc.cluster.local
+
+
+Get the Prometheus server URL by running these commands in the same shell:
+  export NODE_PORT=$(kubectl get --namespace prometheus -o jsonpath="{.spec.ports[0].nodePort}" services prometheus-server)
+  export NODE_IP=$(kubectl get nodes --namespace prometheus -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+#################################################################################
+######   WARNING: Persistence is disabled!!! You will lose your data when   #####
+######            the Server pod is terminated.                             #####
+#################################################################################
+
+
+The Prometheus alertmanager can be accessed via port  on the following DNS name from within your cluster:
+prometheus-%!s(<nil>).prometheus.svc.cluster.local
+
+
+Get the Alertmanager URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus,component=" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace prometheus port-forward $POD_NAME 9093
+#################################################################################
+######   WARNING: Persistence is disabled!!! You will lose your data when   #####
+######            the AlertManager pod is terminated.                       #####
+#################################################################################
+#################################################################################
+######   WARNING: Pod Security Policy has been disabled by default since    #####
+######            it deprecated after k8s 1.25+. use                        #####
+######            (index .Values "prometheus-node-exporter" "rbac"          #####
+###### .          "pspEnabled") with (index .Values                         #####
+######            "prometheus-node-exporter" "rbac" "pspAnnotations")       #####
+######            in case you still need it.                                #####
+#################################################################################
+
+
+The Prometheus PushGateway can be accessed via port 9091 on the following DNS name from within your cluster:
+prometheus-prometheus-pushgateway.prometheus.svc.cluster.local
+
+
+Get the PushGateway URL by running these commands in the same shell:
+  export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus-pushgateway,component=pushgateway" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace prometheus port-forward $POD_NAME 9091
+
+For more information on running Prometheus, visit:
+https://prometheus.io/
+fernando@debian10x64:~$
+
+
+fernando@debian10x64:~$ kubectl get svc -n prometheus
+NAME                                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+prometheus-alertmanager               ClusterIP   172.20.81.52     <none>        9093/TCP       87m
+prometheus-alertmanager-headless      ClusterIP   None             <none>        9093/TCP       87m
+prometheus-kube-state-metrics         ClusterIP   172.20.254.89    <none>        8080/TCP       87m
+prometheus-prometheus-node-exporter   ClusterIP   172.20.101.207   <none>        9100/TCP       87m
+prometheus-prometheus-pushgateway     ClusterIP   172.20.179.43    <none>        9091/TCP       87m
+prometheus-server                     NodePort    172.20.236.225   <none>        80:32259/TCP   87m
+fernando@debian10x64:~$ date
+Sun 09 Apr 2023 12:12:58 AM -03
+fernando@debian10x64:~$
+~~~~
+
+
+
+
+
+
+
+Get the Prometheus server URL by running these commands in the same shell:
+  export NODE_PORT=$(kubectl get --namespace prometheus -o jsonpath="{.spec.ports[0].nodePort}" services prometheus-server)
+  export NODE_IP=$(kubectl get nodes --namespace prometheus -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+
+
+
+
+fernando@debian10x64:~$   export NODE_PORT=$(kubectl get --namespace prometheus -o jsonpath="{.spec.ports[0].nodePort}" services prometheus-server)
+fernando@debian10x64:~$   export NODE_IP=$(kubectl get nodes --namespace prometheus -o jsonpath="{.items[0].status.addresses[0].address}")
+fernando@debian10x64:~$   echo http://$NODE_IP:$NODE_PORT
+http://10.0.10.136:32259
+fernando@debian10x64:~$
+
+
+
+- Expos o ip privado
+
+
+fernando@debian10x64:~$ kubectl get nodes
+NAME                          STATUS   ROLES    AGE    VERSION
+ip-10-0-10-136.ec2.internal   Ready    <none>   171m   v1.23.17-eks-a59e1f0
+ip-10-0-11-122.ec2.internal   Ready    <none>   171m   v1.23.17-eks-a59e1f0
+ip-10-0-12-160.ec2.internal   Ready    <none>   171m   v1.23.17-eks-a59e1f0
+fernando@debian10x64:~$
+
+fernando@debian10x64:~$ kubectl get nodes -o wide
+NAME                          STATUS   ROLES    AGE    VERSION                INTERNAL-IP   EXTERNAL-IP   OS-IMAGE         KERNEL-VERSION                 CONTAINER-RUNTIME
+ip-10-0-10-136.ec2.internal   Ready    <none>   171m   v1.23.17-eks-a59e1f0   10.0.10.136   <none>        Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+ip-10-0-11-122.ec2.internal   Ready    <none>   171m   v1.23.17-eks-a59e1f0   10.0.11.122   <none>        Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+ip-10-0-12-160.ec2.internal   Ready    <none>   171m   v1.23.17-eks-a59e1f0   10.0.12.160   <none>        Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+fernando@debian10x64:~$
+
+
+
+
+
+
+
+
+- Testar "public_subnets" no eks blueprint
+
+
+
+- Troquei onde tinha private por public:
+private_subnet_ids = module.vpc.private_subnets
+subnet_ids      = module.vpc.private_subnets
+
+- Erro
+
+~~~~bash
+module.eks_blueprints.module.aws_eks.aws_eks_cluster.this[0]: Refreshing state... [id=eks-lab]
+╷
+│ Error: Error in function call
+│
+│   on .terraform/modules/eks_blueprints.aws_eks/main.tf line 24, in resource "aws_eks_cluster" "this":
+│   24:     subnet_ids              = coalescelist(var.control_plane_subnet_ids, var.subnet_ids)
+│     ├────────────────
+│     │ var.control_plane_subnet_ids is empty list of string
+│     │ var.subnet_ids is empty list of string
+│
+│ Call to function "coalescelist" failed: no non-null arguments.
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+~~~~
+
+
+
+
+- Adicionando node-group separado para os public:
+
+    T3A_NODE2 = {
+      node_group_name = "teste2"
+      instance_types  = ["t3a.medium"]
+      subnet_ids      = module.vpc.public_subnets
+    }
+
+
+
+
+- Aplicado
+
+
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].aws_eks_node_group.managed_ng: Still creating... [4m20s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].aws_eks_node_group.managed_ng: Still creating... [4m30s elapsed]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].aws_eks_node_group.managed_ng: Creation complete after 4m35s [id=eks-lab:teste2-20230409032905072200000005]
+
+Apply complete! Resources: 7 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0a522b806f302ae0a"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+
+
+
+
+  export NODE_PORT=$(kubectl get --namespace prometheus -o jsonpath="{.spec.ports[0].nodePort}" services prometheus-server)
+  export NODE_IP=$(kubectl get nodes --namespace prometheus -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+
+
+
+
+fernando@debian10x64:~$ kubectl get nodes -o wide
+NAME                          STATUS   ROLES    AGE     VERSION                INTERNAL-IP   EXTERNAL-IP     OS-IMAGE         KERNEL-VERSION                 CONTAINER-RUNTIME
+ip-10-0-0-11.ec2.internal     Ready    <none>   4m5s    v1.23.17-eks-a59e1f0   10.0.0.11     3.231.164.18    Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+ip-10-0-1-112.ec2.internal    Ready    <none>   4m6s    v1.23.17-eks-a59e1f0   10.0.1.112    3.80.182.168    Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+ip-10-0-10-136.ec2.internal   Ready    <none>   3h11m   v1.23.17-eks-a59e1f0   10.0.10.136   <none>          Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+ip-10-0-11-122.ec2.internal   Ready    <none>   3h11m   v1.23.17-eks-a59e1f0   10.0.11.122   <none>          Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+ip-10-0-12-160.ec2.internal   Ready    <none>   3h11m   v1.23.17-eks-a59e1f0   10.0.12.160   <none>          Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+ip-10-0-2-69.ec2.internal     Ready    <none>   4m5s    v1.23.17-eks-a59e1f0   10.0.2.69     54.204.253.27   Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$   export NODE_PORT=$(kubectl get --namespace prometheus -o jsonpath="{.spec.ports[0].nodePort}" services prometheus-server)
+
+fernando@debian10x64:~$   export NODE_IP=$(kubectl get nodes --namespace prometheus -o jsonpath="{.items[0].status.addresses[0].address}")
+fernando@debian10x64:~$   echo http://$NODE_IP:$NODE_PORT
+http://10.0.0.11:32259
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+
+
+- Não acessou via:
+http://3.231.164.18:32259
+
+
+- Pod do Server tá no Node:
+ip-10-0-10-136.ec2.internal
+esse node é privado
+
+
+
+
+
+
+
+
+
+
+
+
+
+- Efetuando destroy
+
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# PENDENTE
+
+## Material de apoio:
+- Values de referencia:
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/bkp-antes/values.yaml
+
+- Chart do Prometheus
+https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
+
+## Continuar em:
+- Expor Prometheus ao mundo, verificar como fazer para expor o Prometheus que está no AWS EKS.
+expondo via service:
+https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/exposing-prometheus-and-alertmanager.md
+Necessário ajustar o cluster EKS, para que tenha Nodes publicos numa Subnet Publica, para ter um External IP.
+Avaliar se criar Cluster EKS só com o Node-group de Subnet Publica ou expor via Ingress(verificar como).
+
+- Quando utilizando Persistence, os Pods do Prometheus-Server e do AlertManager não sobem.
+Pode ser devido o GP2 e o PVC que eles tentam utilizar.
+Tentar aplicar solução, criando o PVC tbm:
+https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-setup-it-by-helm-in-kubernetes-cluster-on-ranch
+<https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-setup-it-by-helm-in-kubernetes-cluster-on-ranch>
+
+- Helm via Terraform, verificar como fazer o Terraform aplicar o chart do Prometheus.
+usar o values personalizado.

@@ -28,6 +28,7 @@ module "eks_blueprints" {
   # EKS Cluster VPC and Subnet mandatory config
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnets
+  public_subnet_ids = module.vpc.public_subnets
 
   # EKS CONTROL PLANE VARIABLES
   cluster_version = local.cluster_version
@@ -72,6 +73,12 @@ module "eks_blueprints" {
       node_group_name = local.node_group_name
       instance_types  = ["t3a.medium"]
       subnet_ids      = module.vpc.private_subnets
+      #subnet_ids      = module.vpc.public_subnets
+    }
+    T3A_NODE2 = {
+      node_group_name = "teste2"
+      instance_types  = ["t3a.medium"]
+      subnet_ids      = module.vpc.public_subnets
     }
   }
 
@@ -88,14 +95,6 @@ module "eks_blueprints" {
 }
 
 
-
-# Prometheus Stack, usando addons
-
-module "kubernetes_addons" {
-source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.22.0/modules/kubernetes-addons"
-  enable_metrics_server                = true
-  enable_kube_prometheus_stack         = true # <-- Add this line
-}
 
 
 # VPC
