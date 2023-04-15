@@ -269,6 +269,9 @@ resource "kubectl_manifest" "rbac" {
 
 module "kubernetes_addons" {
 source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.21.0/modules/kubernetes-addons"
+
+  eks_cluster_id                = module.eks_blueprints.eks_cluster_id
+
   enable_aws_load_balancer_controller  = true
   enable_amazon_eks_aws_ebs_csi_driver = true
   enable_metrics_server                = true

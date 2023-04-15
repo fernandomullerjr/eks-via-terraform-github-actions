@@ -31,8 +31,22 @@ terraform destroy -auto-approve
 - Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
 
 
+## PROMETHEUS
+
+- Foram usados os addons de Prometheus(kube-prometheus-stack) para subir o Prometheus, Grafana e AlertManager:
+https://catalog.workshops.aws/eks-blueprints-terraform/en-US/050-observability/2-metrics-kube-prometheus-stack#metrics-with-kube-prometheus-stack
+https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
 
 
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Dia 01/04/2023
 
@@ -1732,7 +1746,79 @@ source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.21.0/modules/kub
 ~~~~
 
 
+
+
+- Aplicando:
 terraform apply -target=module.kubernetes_addons -auto-approve
+
+- Erro durante apply:
+
+~~~~bash
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform apply -target=module.kubernetes_addons -auto-approve
+╷
+│ Error: Missing required argument
+│
+│   on main.tf line 270, in module "kubernetes_addons":
+│  270: module "kubernetes_addons" {
+│
+│ The argument "eks_cluster_id" is required, but no definition was found.
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+~~~~
+
+
+
+- Detalhes
+https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+<https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack>
+
+
+
+- Adicionada a linha abaixo, para resolver o erro:
+eks_cluster_id                = module.eks_blueprints.eks_cluster_id
+
+
+- Aplicado:
+
+~~~~bash
+
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still creating... [2m20s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still creating... [2m30s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still creating... [2m40s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still creating... [2m50s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still creating... [3m0s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Creation complete after 3m2s [id=kube-prometheus-stack]
+╷
+│ Warning: Resource targeting is in effect
+│
+│ You are creating a plan with the -target option, which means that the result of this plan may not represent all of the changes requested by the current configuration.
+│
+│ The -target option is not for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform specifically suggests to use
+│ it as part of an error message.
+╵
+╷
+│ Warning: Applied changes may be incomplete
+│
+│ The plan was created with the -target option in effect, so some changes requested in the configuration may have been ignored and the output values may not be fully updated. Run the
+│ following command to verify that no other changes are pending:
+│     terraform plan
+│
+│ Note that the -target option is not suitable for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform
+│ specifically suggests to use it as part of an error message.
+╵
+
+Apply complete! Resources: 13 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-09c7f99a7574131f7"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+~~~~
+
+
+
 
 After successful installation you can see all Kube Prometheus Stack pods created and running under kube-prometheus-stack namespace:
 exemplo:
@@ -1750,16 +1836,103 @@ prometheus-kube-prometheus-stack-prometheus-0               2/2     Running   0 
 ~~~~
 
 
-fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform apply -target=module.kubernetes_addons -auto-approve
-╷
-│ Error: Missing required argument
-│
-│   on main.tf line 270, in module "kubernetes_addons":
-│  270: module "kubernetes_addons" {
-│
-│ The argument "eks_cluster_id" is required, but no definition was found.
-╵
-fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+kubectl -n kube-prometheus-stack get pods
+
+~~~~BASH
+fernando@debian10x64:~$ kubectl -n kube-prometheus-stack get pods
+NAME                                                        READY   STATUS    RESTARTS        AGE
+alertmanager-kube-prometheus-stack-alertmanager-0           2/2     Running   1 (2m27s ago)   2m31s
+kube-prometheus-stack-grafana-76df987db5-5wldn              3/3     Running   0               2m35s
+kube-prometheus-stack-kube-state-metrics-5d5f6ff4bc-8gg8h   1/1     Running   0               2m35s
+kube-prometheus-stack-operator-8d4d67d7d-hzc8r              1/1     Running   0               2m35s
+kube-prometheus-stack-prometheus-node-exporter-ckkxk        1/1     Running   0               2m35s
+kube-prometheus-stack-prometheus-node-exporter-sj8bn        1/1     Running   0               2m35s
+kube-prometheus-stack-prometheus-node-exporter-z9nc5        1/1     Running   0               2m35s
+prometheus-kube-prometheus-stack-prometheus-0               2/2     Running   0               2m31s
+fernando@debian10x64:~$ date
+Sat 15 Apr 2023 08:32:02 PM -03
+fernando@debian10x64:~$
+~~~~
+
+
+Let's login to Grafana now and see all metrics scraped by Prometheus displayed in beautiful Grafana dashboards.
+
+    Get Grafana admin password:
+
+1
+kubectl get secret --namespace kube-prometheus-stack kube-prometheus-stack-grafana  -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+    To access Grafana dashboard you should forward your local port 8080 to the Grafana port 3030 with next command:
+
+1
+kubectl port-forward kube-prometheus-stack-grafana-78457d9fc8-p48d9 -n kube-prometheus-stack --address 0.0.0.0 8080:3000
+
+    Open your browser and go to http://localhost:8080/ 
+
+    . Then, login with username admin and above received password (default password: prom-operator).
+
+    Inside Grafana, under Dashboards you can browse different preconfigured dashboards available for you out of the box.
+
+As you can see, getting observability (logs and metrics) setup is pretty easy and straight forward with AWS EKS Blueprints Addons available for you. Now, let move into distributed tracing configuration.
 
 
 
+
+fernando@debian10x64:~$ kubectl get secret --namespace kube-prometheus-stack kube-prometheus-stack-grafana  -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+prom-operator
+fernando@debian10x64:~$
+
+kubectl port-forward kube-prometheus-stack-grafana-76df987db5-5wldn -n kube-prometheus-stack --address 0.0.0.0 8080:3000
+
+
+
+- Acessando:
+192.168.0.110:8080
+
+~~~~bash
+
+fernando@debian10x64:~$ curl -v 192.168.0.110:8080
+* Expire in 0 ms for 6 (transfer 0x55934eccffb0)
+*   Trying 192.168.0.110...
+* TCP_NODELAY set
+* Expire in 200 ms for 4 (transfer 0x55934eccffb0)
+* Connected to 192.168.0.110 (192.168.0.110) port 8080 (#0)
+> GET / HTTP/1.1
+> Host: 192.168.0.110:8080
+> User-Agent: curl/7.64.0
+> Accept: */*
+>
+< HTTP/1.1 302 Found
+< Cache-Control: no-cache
+< Content-Type: text/html; charset=utf-8
+< Expires: -1
+< Location: /login
+< Pragma: no-cache
+< Set-Cookie: redirect_to=%2F; Path=/; HttpOnly; SameSite=Lax
+< X-Content-Type-Options: nosniff
+< X-Frame-Options: deny
+< X-Xss-Protection: 1; mode=block
+< Date: Sat, 15 Apr 2023 23:34:22 GMT
+< Content-Length: 29
+<
+<a href="/login">Found</a>.
+
+* Connection #0 to host 192.168.0.110 left intact
+fernando@debian10x64:~$
+
+~~~~
+
+
+
+- Via navegador no Notebook-Avell local, OK também!
+- Via navegador no Notebook-Avell local, OK também!
+- Via navegador no Notebook-Avell local, OK também!
+- Via navegador no Notebook-Avell local, OK também!
+
+
+
+- Foram usados os addons de Prometheus(kube-prometheus-stack) para subir o Prometheus, Grafana e AlertManager:
+https://catalog.workshops.aws/eks-blueprints-terraform/en-US/050-observability/2-metrics-kube-prometheus-stack#metrics-with-kube-prometheus-stack
+https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
