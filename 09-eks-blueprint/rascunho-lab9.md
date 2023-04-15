@@ -8,10 +8,14 @@ https://catalog.workshops.aws/eks-blueprints-terraform/en-US/030-provision-eks-c
 
 
 # RESUMO
+
+- COMANDOS
 terraform apply -target=module.vpc -auto-approve
 terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -target=module.kubernetes_addons -auto-approve
 terraform apply -auto-approve
 
+terraform destroy -target=module.kubernetes_addons -auto-approve
 terraform destroy -target=module.eks_blueprints -auto-approve
 terraform destroy -target=module.vpc -auto-approve
 terraform destroy -auto-approve
@@ -1611,12 +1615,16 @@ terraform destroy -auto-approve
 https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
 
 ## Continuar em:
+
 - Expor Prometheus ao mundo, verificar como fazer para expor o Prometheus que está no AWS EKS.
 expondo via service:
 https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/exposing-prometheus-and-alertmanager.md
 Necessário ajustar o cluster EKS, para que tenha Nodes publicos numa Subnet Publica, para ter um External IP.
 Avaliar se criar Cluster EKS só com o Node-group de Subnet Publica ou expor via Ingress(verificar como).
 
+Expor o Prometheus via Ingress ao invés de Port-Forward
+
+- Persistencia, ver melhor maneira e erros ocorridos.
 - Quando utilizando Persistence, os Pods do Prometheus-Server e do AlertManager não sobem.
 Pode ser devido o GP2 e o PVC que eles tentam utilizar.
 Tentar aplicar solução, criando o PVC tbm:
@@ -1625,3 +1633,133 @@ https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-se
 
 - Helm via Terraform, verificar como fazer o Terraform aplicar o chart do Prometheus.
 usar o values personalizado.
+
+
+
+
+
+
+
+# Dia 15/04/2023
+
+- Expor o Prometheus via Ingress ao invés de Port-Forward
+
+- Subindo EKS
+
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -auto-approve
+
+
+19:34h
+terraform apply -target=module.eks_blueprints -auto-approve
+
+
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-09c7f99a7574131f7"
+
+
+- Comentando o node-group "T3A_NODE2" no manifesto main.tf, para remover as maquinas das Subnets Publicas:
+"T3A_NODE2"
+eks-via-terraform-github-actions/09-eks-blueprint/main.tf
+~~~~h
+#    T3A_NODE2 = {
+#      node_group_name = "teste2"
+#      instance_types  = ["t3a.medium"]
+#      subnet_ids      = module.vpc.public_subnets
+#    }
+~~~~
+
+
+
+
+
+
+- Expor o Prometheus via Ingress ao invés de Port-Forward
+
+
+
+- Via Blueprint
+
+https://catalog.workshops.aws/eks-blueprints-terraform/en-US/050-observability/2-metrics-kube-prometheus-stack
+<https://catalog.workshops.aws/eks-blueprints-terraform/en-US/050-observability/2-metrics-kube-prometheus-stack>
+
+Metrics with Kube Prometheus Stack
+
+Another add-on that is available on EKS Blueprints for Terraform is Kube Prometheus Stack. This particular add-on when enabled installs Prometheus instance, Prometheus operator, kube-state-metrics, node-exporter, alertmanager as well as Grafana instance with preconfigured dashboards. This stack is meant for cluster monitoring, so it is pre-configured to collect metrics from all Kubernetes components. In addition to that it delivers a default set of dashboards and alerting rules. More on kube-prometheus-stack 
+
+.
+
+Add following configuration under kubernetes_addons section in your main.tf file:
+
+~~~~h
+module "kubernetes_addons" {
+source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.22.0/modules/kubernetes-addons"
+... ommitted content for brevity ...
+
+  enable_aws_load_balancer_controller  = true
+  enable_amazon_eks_aws_ebs_csi_driver = true
+  enable_aws_for_fluentbit             = true
+  enable_metrics_server                = true
+  enable_argo_rollouts                 = true 
+  enable_kube_prometheus_stack         = true # <-- Add this line
+
+... ommitted content for brevity ...
+}
+~~~~
+
+And, apply changes:
+
+# Always a good practice to use a dry-run command
+terraform plan
+
+# Apply changes to provision the Platform Team
+terraform apply -auto-approve
+
+
+
+- Editando
+
+~~~~h
+module "kubernetes_addons" {
+source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.21.0/modules/kubernetes-addons"
+  enable_aws_load_balancer_controller  = true
+  enable_amazon_eks_aws_ebs_csi_driver = true
+  enable_metrics_server                = true
+  enable_kube_prometheus_stack         = true # <-- Add this line
+}
+~~~~
+
+
+terraform apply -target=module.kubernetes_addons -auto-approve
+
+After successful installation you can see all Kube Prometheus Stack pods created and running under kube-prometheus-stack namespace:
+exemplo:
+~~~~BASH
+$ kubectl -n kube-prometheus-stack get pods
+NAME                                                        READY   STATUS    RESTARTS   AGE
+alertmanager-kube-prometheus-stack-alertmanager-0           2/2     Running   0          32d
+kube-prometheus-stack-grafana-78457d9fc8-p48d9              3/3     Running   0          32d
+kube-prometheus-stack-kube-state-metrics-5f6d6c64d5-xvcpw   1/1     Running   0          32d
+kube-prometheus-stack-operator-6f4f8975fb-slt5c             1/1     Running   0          32d
+kube-prometheus-stack-prometheus-node-exporter-jsfz6        1/1     Running   0          32d
+kube-prometheus-stack-prometheus-node-exporter-qgxqp        1/1     Running   0          32d
+kube-prometheus-stack-prometheus-node-exporter-xh2z7        1/1     Running   0          32d
+prometheus-kube-prometheus-stack-prometheus-0               2/2     Running   0          32d
+~~~~
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform apply -target=module.kubernetes_addons -auto-approve
+╷
+│ Error: Missing required argument
+│
+│   on main.tf line 270, in module "kubernetes_addons":
+│  270: module "kubernetes_addons" {
+│
+│ The argument "eks_cluster_id" is required, but no definition was found.
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+

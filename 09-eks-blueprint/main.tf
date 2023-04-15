@@ -75,11 +75,11 @@ module "eks_blueprints" {
       subnet_ids      = module.vpc.private_subnets
       #subnet_ids      = module.vpc.public_subnets
     }
-    T3A_NODE2 = {
-      node_group_name = "teste2"
-      instance_types  = ["t3a.medium"]
-      subnet_ids      = module.vpc.public_subnets
-    }
+#    T3A_NODE2 = {
+#      node_group_name = "teste2"
+#      instance_types  = ["t3a.medium"]
+#      subnet_ids      = module.vpc.public_subnets
+#    }
   }
 
   # teams
@@ -265,4 +265,17 @@ resource "kubectl_manifest" "rbac" {
   depends_on = [
     module.eks_blueprints
   ]
+}
+
+module "kubernetes_addons" {
+source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.21.0/modules/kubernetes-addons"
+  enable_aws_load_balancer_controller  = true
+  enable_amazon_eks_aws_ebs_csi_driver = true
+  enable_metrics_server                = true
+  enable_kube_prometheus_stack         = true # <-- Add this line
+
+  depends_on = [
+    module.eks_blueprints
+  ]
+
 }
