@@ -277,6 +277,16 @@ source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.21.0/modules/kub
   enable_metrics_server                = true
   enable_kube_prometheus_stack         = true # <-- Add this line
 
+  kube_prometheus_stack_helm_config = {
+    name       = "kube-prometheus-stack"                                         # (Required) Release name.
+    #repository = "https://prometheus-community.github.io/helm-charts" # (Optional) Repository URL where to locate the requested chart.
+    chart      = "kube-prometheus-stack"                                         # (Required) Chart name to be installed.
+    namespace  = "kube-prometheus-stack"                                        # (Optional) The namespace to install the release into.
+    values = [templatefile("${path.module}/values-stack.yaml", {
+      operating_system = "linux"
+    })]
+  }
+
   depends_on = [
     module.eks_blueprints
   ]
