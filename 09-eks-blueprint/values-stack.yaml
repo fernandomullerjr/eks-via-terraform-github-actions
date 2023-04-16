@@ -1,0 +1,41 @@
+defaultRules:
+  create: true
+  rules:
+    etcd: false
+    kubeScheduler: false
+kubeControllerManager:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeScheduler:
+  enabled: false
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 20Gi
+          storageClassName: gp2
+  enabled: true
+  ## Configuration for Prometheus service
+  ##
+  service:
+    annotations: {}
+    labels: {}
+    clusterIP: ""
+    port: 9090
+    ## To be used with a proxy extraContainer port
+    targetPort: 9090
+    ## List of IP addresses at which the Prometheus server service is available
+    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+    ##
+    externalIPs: []
+    ## Port to expose on each node
+    ## Only used if service.type is 'NodePort'
+    ##
+    nodePort: 30090
+    type: NodePort
