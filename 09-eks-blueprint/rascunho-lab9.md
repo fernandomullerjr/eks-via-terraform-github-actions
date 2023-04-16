@@ -37,8 +37,9 @@ terraform destroy -auto-approve
 https://catalog.workshops.aws/eks-blueprints-terraform/en-US/050-observability/2-metrics-kube-prometheus-stack#metrics-with-kube-prometheus-stack
 https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
 
-
-
+- Port-forward
+kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name
+kubectl port-forward $(kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name) -n kube-prometheus-stack --address 0.0.0.0 8080:3000
 
 
 
@@ -1886,6 +1887,10 @@ fernando@debian10x64:~$
 
 kubectl port-forward kube-prometheus-stack-grafana-76df987db5-5wldn -n kube-prometheus-stack --address 0.0.0.0 8080:3000
 
+fernando@debian10x64:~$ kubectl port-forward kube-prometheus-stack-grafana-76df987db5-5wldn -n kube-prometheus-stack --address 0.0.0.0 8080:3000
+Forwarding from 0.0.0.0:8080 -> 3000
+Handling connection for 8080
+
 
 
 - Acessando:
@@ -1936,3 +1941,39 @@ fernando@debian10x64:~$
 - Foram usados os addons de Prometheus(kube-prometheus-stack) para subir o Prometheus, Grafana e AlertManager:
 https://catalog.workshops.aws/eks-blueprints-terraform/en-US/050-observability/2-metrics-kube-prometheus-stack#metrics-with-kube-prometheus-stack
 https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+
+
+
+
+
+
+
+
+kubectl get pods --selector app.kubernetes.io/name=grafana -A
+
+fernando@debian10x64:~$ kubectl get pods --selector app.kubernetes.io/name=grafana -A
+NAMESPACE               NAME                                             READY   STATUS    RESTARTS   AGE
+kube-prometheus-stack   kube-prometheus-stack-grafana-76df987db5-5wldn   3/3     Running   0          25m
+fernando@debian10x64:~$
+
+
+
+kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack
+
+fernando@debian10x64:~$ kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack
+NAME                                             READY   STATUS    RESTARTS   AGE
+kube-prometheus-stack-grafana-76df987db5-5wldn   3/3     Running   0          25m
+fernando@debian10x64:~$
+
+
+
+
+
+kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name
+
+
+fernando@debian10x64:~$ kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name
+pod/kube-prometheus-stack-grafana-76df987db5-5wldn
+fernando@debian10x64:~$
+
+kubectl port-forward $(kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name) -n kube-prometheus-stack --address 0.0.0.0 8080:3000
