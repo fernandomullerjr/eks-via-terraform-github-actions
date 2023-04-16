@@ -69,17 +69,17 @@ module "eks_blueprints" {
 
   # EKS MANAGED NODE GROUPS
   managed_node_groups = {
-    T3A_NODE = {
-      node_group_name = local.node_group_name
-      instance_types  = ["t3a.medium"]
-      subnet_ids      = module.vpc.private_subnets
-      #subnet_ids      = module.vpc.public_subnets
-    }
-#    T3A_NODE2 = {
-#      node_group_name = "teste2"
+#    T3A_NODE = {
+#      node_group_name = local.node_group_name
 #      instance_types  = ["t3a.medium"]
-#      subnet_ids      = module.vpc.public_subnets
+#      subnet_ids      = module.vpc.private_subnets
+#      #subnet_ids      = module.vpc.public_subnets
 #    }
+    T3A_NODE2 = {
+      node_group_name = "teste2"
+      instance_types  = ["t3a.medium"]
+      subnet_ids      = module.vpc.public_subnets
+    }
   }
 
   # teams

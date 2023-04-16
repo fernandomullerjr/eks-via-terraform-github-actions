@@ -31,6 +31,10 @@ terraform destroy -auto-approve
 - Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
 
 
+## INFO
+
+- Projeto sobe EKS + Prometheus + Grafana + AlertManager
+
 ## PROMETHEUS
 
 - Foram usados os addons de Prometheus(kube-prometheus-stack) para subir o Prometheus, Grafana e AlertManager:
@@ -41,7 +45,8 @@ https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-promet
 kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name
 kubectl port-forward $(kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name) -n kube-prometheus-stack --address 0.0.0.0 8080:3000
 
-
+- Senha do Grafana:
+prom-operator
 
 
 
@@ -1968,12 +1973,203 @@ fernando@debian10x64:~$
 
 
 
+- Acesso ao grafana OK via Port-forward:
 
+~~~~bash
 kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name
-
 
 fernando@debian10x64:~$ kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name
 pod/kube-prometheus-stack-grafana-76df987db5-5wldn
 fernando@debian10x64:~$
 
 kubectl port-forward $(kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name) -n kube-prometheus-stack --address 0.0.0.0 8080:3000
+~~~~
+
+
+- Erro ao tentar acessar o Prometheus via Port-forward:
+
+~~~~bash
+kubectl get pods --selector app.kubernetes.io/name=prometheus -n kube-prometheus-stack -o=name
+
+kubectl port-forward $(kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name) -n kube-prometheus-stack --address 0.0.0.0 9090:9090
+
+
+fernando@debian10x64:~$ kubectl port-forward $(kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name) -n kub                                        e-prometheus-stack --address 0.0.0.0 9090:9090
+Forwarding from 0.0.0.0:9090 -> 9090
+Handling connection for 9090
+E0415 21:00:15.583457    7565 portforward.go:406] an error occurred forwarding 9090 -> 9090: error forwarding port 9090 to pod d8643b07130cd250e6b20a3efb270e49dd548763365d2dd375f535755add34a6, uid : exit status 1: 2023/04/16 00:00:15 socat[25647] E connect(5, AF=2 127.0.0.1:9090, 16): Connection refused
+E0415 21:00:15.585253    7565 portforward.go:234] lost connection to pod
+fernando@debian10x64:~$
+~~~~
+
+
+
+- Container do Prometheus tem esses argumentos
+
+Arguments
+
+    --web.console.templates=/etc/prometheus/consoles
+    --web.console.libraries=/etc/prometheus/console_libraries
+    --storage.tsdb.retention.time=10d
+    --config.file=/etc/prometheus/config_out/prometheus.env.yaml
+    --storage.tsdb.path=/prometheus
+    --web.enable-lifecycle
+    --web.external-url=http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090
+    --web.route-prefix=/
+    --storage.tsdb.wal-compression
+    --web.config.file=/etc/prometheus/web_config/web-config.yaml
+
+
+
+e como deve estar a variável web.external-url?
+
+A variável web.external-url é usada para definir a URL externa do Prometheus, que é usada para construir URLs absolutas para consultas e alertas. Se você deseja acessar o Prometheus de um navegador ou ferramenta externa, é importante definir essa variável corretamente.
+
+Por padrão, a variável web.external-url é comentada no arquivo de configuração prometheus.yml do kube-prometheus-stack. Para definir essa variável, você deve descomentá-la e atribuir a URL externa do seu Prometheus.
+
+Por exemplo, se você deseja definir a URL externa como http://prometheus.example.com, sua configuração deve incluir a seguinte linha:
+
+kotlin
+
+web:
+  external-url: http://prometheus.example.com
+
+Você pode adicionar esta linha no arquivo prometheus.yml ou definir a variável como um argumento de linha de comando no momento da inicialização do Prometheus. Por exemplo, se estiver usando o docker run, você pode definir a variável usando o seguinte comando:
+
+bash
+
+docker run -p 9090:9090 -v /path/to/prometheus.yml:/etc/prometheus/prometheus.yml -e "web.external-url=http://prometheus.example.com" prom/prometheus
+
+Lembre-se de substituir http://prometheus.example.com pela URL externa correta do seu Prometheus.
+
+
+
+
+
+
+Quando o argumento --web.external-url=http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090 é passado dessa maneira, isso significa que a variável web.external-url está sendo definida com o valor http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090.
+
+Isso indica que a URL externa do Prometheus é definida como http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090. Esse valor deve ser substituído pelo endereço correto do seu servidor Prometheus.
+
+Note que a URL http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090 inclui o nome do host do Pod do Prometheus (kube-prometheus-stack-prometheus) e o nome do namespace (kube-prometheus-stack), seguido da porta (9090). Isso é usado para acessar o serviço do Prometheus de dentro do cluster do Kubernetes.
+
+Se você quiser acessar o Prometheus de fora do cluster, é necessário definir um serviço do tipo LoadBalancer ou NodePort para o serviço do Prometheus e, em seguida, usar o endereço IP ou nome de host externo do serviço em sua variável web.external-url.
+
+
+
+
+
+
+kubectl exec -ti $(kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name) -n kube-prometheus-stack -- sh
+
+
+
+    - --web.external-url=http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090
+
+
+
+    - --web.external-url:
+     - http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090
+     - http://192.168.0.110:9090
+
+fernando@debian10x64:~$ ^C
+fernando@debian10x64:~$ kubectl edit pod/prometheus-kube-prometheus-stack-prometheus-0 -n kube-prometheus-stack
+Edit cancelled, no changes made.
+fernando@debian10x64:~$ kubectl edit pod/prometheus-kube-prometheus-stack-prometheus-0 -n kube-prometheus-stack
+error: pods "prometheus-kube-prometheus-stack-prometheus-0" is invalid
+A copy of your changes has been stored to "/tmp/kubectl-edit-1507445489.yaml"
+error: Edit cancelled, no valid changes were saved.
+fernando@debian10x64:~$
+
+
+
+
+
+- EFETUANDO DESTROY
+terraform destroy -target=module.kubernetes_addons -auto-approve
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# PENDENTE
+
+## Material de apoio:
+- Values de referencia:
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/bkp-antes/values.yaml
+
+- Chart do Prometheus
+https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
+
+## Continuar em:
+
+- Expor Prometheus ao mundo, verificar como fazer para expor o Prometheus que está no AWS EKS.
+expondo via service:
+https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/exposing-prometheus-and-alertmanager.md
+Necessário ajustar o cluster EKS, para que tenha Nodes publicos numa Subnet Publica, para ter um External IP.
+Avaliar se criar Cluster EKS só com o Node-group de Subnet Publica ou expor via Ingress(verificar como).
+
+Expor o Prometheus via Ingress ao invés de Port-Forward
+
+- Grafana OK.
+
+- Prometheus ÑOK
+erros no Port-forward
+E0415 21:00:15.583457    7565 portforward.go:406] an error occurred forwarding 9090 -> 9090: error forwarding port 9090 to pod 
+
+- Ver como passar um value para o Prometheus utilizar um web.external-url diferente?
+https://aws-ia.github.io/terraform-aws-eks-blueprints/add-ons/prometheus/
+
+- Ver como o kube-prometheus-stack pode ser configurado para expor uma URL diferente desta:
+    --web.external-url=http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090
+https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+
+- Persistencia, ver melhor maneira e erros ocorridos.
+- Quando utilizando Persistence, os Pods do Prometheus-Server e do AlertManager não sobem.
+Pode ser devido o GP2 e o PVC que eles tentam utilizar.
+Tentar aplicar solução, criando o PVC tbm:
+https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-setup-it-by-helm-in-kubernetes-cluster-on-ranch
+<https://stackoverflow.com/questions/47235014/why-prometheus-pod-pending-after-setup-it-by-helm-in-kubernetes-cluster-on-ranch>
+https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+<https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack>
+
+- Helm via Terraform, verificar como fazer o Terraform aplicar o chart do Prometheus.
+usar o values personalizado.
+
+
+
+
+
+
+
+
+
+
+
+
+
+# dia 16/04/2023
+
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -target=module.kubernetes_addons -auto-approve
+terraform apply -auto-approve
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0b887b33857e57ce9"
+
+
+
+
+https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/modules/kubernetes-addons/kube-prometheus-stack
+kube-prometheus-stack Helm Chart
+Introduction
+
+kube-prometheus-stack is a a collection of Kubernetes manifests, Grafana dashboards, and Prometheus rules combined with documentation and scripts to provide easy to operate end-to-end Kubernetes cluster monitoring with Prometheus using the Prometheus Operator.
+
+The default values.yaml file in this add-on has disabled the components that are unreachable in EKS environments, and an EBS Volume for Persistent Storage.
