@@ -2251,3 +2251,269 @@ prometheus:
     annotations: {}
     labels: {}
     clusterIP: ""
+
+
+
+- Editado o main.tf:
+
+~~~~h
+
+module "kubernetes_addons" {
+source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.21.0/modules/kubernetes-addons"
+
+  eks_cluster_id                = module.eks_blueprints.eks_cluster_id
+
+  enable_aws_load_balancer_controller  = true
+  enable_amazon_eks_aws_ebs_csi_driver = true
+  enable_metrics_server                = true
+  enable_kube_prometheus_stack         = true # <-- Add this line
+
+  kube_prometheus_stack_helm_config = {
+    name       = "kube-prometheus-stack"                                         # (Required) Release name.
+    #repository = "https://prometheus-community.github.io/helm-charts" # (Optional) Repository URL where to locate the requested chart.
+    chart      = "kube-prometheus-stack"                                         # (Required) Chart name to be installed.
+    namespace  = "kube-prometheus-stack"                                        # (Optional) The namespace to install the release into.
+    values = [templatefile("${path.module}/values-stack.yaml", {
+      operating_system = "linux"
+    })]
+  }
+
+  depends_on = [
+    module.eks_blueprints
+  ]
+
+}
+~~~~
+
+
+
+
+- Efetuando plan e apply:
+
+terraform apply -auto-approve
+
+~~~~bash
+
+Terraform will perform the following actions:
+
+  # module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0] will be updated in-place
+  ~ resource "helm_release" "addon" {
+        id                         = "kube-prometheus-stack"
+        name                       = "kube-prometheus-stack"
+      ~ values                     = [
+          - <<-EOT
+                # Create default rules for monitoring the cluster
+                # Disable rules for unreachable components
+                defaultRules:
+                  create: true
+                  rules:
+                    etcd: false
+                    kubeScheduler: false
+
+                # Disable component scraping for the kube controller manager, etcd, and kube-scheduler
+                # These components are not reachable on EKS
+                kubeControllerManager:
+                  enabled: false
+                kubeEtcd:
+                  enabled: false
+                kubeScheduler:
+                  enabled: false
+
+                prometheus:
+                  prometheusSpec:
+                    # Prometheus StorageSpec for persistent data on AWS EBS
+                    # ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/storage.md
+                    storageSpec:
+                     volumeClaimTemplate:
+                       spec:
+                         storageClassName: gp2
+                         accessModes: ["ReadWriteOnce"]
+                         resources:
+                           requests:
+                             storage: 20Gi
+            EOT,
+          + <<-EOT
+                defaultRules:
+                  create: true
+                  rules:
+                    etcd: false
+                    kubeScheduler: false
+                kubeControllerManager:
+                  enabled: false
+                kubeEtcd:
+                  enabled: false
+                kubeScheduler:
+                  enabled: false
+                prometheus:
+                  prometheusSpec:
+                    storageSpec:
+                      volumeClaimTemplate:
+                        spec:
+                          accessModes:
+                          - ReadWriteOnce
+                          resources:
+                            requests:
+                              storage: 20Gi
+                          storageClassName: gp2
+                  enabled: true
+                  ## Configuration for Prometheus service
+                  ##
+                  service:
+                    annotations: {}
+                    labels: {}
+                    clusterIP: ""
+                    port: 9090
+                    ## To be used with a proxy extraContainer port
+                    targetPort: 9090
+                    ## List of IP addresses at which the Prometheus server service is available
+                    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+                    ##
+                    externalIPs: []
+                    ## Port to expose on each node
+                    ## Only used if service.type is 'NodePort'
+                    ##
+                    nodePort: 30090
+                    type: NodePort
+            EOT,
+        ]
+        # (28 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+Plan: 0 to add, 1 to change, 0 to destroy.
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Modifying... [id=kube-prometheus-stack]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 10s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 20s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 30s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 40s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 50s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 1m0s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 1m10s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 1m20s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 1m30s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 1m40s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 1m50s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 2m0s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 2m10s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 2m20s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 2m30s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 2m40s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 2m50s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 3m0s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 3m10s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 3m20s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 3m30s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 3m40s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 3m50s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 4m0s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 4m10s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 4m20s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 4m30s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 4m40s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 4m50s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Still modifying... [id=kube-prometheus-stack, 5m0s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Modifications complete after 5m1s [id=kube-prometheus-stack]
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0b887b33857e57ce9"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+~~~~
+
+
+
+
+
+
+
+
+- Verificando o Service, virou NodePort e com a port desejada.
+- Nodes estão com ips publicos.
+- Primeiro teste de acesso ao Prometheus via, sem sucesso.
+- Liberado tráfego para todas origens na SG da EC2, acesso ficou OK.
+
+~~~~bash
+
+SERVICE NodePort OK
+
+fernando@debian10x64:~$ kubectl get svc -A
+NAMESPACE               NAME                                             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                        AGE
+default                 kubernetes                                       ClusterIP   172.20.0.1       <none>        443/TCP                        82m
+kube-prometheus-stack   alertmanager-operated                            ClusterIP   None             <none>        9093/TCP,9094/TCP,9094/UDP     70m
+kube-prometheus-stack   kube-prometheus-stack-alertmanager               ClusterIP   172.20.64.90     <none>        9093/TCP                       70m
+kube-prometheus-stack   kube-prometheus-stack-grafana                    ClusterIP   172.20.217.105   <none>        80/TCP                         70m
+kube-prometheus-stack   kube-prometheus-stack-kube-state-metrics         ClusterIP   172.20.78.3      <none>        8080/TCP                       70m
+kube-prometheus-stack   kube-prometheus-stack-operator                   ClusterIP   172.20.4.0       <none>        443/TCP                        70m
+kube-prometheus-stack   kube-prometheus-stack-prometheus                 NodePort    172.20.207.228   <none>        9090:30090/TCP                 70m
+kube-prometheus-stack   kube-prometheus-stack-prometheus-node-exporter   ClusterIP   172.20.52.51     <none>        9100/TCP                       70m
+kube-prometheus-stack   prometheus-operated                              ClusterIP   None             <none>        9090/TCP                       70m
+kube-system             aws-load-balancer-webhook-service                ClusterIP   172.20.0.233     <none>        443/TCP                        72m
+kube-system             kube-dns                                         ClusterIP   172.20.0.10      <none>        53/UDP,53/TCP                  82m
+kube-system             kube-prometheus-stack-coredns                    ClusterIP   None             <none>        9153/TCP                       70m
+kube-system             kube-prometheus-stack-kube-proxy                 ClusterIP   None             <none>        10249/TCP                      70m
+kube-system             kube-prometheus-stack-kubelet                    ClusterIP   None             <none>        10250/TCP,10255/TCP,4194/TCP   70m
+kube-system             metrics-server                                   ClusterIP   172.20.60.69     <none>        443/TCP                        72m
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$ kubectl get nodes -o wide
+NAME                         STATUS   ROLES    AGE   VERSION                INTERNAL-IP   EXTERNAL-IP     OS-IMAGE         KERNEL-VERSION                 CONTAINER-RUNTIME
+ip-10-0-0-226.ec2.internal   Ready    <none>   77m   v1.23.17-eks-a59e1f0   10.0.0.226    3.235.247.118   Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+ip-10-0-1-218.ec2.internal   Ready    <none>   77m   v1.23.17-eks-a59e1f0   10.0.1.218    34.201.72.159   Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+ip-10-0-2-220.ec2.internal   Ready    <none>   77m   v1.23.17-eks-a59e1f0   10.0.2.220    3.80.31.184     Amazon Linux 2   5.4.238-148.346.amzn2.x86_64   docker://20.10.17
+
+
+TESTE ÑOK
+
+fernando@debian10x64:~$ curl -v 3.235.247.118:30090 | head
+* Expire in 0 ms for 6 (transfer 0x560fbe412fb0)
+*   Trying 3.235.247.118...
+* TCP_NODELAY set
+* Expire in 200 ms for 4 (transfer 0x560fbe412fb0)
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:--  0:00:31 --:--:--     0* connect to 3.235.247.118 port 30090 failed: Connection timed out
+* Failed to connect to 3.235.247.118 port 30090: Connection timed out
+* Closing connection 0
+curl: (7) Failed to connect to 3.235.247.118 port 30090: Connection timed out
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+fernando@debian10x64:~$
+
+TESTE OK - após liberada SG da EC2
+
+fernando@debian10x64:~$ curl -v 3.235.247.118:30090 | head -N 58
+head: invalid option -- 'N'
+Try 'head --help' for more information.
+* Expire in 0 ms for 6 (transfer 0x5648438d4fb0)
+*   Trying 3.235.247.118...
+* TCP_NODELAY set
+* Expire in 200 ms for 4 (transfer 0x5648438d4fb0)
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Connected to 3.235.247.118 (3.235.247.118) port 30090 (#0)
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0> GET / HTTP/1.1
+> Host: 3.235.247.118:30090
+> User-Agent: curl/7.64.0
+> Accept: */*
+>
+< HTTP/1.1 302 Found
+< Content-Type: text/html; charset=utf-8
+< Location: /graph
+< Date: Sun, 16 Apr 2023 23:38:31 GMT
+< Content-Length: 29
+<
+{ [29 bytes data]
+100    29  100    29    0     0     99      0 --:--:-- --:--:-- --:--:--    98
+* Connection #0 to host 3.235.247.118 left intact
+(23) Failed writing body
+fernando@debian10x64:~$
+
+~~~~
