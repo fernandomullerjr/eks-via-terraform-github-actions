@@ -2517,3 +2517,36 @@ Try 'head --help' for more information.
 fernando@debian10x64:~$
 
 ~~~~
+
+
+
+
+
+- RESUMO
+
+- Verifica a sintaxe de como editar o Helm Config:
+https://aws-ia.github.io/terraform-aws-eks-blueprints/add-ons/prometheus/
+
+- Verificados os valores padrão e os argumentos aceitos pelo módulo "Kubernetes Addons":
+https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/modules/kubernetes-addons#input_kube_prometheus_stack_helm_config
+verificado que precisa usar:
+kube_prometheus_stack_helm_config 	Community kube-prometheus-stack Helm Chart config 	any
+
+-Verificados os values utilizados pelo stack padrão:
+https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/modules/kubernetes-addons/kube-prometheus-stack/values.yaml
+
+- Verificados os values de referencia, para poder criar um mais completo/personalizado:
+https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
+
+- Adicionado o values personalizado no módulo "Kubernetes Addons":
+~~~~h
+templatefile("${path.module}/values-stack.yaml
+~~~~
+
+
+
+
+
+## PENDENTE
+- Ajustar SG das EC2 do node-group via manifesto do EKS-BLUEPRINT.
+- Criar KB, sobre como ajustar o Helm do "kube-prometheus-stack" via EKS-BLUEPRINT.
