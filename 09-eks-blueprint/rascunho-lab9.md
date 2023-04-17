@@ -2547,6 +2547,11 @@ templatefile("${path.module}/values-stack.yaml
 
 
 
+
+
+Como fazer o Terraform editar a SG que é anexada a EC2 dos node groups que são criados via módulo eks_blueprints ?
+
+
 ## PENDENTE
 - Ajustar SG das EC2 do node-group via manifesto do EKS-BLUEPRINT.
 - Criar KB, sobre como ajustar o Helm do "kube-prometheus-stack" via EKS-BLUEPRINT.
