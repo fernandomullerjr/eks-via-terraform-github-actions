@@ -20,3 +20,6 @@ Blueprint utilizado como referência:<br/>
 Um pouco mais sobre o Teams:<br/>
 <https://aws-ia.github.io/terraform-aws-eks-blueprints/teams/><br/>
 
+## kube-prometheus-stack Helm Chart
+Stack contendo Prometheus, Grafana e AlertManager
+<https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/modules/kubernetes-addons/kube-prometheus-stack>
