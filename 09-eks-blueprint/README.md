@@ -19,3 +19,4 @@ Blueprint utilizado como referência:<br/>
 ## Teams
 Um pouco mais sobre o Teams:<br/>
 <https://aws-ia.github.io/terraform-aws-eks-blueprints/teams/><br/>
+
