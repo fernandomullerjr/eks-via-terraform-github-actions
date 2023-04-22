@@ -2944,6 +2944,1553 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-
 
 
 
+~~~~bash
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform apply -auto-approve
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_tcp"] (deposed object 3b6a7f95): Refreshing state... [id=sgrule-3591147875]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_cluster_443"] (deposed object c23413c1): Refreshing state... [id=sgrule-1487053307]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["ingress_nodes_443"] (deposed object 508207ad): Refreshing state... [id=sgrule-695323498]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_udp"] (deposed object b3c7ec09): Refreshing state... [id=sgrule-3111923594]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_udp"] (deposed object b526a1b7): Refreshing state... [id=sgrule-2442639657]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_https"] (deposed object 0a4c5768): Refreshing state... [id=sgrule-819437882]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_443"] (deposed object 0a1b86ad): Refreshing state... [id=sgrule-3935461898]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_udp"] (deposed object c192202e): Refreshing state... [id=sgrule-1483412229]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_443"] (deposed object c5b6d455): Refreshing state... [id=sgrule-4177801947]
+module.eks_blueprints.module.aws_eks.aws_security_group.node[0] (deposed object f555d40c): Refreshing state... [id=sg-05419262c58b82268]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_kubelet"] (deposed object fdd872c2): Refreshing state... [id=sgrule-3081823999]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_tcp"] (deposed object f10922f1): Refreshing state... [id=sgrule-4010384420]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_tcp"] (deposed object 662c48b5): Refreshing state... [id=sgrule-488868965]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_kubelet"] (deposed object 27150a2d): Refreshing state... [id=sgrule-3147465503]
+module.vpc.aws_vpc.this[0]: Refreshing state... [id=vpc-06ce67bba86f683c1]
+aws_security_group.sg: Refreshing state... [id=sg-0acd6eab376a40bcb]
+module.vpc.aws_eip.nat[0]: Refreshing state... [id=eipalloc-060cc671fe2203562]
+module.eks_blueprints.module.aws_eks.aws_iam_role.this[0]: Refreshing state... [id=eks-lab-cluster-role]
+module.eks_blueprints.module.kms[0].aws_kms_key.this: Refreshing state... [id=9491e753-a277-4773-896f-48be5e7ed2a6]
+module.eks_blueprints.module.aws_eks.aws_iam_role_policy_attachment.this["arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"]: Refreshing state... [id=eks-lab-cluster-role-20230422000800428900000004]
+module.eks_blueprints.module.aws_eks.aws_iam_role_policy_attachment.this["arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"]: Refreshing state... [id=eks-lab-cluster-role-20230422000800207000000003]
+module.eks_blueprints.module.kms[0].aws_kms_alias.this: Refreshing state... [id=alias/eks-lab]
+module.vpc.aws_default_route_table.default[0]: Refreshing state... [id=rtb-02a490bd75e3d8b6a]
+module.vpc.aws_default_network_acl.this[0]: Refreshing state... [id=acl-01c3d18ad23948cb3]
+module.vpc.aws_subnet.private[1]: Refreshing state... [id=subnet-0bd033c7612c25e4a]
+module.eks_blueprints.module.aws_eks.aws_security_group.node[0]: Refreshing state... [id=sg-0f670a1c8e36994c1]
+module.vpc.aws_subnet.private[0]: Refreshing state... [id=subnet-07366daa05b22ae37]
+module.vpc.aws_default_security_group.this[0]: Refreshing state... [id=sg-0661a6303e0e91257]
+module.vpc.aws_internet_gateway.this[0]: Refreshing state... [id=igw-099098ea7db0bc5ef]
+module.vpc.aws_route_table.private[0]: Refreshing state... [id=rtb-0191c122852489100]
+module.vpc.aws_subnet.private[2]: Refreshing state... [id=subnet-05fef12bb2f126fdf]
+module.eks_blueprints.module.aws_eks.aws_security_group.cluster[0]: Refreshing state... [id=sg-02e6be5a34ccda5f7]
+module.vpc.aws_subnet.public[1]: Refreshing state... [id=subnet-0c4a8262511329c3f]
+module.vpc.aws_route_table.public[0]: Refreshing state... [id=rtb-0635faa6fa1be3306]
+module.vpc.aws_subnet.public[0]: Refreshing state... [id=subnet-09d514a08bac0e589]
+module.vpc.aws_subnet.public[2]: Refreshing state... [id=subnet-0d03d2d63e662d1b1]
+module.vpc.aws_route_table_association.private[2]: Refreshing state... [id=rtbassoc-0f5b1c96737a73fa4]
+module.vpc.aws_route_table_association.private[1]: Refreshing state... [id=rtbassoc-035687ec79e663950]
+module.vpc.aws_route_table_association.private[0]: Refreshing state... [id=rtbassoc-02d1e84cc4844a7a0]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_udp"]: Refreshing state... [id=sgrule-1584882114]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_cluster_443"]: Refreshing state... [id=sgrule-4196098811]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_443"]: Refreshing state... [id=sgrule-4188441368]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_kubelet"]: Refreshing state... [id=sgrule-2312952067]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_tcp"]: Refreshing state... [id=sgrule-666015455]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_udp"]: Refreshing state... [id=sgrule-1496101842]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_example"]: Refreshing state... [id=sgrule-3038877186]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_tcp"]: Refreshing state... [id=sgrule-3428936300]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_udp"]: Refreshing state... [id=sgrule-1748945283]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_https"]: Refreshing state... [id=sgrule-4167871425]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_tcp"]: Refreshing state... [id=sgrule-3490767780]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_443"]: Refreshing state... [id=sgrule-3848468000]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_kubelet"]: Refreshing state... [id=sgrule-3091231445]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["ingress_nodes_443"]: Refreshing state... [id=sgrule-646012736]
+module.vpc.aws_route.public_internet_gateway[0]: Refreshing state... [id=r-rtb-0635faa6fa1be33061080289494]
+module.vpc.aws_nat_gateway.this[0]: Refreshing state... [id=nat-003939fe45a190922]
+module.vpc.aws_route_table_association.public[1]: Refreshing state... [id=rtbassoc-0e0e1c64aefb50117]
+module.vpc.aws_route_table_association.public[2]: Refreshing state... [id=rtbassoc-00e159b3058b7475a]
+module.vpc.aws_route_table_association.public[0]: Refreshing state... [id=rtbassoc-0acd4745fa4cad650]
+module.vpc.aws_route.private_nat_gateway[0]: Refreshing state... [id=r-rtb-0191c1228524891001080289494]
+module.eks_blueprints.module.aws_eks.aws_eks_cluster.this[0]: Refreshing state... [id=eks-lab]
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["GithubRepo"]: Refreshing state... [id=sg-0f552d7b44716d1ed,GithubRepo]
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["Blueprint"]: Refreshing state... [id=sg-0f552d7b44716d1ed,Blueprint]
+module.eks_blueprints.module.aws_eks.aws_iam_openid_connect_provider.oidc_provider[0]: Refreshing state... [id=arn:aws:iam::261106957109:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/B5287FFBCE112FDB3C90BCED28AE250F]
+module.eks_blueprints.kubernetes_config_map.aws_auth[0]: Refreshing state... [id=kube-system/aws-auth]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_policy.platform_team_eks_access[0]: Refreshing state... [id=arn:aws:iam::261106957109:policy/eks-lab-PlatformTeamEKSAccess]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Refreshing state... [id=eks-lab-admin-access]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].aws_iam_role.managed_ng[0]: Refreshing state... [id=eks-lab-teste2]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]: Refreshing state... [id=eks-lab-teste2-20230422001908390400000005]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]: Refreshing state... [id=eks-lab-teste2-20230422001908422900000006]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]: Refreshing state... [id=eks-lab-teste2-20230422001908600800000007]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].aws_iam_instance_profile.managed_ng[0]: Refreshing state... [id=eks-lab-teste2]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].aws_iam_role_policy_attachment.managed_ng["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]: Refreshing state... [id=eks-lab-teste2-20230422001908668000000008]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].aws_eks_node_group.managed_ng: Refreshing state... [id=eks-lab:teste2-20230422001909567200000009]
+kubectl_manifest.rbac: Refreshing state... [id=/apis/rbac.authorization.k8s.io/v1/clusterroles/eks-console-dashboard-full-access-clusterrole]
+module.kubernetes_addons.time_sleep.dataplane: Refreshing state... [id=2023-04-22T00:26:11Z]
+module.kubernetes_addons.module.kube_prometheus_stack[0].kubernetes_namespace_v1.prometheus: Refreshing state... [id=kube-prometheus-stack]
+module.kubernetes_addons.module.metrics_server[0].module.helm_addon.helm_release.addon[0]: Refreshing state... [id=metrics-server]
+module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.module.irsa[0].kubernetes_service_account_v1.irsa[0]: Refreshing state... [id=kube-system/aws-load-balancer-controller-sa]
+module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0]: Refreshing state... [id=kube-prometheus-stack]
+module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.helm_release.addon[0]: Refreshing state... [id=aws-load-balancer-controller]
+
+Note: Objects have changed outside of Terraform
+
+Terraform detected the following changes made outside of Terraform since the last "terraform apply":
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group.cluster[0] has changed
+  ~ resource "aws_security_group" "cluster" {
+      ~ egress                 = [
+          + {
+              + cidr_blocks      = []
+              + description      = "Cluster API to node groups"
+              + from_port        = 443
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = [
+                  + "sg-0f670a1c8e36994c1",
+                ]
+              + self             = false
+              + to_port          = 443
+            },
+          + {
+              + cidr_blocks      = []
+              + description      = "Cluster API to node kubelets"
+              + from_port        = 10250
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = [
+                  + "sg-0f670a1c8e36994c1",
+                ]
+              + self             = false
+              + to_port          = 10250
+            },
+            # (2 unchanged elements hidden)
+        ]
+        id                     = "sg-02e6be5a34ccda5f7"
+      ~ ingress                = [
+          + {
+              + cidr_blocks      = []
+              + description      = "Node groups to cluster API"
+              + from_port        = 443
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = [
+                  + "sg-0f670a1c8e36994c1",
+                ]
+              + self             = false
+              + to_port          = 443
+            },
+            # (1 unchanged element hidden)
+        ]
+        name                   = "eks-lab-cluster-20230422000758683400000001"
+        tags                   = {
+            "Blueprint"  = "eks-lab"
+            "GithubRepo" = "github.com/aws-ia/terraform-aws-eks-blueprints"
+            "Name"       = "eks-lab-cluster"
+        }
+        # (7 unchanged attributes hidden)
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group.node[0] has changed
+  ~ resource "aws_security_group" "node" {
+      ~ egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = "Egress NTP/TCP to internet"
+              + from_port        = 123
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 123
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = "Egress NTP/UDP to internet"
+              + from_port        = 123
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "udp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 123
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = "Egress all HTTPS to internet"
+              + from_port        = 443
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 443
+            },
+          + {
+              + cidr_blocks      = []
+              + description      = "Node groups to cluster API"
+              + from_port        = 443
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = [
+                  + "sg-02e6be5a34ccda5f7",
+                ]
+              + self             = false
+              + to_port          = 443
+            },
+          + {
+              + cidr_blocks      = []
+              + description      = "Node to node CoreDNS"
+              + from_port        = 53
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = true
+              + to_port          = 53
+            },
+          + {
+              + cidr_blocks      = []
+              + description      = "Node to node CoreDNS"
+              + from_port        = 53
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "udp"
+              + security_groups  = []
+              + self             = true
+              + to_port          = 53
+            },
+        ]
+        id                     = "sg-0f670a1c8e36994c1"
+      ~ ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 8080
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 8080
+            },
+          + {
+              + cidr_blocks      = []
+              + description      = "Cluster API to node groups"
+              + from_port        = 443
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = [
+                  + "sg-02e6be5a34ccda5f7",
+                ]
+              + self             = false
+              + to_port          = 443
+            },
+          + {
+              + cidr_blocks      = []
+              + description      = "Cluster API to node kubelets"
+              + from_port        = 10250
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = [
+                  + "sg-02e6be5a34ccda5f7",
+                ]
+              + self             = false
+              + to_port          = 10250
+            },
+          + {
+              + cidr_blocks      = []
+              + description      = "Node to node CoreDNS"
+              + from_port        = 53
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = true
+              + to_port          = 53
+            },
+          + {
+              + cidr_blocks      = []
+              + description      = "Node to node CoreDNS"
+              + from_port        = 53
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "udp"
+              + security_groups  = []
+              + self             = true
+              + to_port          = 53
+            },
+        ]
+        name                   = "my-eks-node-security-group"
+        tags                   = {
+            "Blueprint"                     = "eks-lab"
+            "Environment"                   = "dev"
+            "GithubRepo"                    = "github.com/aws-ia/terraform-aws-eks-blueprints"
+            "Name"                          = "my-eks-node-security-group"
+            "Terraform"                     = "true"
+            "kubernetes.io/cluster/eks-lab" = "owned"
+        }
+        # (6 unchanged attributes hidden)
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_443"] has changed
+  ~ resource "aws_security_group_rule" "cluster" {
+        id                       = "sgrule-3848468000"
+      ~ security_group_rule_id   = "sgr-0b4a45d30706b2be3" -> "sgr-0680b9c07d13dad6e"
+        # (9 unchanged attributes hidden)
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_udp"] has changed
+  ~ resource "aws_security_group_rule" "node" {
+        id                     = "sgrule-1584882114"
+      ~ security_group_rule_id = "sgr-0e06c5b99deebd4d9" -> "sgr-08ba4ed9742b09734"
+        # (8 unchanged attributes hidden)
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_example"] has changed
+  ~ resource "aws_security_group_rule" "node" {
+        id                     = "sgrule-3038877186"
+        # (9 unchanged attributes hidden)
+    }
+
+
+Unless you have made equivalent changes to your configuration, or ignored the relevant attributes using ignore_changes, the following plan may include actions to undo or respond to
+these changes.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+  ~ update in-place
+  - destroy
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # module.kubernetes_addons.data.aws_caller_identity.current will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_caller_identity" "current"  {
+      + account_id = (known after apply)
+      + arn        = (known after apply)
+      + id         = (known after apply)
+      + user_id    = (known after apply)
+    }
+
+  # module.kubernetes_addons.data.aws_eks_cluster.eks_cluster will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_eks_cluster" "eks_cluster"  {
+      + arn                       = (known after apply)
+      + certificate_authority     = (known after apply)
+      + cluster_id                = (known after apply)
+      + created_at                = (known after apply)
+      + enabled_cluster_log_types = (known after apply)
+      + endpoint                  = (known after apply)
+      + id                        = (known after apply)
+      + identity                  = (known after apply)
+      + kubernetes_network_config = (known after apply)
+      + name                      = "eks-lab"
+      + outpost_config            = (known after apply)
+      + platform_version          = (known after apply)
+      + role_arn                  = (known after apply)
+      + status                    = (known after apply)
+      + tags                      = (known after apply)
+      + version                   = (known after apply)
+      + vpc_config                = (known after apply)
+    }
+
+  # module.kubernetes_addons.data.aws_partition.current will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_partition" "current"  {
+      + dns_suffix         = (known after apply)
+      + id                 = (known after apply)
+      + partition          = (known after apply)
+      + reverse_dns_prefix = (known after apply)
+    }
+
+  # module.kubernetes_addons.data.aws_region.current will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_region" "current"  {
+      + description = (known after apply)
+      + endpoint    = (known after apply)
+      + id          = (known after apply)
+      + name        = (known after apply)
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group.node[0] (deposed object f555d40c) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group" "node" {
+      - arn                    = "arn:aws:ec2:us-east-1:261106957109:security-group/sg-05419262c58b82268" -> null
+      - description            = "EKS node shared security group" -> null
+      - egress                 = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = "Egress NTP/TCP to internet"
+              - from_port        = 123
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 123
+            },
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = "Egress NTP/UDP to internet"
+              - from_port        = 123
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "udp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 123
+            },
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = "Egress all HTTPS to internet"
+              - from_port        = 443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 443
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Node groups to cluster API"
+              - from_port        = 443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-02e6be5a34ccda5f7",
+                ]
+              - self             = false
+              - to_port          = 443
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Node to node CoreDNS"
+              - from_port        = 53
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = true
+              - to_port          = 53
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Node to node CoreDNS"
+              - from_port        = 53
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "udp"
+              - security_groups  = []
+              - self             = true
+              - to_port          = 53
+            },
+        ] -> null
+      - id                     = "sg-05419262c58b82268" -> null
+      - ingress                = [
+          - {
+              - cidr_blocks      = []
+              - description      = "Cluster API to node groups"
+              - from_port        = 443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-02e6be5a34ccda5f7",
+                ]
+              - self             = false
+              - to_port          = 443
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Cluster API to node kubelets"
+              - from_port        = 10250
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-02e6be5a34ccda5f7",
+                ]
+              - self             = false
+              - to_port          = 10250
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Node to node CoreDNS"
+              - from_port        = 53
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = true
+              - to_port          = 53
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Node to node CoreDNS"
+              - from_port        = 53
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "udp"
+              - security_groups  = []
+              - self             = true
+              - to_port          = 53
+            },
+        ] -> null
+      - name                   = "eks-lab-node-20230422000758685700000002" -> null
+      - name_prefix            = "eks-lab-node-" -> null
+      - owner_id               = "261106957109" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {
+          - "Blueprint"                     = "eks-lab"
+          - "GithubRepo"                    = "github.com/aws-ia/terraform-aws-eks-blueprints"
+          - "Name"                          = "eks-lab-node"
+          - "kubernetes.io/cluster/eks-lab" = "owned"
+        } -> null
+      - tags_all               = {
+          - "Blueprint"                     = "eks-lab"
+          - "GithubRepo"                    = "github.com/aws-ia/terraform-aws-eks-blueprints"
+          - "Name"                          = "eks-lab-node"
+          - "kubernetes.io/cluster/eks-lab" = "owned"
+        } -> null
+      - vpc_id                 = "vpc-06ce67bba86f683c1" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_443"] (deposed object 0a1b86ad) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "cluster" {
+      - description              = "Cluster API to node groups" -> null
+      - from_port                = 443 -> null
+      - id                       = "sgrule-3935461898" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-02e6be5a34ccda5f7" -> null
+      - security_group_rule_id   = "sgr-007afce860ffc6f19" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-05419262c58b82268" -> null
+      - to_port                  = 443 -> null
+      - type                     = "egress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_kubelet"] (deposed object fdd872c2) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "cluster" {
+      - description              = "Cluster API to node kubelets" -> null
+      - from_port                = 10250 -> null
+      - id                       = "sgrule-3081823999" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-02e6be5a34ccda5f7" -> null
+      - security_group_rule_id   = "sgr-0347682517ef30c21" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-05419262c58b82268" -> null
+      - to_port                  = 10250 -> null
+      - type                     = "egress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["ingress_nodes_443"] (deposed object 508207ad) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "cluster" {
+      - description              = "Node groups to cluster API" -> null
+      - from_port                = 443 -> null
+      - id                       = "sgrule-695323498" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-02e6be5a34ccda5f7" -> null
+      - security_group_rule_id   = "sgr-007afce860ffc6f19" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-05419262c58b82268" -> null
+      - to_port                  = 443 -> null
+      - type                     = "ingress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_cluster_443"] (deposed object c23413c1) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "node" {
+      - description              = "Node groups to cluster API" -> null
+      - from_port                = 443 -> null
+      - id                       = "sgrule-1487053307" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-05419262c58b82268" -> null
+      - security_group_rule_id   = "sgr-0178d95e9f8a25a6f" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-02e6be5a34ccda5f7" -> null
+      - to_port                  = 443 -> null
+      - type                     = "egress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_example"] will be created
+  + resource "aws_security_group_rule" "node" {
+      + cidr_blocks              = [
+          + "0.0.0.0/0",
+        ]
+      + from_port                = 30093
+      + id                       = (known after apply)
+      + prefix_list_ids          = []
+      + protocol                 = "tcp"
+      + security_group_id        = "sg-0f670a1c8e36994c1"
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 30093
+      + type                     = "egress"
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_https"] (deposed object 0a4c5768) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "node" {
+      - cidr_blocks            = [
+          - "0.0.0.0/0",
+        ] -> null
+      - description            = "Egress all HTTPS to internet" -> null
+      - from_port              = 443 -> null
+      - id                     = "sgrule-819437882" -> null
+      - prefix_list_ids        = [] -> null
+      - protocol               = "tcp" -> null
+      - security_group_id      = "sg-05419262c58b82268" -> null
+      - security_group_rule_id = "sgr-0dee1361380927e0b" -> null
+      - self                   = false -> null
+      - to_port                = 443 -> null
+      - type                   = "egress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_tcp"] (deposed object f10922f1) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "node" {
+      - cidr_blocks            = [
+          - "0.0.0.0/0",
+        ] -> null
+      - description            = "Egress NTP/TCP to internet" -> null
+      - from_port              = 123 -> null
+      - id                     = "sgrule-4010384420" -> null
+      - prefix_list_ids        = [] -> null
+      - protocol               = "tcp" -> null
+      - security_group_id      = "sg-05419262c58b82268" -> null
+      - security_group_rule_id = "sgr-0094d7a00f7a95cff" -> null
+      - self                   = false -> null
+      - to_port                = 123 -> null
+      - type                   = "egress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_udp"] (deposed object b526a1b7) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "node" {
+      - cidr_blocks            = [
+          - "0.0.0.0/0",
+        ] -> null
+      - description            = "Egress NTP/UDP to internet" -> null
+      - from_port              = 123 -> null
+      - id                     = "sgrule-2442639657" -> null
+      - prefix_list_ids        = [] -> null
+      - protocol               = "udp" -> null
+      - security_group_id      = "sg-05419262c58b82268" -> null
+      - security_group_rule_id = "sgr-0f86a146dfbbbb05e" -> null
+      - self                   = false -> null
+      - to_port                = 123 -> null
+      - type                   = "egress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_tcp"] (deposed object 3b6a7f95) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "node" {
+      - description            = "Node to node CoreDNS" -> null
+      - from_port              = 53 -> null
+      - id                     = "sgrule-3591147875" -> null
+      - prefix_list_ids        = [] -> null
+      - protocol               = "tcp" -> null
+      - security_group_id      = "sg-05419262c58b82268" -> null
+      - security_group_rule_id = "sgr-094359908134c5d0a" -> null
+      - self                   = true -> null
+      - to_port                = 53 -> null
+      - type                   = "egress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_udp"] (deposed object c192202e) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "node" {
+      - description            = "Node to node CoreDNS" -> null
+      - from_port              = 53 -> null
+      - id                     = "sgrule-1483412229" -> null
+      - prefix_list_ids        = [] -> null
+      - protocol               = "udp" -> null
+      - security_group_id      = "sg-05419262c58b82268" -> null
+      - security_group_rule_id = "sgr-052dfa3f1e4c75a87" -> null
+      - self                   = true -> null
+      - to_port                = 53 -> null
+      - type                   = "egress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_443"] (deposed object c5b6d455) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "node" {
+      - description              = "Cluster API to node groups" -> null
+      - from_port                = 443 -> null
+      - id                       = "sgrule-4177801947" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-05419262c58b82268" -> null
+      - security_group_rule_id   = "sgr-0178d95e9f8a25a6f" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-02e6be5a34ccda5f7" -> null
+      - to_port                  = 443 -> null
+      - type                     = "ingress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_kubelet"] (deposed object 27150a2d) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "node" {
+      - description              = "Cluster API to node kubelets" -> null
+      - from_port                = 10250 -> null
+      - id                       = "sgrule-3147465503" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-05419262c58b82268" -> null
+      - security_group_rule_id   = "sgr-0f789239462b2de67" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-02e6be5a34ccda5f7" -> null
+      - to_port                  = 10250 -> null
+      - type                     = "ingress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_tcp"] (deposed object 662c48b5) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "node" {
+      - description            = "Node to node CoreDNS" -> null
+      - from_port              = 53 -> null
+      - id                     = "sgrule-488868965" -> null
+      - prefix_list_ids        = [] -> null
+      - protocol               = "tcp" -> null
+      - security_group_id      = "sg-05419262c58b82268" -> null
+      - security_group_rule_id = "sgr-0e55fc2d0e2f760a5" -> null
+      - self                   = true -> null
+      - to_port                = 53 -> null
+      - type                   = "ingress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_udp"] (deposed object b3c7ec09) will be destroyed
+  # (left over from a partially-failed replacement of this instance)
+  - resource "aws_security_group_rule" "node" {
+      - description            = "Node to node CoreDNS" -> null
+      - from_port              = 53 -> null
+      - id                     = "sgrule-3111923594" -> null
+      - prefix_list_ids        = [] -> null
+      - protocol               = "udp" -> null
+      - security_group_id      = "sg-05419262c58b82268" -> null
+      - security_group_rule_id = "sgr-087447b86b77898da" -> null
+      - self                   = true -> null
+      - to_port                = 53 -> null
+      - type                   = "ingress" -> null
+    }
+
+  # module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].data.aws_iam_policy_document.managed_ng_assume_role_policy will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "managed_ng_assume_role_policy"  {
+      ~ id      = "3778018924" -> (known after apply)
+      ~ json    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "ec2.amazonaws.com"
+                        }
+                      - Sid       = "EKSWorkerAssumeRole"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+      - version = "2012-10-17" -> null
+
+      ~ statement {
+          - effect        = "Allow" -> null
+          - not_actions   = [] -> null
+          - not_resources = [] -> null
+          - resources     = [] -> null
+            # (2 unchanged attributes hidden)
+
+            # (1 unchanged block hidden)
+        }
+    }
+
+  # module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].aws_iam_role.managed_ng[0] will be updated in-place
+  ~ resource "aws_iam_role" "managed_ng" {
+      ~ assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "ec2.amazonaws.com"
+                        }
+                      - Sid       = "EKSWorkerAssumeRole"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        id                    = "eks-lab-teste2"
+        name                  = "eks-lab-teste2"
+        tags                  = {
+            "Blueprint"  = "eks-lab"
+            "GithubRepo" = "github.com/aws-ia/terraform-aws-eks-blueprints"
+        }
+        # (9 unchanged attributes hidden)
+    }
+
+  # module.kubernetes_addons.module.aws_ebs_csi_driver[0].data.aws_eks_addon_version.this will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_eks_addon_version" "this"  {
+      + addon_name         = "aws-ebs-csi-driver"
+      + id                 = (known after apply)
+      + kubernetes_version = (known after apply)
+      + most_recent        = false
+      + version            = (known after apply)
+    }
+
+  # module.kubernetes_addons.module.aws_ebs_csi_driver[0].data.aws_iam_policy_document.aws_ebs_csi_driver[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "aws_ebs_csi_driver"  {
+      + id   = (known after apply)
+      + json = (known after apply)
+
+      + statement {
+          + actions   = [
+              + "ec2:AttachVolume",
+              + "ec2:CreateSnapshot",
+              + "ec2:DescribeAvailabilityZones",
+              + "ec2:DescribeInstances",
+              + "ec2:DescribeSnapshots",
+              + "ec2:DescribeTags",
+              + "ec2:DescribeVolumes",
+              + "ec2:DescribeVolumesModifications",
+              + "ec2:DetachVolume",
+              + "ec2:ModifyVolume",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+        }
+      + statement {
+          + actions   = [
+              + "ec2:CreateTags",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+              + (known after apply),
+            ]
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "CreateVolume",
+                  + "CreateSnapshot",
+                ]
+              + variable = "ec2:CreateAction"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:DeleteTags",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+              + (known after apply),
+            ]
+        }
+      + statement {
+          + actions   = [
+              + "ec2:CreateVolume",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "StringLike"
+              + values   = [
+                  + "true",
+                ]
+              + variable = "aws:RequestTag/ebs.csi.aws.com/cluster"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:CreateVolume",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "StringLike"
+              + values   = [
+                  + "*",
+                ]
+              + variable = "aws:RequestTag/CSIVolumeName"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:CreateVolume",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "StringLike"
+              + values   = [
+                  + "owned",
+                ]
+              + variable = "aws:RequestTag/kubernetes.io/cluster/*"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:DeleteVolume",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "StringLike"
+              + values   = [
+                  + "true",
+                ]
+              + variable = "ec2:ResourceTag/ebs.csi.aws.com/cluster"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:DeleteVolume",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "StringLike"
+              + values   = [
+                  + "*",
+                ]
+              + variable = "ec2:ResourceTag/CSIVolumeName"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:DeleteVolume",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "StringLike"
+              + values   = [
+                  + "owned",
+                ]
+              + variable = "ec2:ResourceTag/kubernetes.io/cluster/*"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:DeleteSnapshot",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "StringLike"
+              + values   = [
+                  + "*",
+                ]
+              + variable = "ec2:ResourceTag/CSIVolumeSnapshotName"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:DeleteSnapshot",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "StringLike"
+              + values   = [
+                  + "true",
+                ]
+              + variable = "ec2:ResourceTag/ebs.csi.aws.com/cluster"
+            }
+        }
+    }
+
+  # module.kubernetes_addons.module.aws_ebs_csi_driver[0].aws_eks_addon.aws_ebs_csi_driver[0] will be created
+  + resource "aws_eks_addon" "aws_ebs_csi_driver" {
+      + addon_name               = "aws-ebs-csi-driver"
+      + addon_version            = (known after apply)
+      + arn                      = (known after apply)
+      + cluster_name             = (known after apply)
+      + configuration_values     = (known after apply)
+      + created_at               = (known after apply)
+      + id                       = (known after apply)
+      + modified_at              = (known after apply)
+      + preserve                 = true
+      + resolve_conflicts        = "OVERWRITE"
+      + service_account_role_arn = (known after apply)
+      + tags_all                 = (known after apply)
+    }
+
+  # module.kubernetes_addons.module.aws_ebs_csi_driver[0].aws_iam_policy.aws_ebs_csi_driver[0] will be created
+  + resource "aws_iam_policy" "aws_ebs_csi_driver" {
+      + arn         = (known after apply)
+      + description = "IAM Policy for AWS EBS CSI Driver"
+      + id          = (known after apply)
+      + name        = (known after apply)
+      + name_prefix = (known after apply)
+      + path        = "/"
+      + policy      = (known after apply)
+      + policy_id   = (known after apply)
+      + tags_all    = (known after apply)
+    }
+
+  # module.kubernetes_addons.module.aws_load_balancer_controller[0].data.aws_iam_policy_document.aws_lb will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "aws_lb"  {
+      + id   = (known after apply)
+      + json = (known after apply)
+
+      + statement {
+          + actions   = [
+              + "iam:CreateServiceLinkedRole",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "elasticloadbalancing.amazonaws.com",
+                ]
+              + variable = "iam:AWSServiceName"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:DescribeAccountAttributes",
+              + "ec2:DescribeAddresses",
+              + "ec2:DescribeAvailabilityZones",
+              + "ec2:DescribeCoipPools",
+              + "ec2:DescribeInstances",
+              + "ec2:DescribeInternetGateways",
+              + "ec2:DescribeNetworkInterfaces",
+              + "ec2:DescribeSecurityGroups",
+              + "ec2:DescribeSubnets",
+              + "ec2:DescribeTags",
+              + "ec2:DescribeVpcPeeringConnections",
+              + "ec2:DescribeVpcs",
+              + "ec2:GetCoipPoolUsage",
+              + "elasticloadbalancing:DescribeListenerCertificates",
+              + "elasticloadbalancing:DescribeListeners",
+              + "elasticloadbalancing:DescribeLoadBalancerAttributes",
+              + "elasticloadbalancing:DescribeLoadBalancers",
+              + "elasticloadbalancing:DescribeRules",
+              + "elasticloadbalancing:DescribeSSLPolicies",
+              + "elasticloadbalancing:DescribeTags",
+              + "elasticloadbalancing:DescribeTargetGroupAttributes",
+              + "elasticloadbalancing:DescribeTargetGroups",
+              + "elasticloadbalancing:DescribeTargetHealth",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+        }
+      + statement {
+          + actions   = [
+              + "acm:DescribeCertificate",
+              + "acm:ListCertificates",
+              + "cognito-idp:DescribeUserPoolClient",
+              + "iam:GetServerCertificate",
+              + "iam:ListServerCertificates",
+              + "shield:CreateProtection",
+              + "shield:DeleteProtection",
+              + "shield:DescribeProtection",
+              + "shield:GetSubscriptionState",
+              + "waf-regional:AssociateWebACL",
+              + "waf-regional:DisassociateWebACL",
+              + "waf-regional:GetWebACL",
+              + "waf-regional:GetWebACLForResource",
+              + "wafv2:AssociateWebACL",
+              + "wafv2:DisassociateWebACL",
+              + "wafv2:GetWebACL",
+              + "wafv2:GetWebACLForResource",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+        }
+      + statement {
+          + actions   = [
+              + "ec2:AuthorizeSecurityGroupIngress",
+              + "ec2:RevokeSecurityGroupIngress",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+        }
+      + statement {
+          + actions   = [
+              + "ec2:CreateSecurityGroup",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+        }
+      + statement {
+          + actions   = [
+              + "ec2:CreateTags",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+            ]
+
+          + condition {
+              + test     = "Null"
+              + values   = [
+                  + "false",
+                ]
+              + variable = "aws:RequestTag/elbv2.k8s.aws/cluster"
+            }
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "CreateSecurityGroup",
+                ]
+              + variable = "ec2:CreateAction"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:CreateTags",
+              + "ec2:DeleteTags",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+            ]
+
+          + condition {
+              + test     = "Null"
+              + values   = [
+                  + "false",
+                ]
+              + variable = "aws:ResourceTag/ingress.k8s.aws/cluster"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "elasticloadbalancing:AddTags",
+              + "elasticloadbalancing:DeleteTargetGroup",
+              + "elasticloadbalancing:RemoveTags",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+              + (known after apply),
+              + (known after apply),
+            ]
+
+          + condition {
+              + test     = "Null"
+              + values   = [
+                  + "false",
+                ]
+              + variable = "aws:ResourceTag/ingress.k8s.aws/cluster"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:CreateTags",
+              + "ec2:DeleteTags",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+            ]
+
+          + condition {
+              + test     = "Null"
+              + values   = [
+                  + "false",
+                ]
+              + variable = "aws:ResourceTag/elbv2.k8s.aws/cluster"
+            }
+          + condition {
+              + test     = "Null"
+              + values   = [
+                  + "true",
+                ]
+              + variable = "aws:RequestTag/elbv2.k8s.aws/cluster"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "ec2:AuthorizeSecurityGroupIngress",
+              + "ec2:DeleteSecurityGroup",
+              + "ec2:RevokeSecurityGroupIngress",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "Null"
+              + values   = [
+                  + "false",
+                ]
+              + variable = "aws:ResourceTag/elbv2.k8s.aws/cluster"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "elasticloadbalancing:CreateLoadBalancer",
+              + "elasticloadbalancing:CreateTargetGroup",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "Null"
+              + values   = [
+                  + "false",
+                ]
+              + variable = "aws:RequestTag/elbv2.k8s.aws/cluster"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "elasticloadbalancing:CreateListener",
+              + "elasticloadbalancing:CreateRule",
+              + "elasticloadbalancing:DeleteListener",
+              + "elasticloadbalancing:DeleteRule",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+        }
+      + statement {
+          + actions   = [
+              + "elasticloadbalancing:AddTags",
+              + "elasticloadbalancing:RemoveTags",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+              + (known after apply),
+              + (known after apply),
+            ]
+
+          + condition {
+              + test     = "Null"
+              + values   = [
+                  + "false",
+                ]
+              + variable = "aws:ResourceTag/elbv2.k8s.aws/cluster"
+            }
+          + condition {
+              + test     = "Null"
+              + values   = [
+                  + "true",
+                ]
+              + variable = "aws:RequestTag/elbv2.k8s.aws/cluster"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "elasticloadbalancing:AddTags",
+              + "elasticloadbalancing:RemoveTags",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+              + (known after apply),
+              + (known after apply),
+              + (known after apply),
+            ]
+        }
+      + statement {
+          + actions   = [
+              + "elasticloadbalancing:DeleteLoadBalancer",
+              + "elasticloadbalancing:DeleteTargetGroup",
+              + "elasticloadbalancing:ModifyLoadBalancerAttributes",
+              + "elasticloadbalancing:ModifyTargetGroup",
+              + "elasticloadbalancing:ModifyTargetGroupAttributes",
+              + "elasticloadbalancing:SetIpAddressType",
+              + "elasticloadbalancing:SetSecurityGroups",
+              + "elasticloadbalancing:SetSubnets",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+
+          + condition {
+              + test     = "Null"
+              + values   = [
+                  + "false",
+                ]
+              + variable = "aws:ResourceTag/elbv2.k8s.aws/cluster"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "elasticloadbalancing:DeregisterTargets",
+              + "elasticloadbalancing:RegisterTargets",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+            ]
+        }
+      + statement {
+          + actions   = [
+              + "elasticloadbalancing:AddListenerCertificates",
+              + "elasticloadbalancing:ModifyListener",
+              + "elasticloadbalancing:ModifyRule",
+              + "elasticloadbalancing:RemoveListenerCertificates",
+              + "elasticloadbalancing:SetWebAcl",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "*",
+            ]
+        }
+    }
+
+  # module.kubernetes_addons.module.aws_load_balancer_controller[0].aws_iam_policy.aws_load_balancer_controller will be created
+  + resource "aws_iam_policy" "aws_load_balancer_controller" {
+      + arn         = (known after apply)
+      + description = "Allows lb controller to manage ALB and NLB"
+      + id          = (known after apply)
+      + name        = (known after apply)
+      + name_prefix = (known after apply)
+      + path        = "/"
+      + policy      = (known after apply)
+      + policy_id   = (known after apply)
+      + tags_all    = (known after apply)
+    }
+
+  # module.kubernetes_addons.module.aws_ebs_csi_driver[0].module.irsa_addon[0].aws_iam_role.irsa[0] will be created
+  + resource "aws_iam_role" "irsa" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = (known after apply)
+      + create_date           = (known after apply)
+      + description           = "AWS IAM Role for the Kubernetes service account ebs-csi-controller-sa."
+      + force_detach_policies = true
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = (known after apply)
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = (known after apply)
+      + unique_id             = (known after apply)
+
+      + inline_policy {
+          + name   = (known after apply)
+          + policy = (known after apply)
+        }
+    }
+
+  # module.kubernetes_addons.module.aws_ebs_csi_driver[0].module.irsa_addon[0].aws_iam_role_policy_attachment.irsa[0] will be created
+  + resource "aws_iam_role_policy_attachment" "irsa" {
+      + id         = (known after apply)
+      + policy_arn = (known after apply)
+      + role       = (known after apply)
+    }
+
+  # module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.helm_release.addon[0] will be updated in-place
+  ~ resource "helm_release" "addon" {
+        id                         = "aws-load-balancer-controller"
+        name                       = "aws-load-balancer-controller"
+      ~ values                     = [
+          - <<-EOT
+                clusterName: eks-lab
+                region: us-east-1
+                image:
+                  repository: 602401143452.dkr.ecr.us-east-1.amazonaws.com/amazon/aws-load-balancer-controller
+            EOT,
+        ] -> (known after apply)
+        # (28 unchanged attributes hidden)
+
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.module.irsa[0].aws_iam_role.irsa[0] will be created
+  + resource "aws_iam_role" "irsa" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = (known after apply)
+      + create_date           = (known after apply)
+      + description           = "AWS IAM Role for the Kubernetes service account aws-load-balancer-controller-sa."
+      + force_detach_policies = true
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = (known after apply)
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = (known after apply)
+      + unique_id             = (known after apply)
+
+      + inline_policy {
+          + name   = (known after apply)
+          + policy = (known after apply)
+        }
+    }
+
+  # module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.module.irsa[0].aws_iam_role_policy_attachment.irsa[0] will be created
+  + resource "aws_iam_role_policy_attachment" "irsa" {
+      + id         = (known after apply)
+      + policy_arn = (known after apply)
+      + role       = (known after apply)
+    }
+
+  # module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.module.irsa[0].kubernetes_service_account_v1.irsa[0] will be updated in-place
+  ~ resource "kubernetes_service_account_v1" "irsa" {
+        id                              = "kube-system/aws-load-balancer-controller-sa"
+        # (2 unchanged attributes hidden)
+
+      ~ metadata {
+          ~ annotations      = {
+              - "eks.amazonaws.com/role-arn" = "arn:aws:iam::261106957109:role/eks-lab-aws-load-balancer-controller-sa-irsa"
+            } -> (known after apply)
+            name             = "aws-load-balancer-controller-sa"
+            # (5 unchanged attributes hidden)
+        }
+    }
+
+Plan: 8 to add, 3 to change, 14 to destroy.
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_example"]: Creating...
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].data.aws_iam_policy_document.managed_ng_assume_role_policy: Reading... [id=3778018924]
+module.eks_blueprints.module.aws_eks_managed_node_groups["T3A_NODE2"].data.aws_iam_policy_document.managed_ng_assume_role_policy: Read complete after 0s [id=3778018924]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_example"]: Creation complete after 1s [id=sgrule-99950319]
+module.kubernetes_addons.data.aws_partition.current: Reading...
+module.kubernetes_addons.data.aws_region.current: Reading...
+module.kubernetes_addons.data.aws_eks_cluster.eks_cluster: Reading...
+module.kubernetes_addons.data.aws_caller_identity.current: Reading...
+module.kubernetes_addons.data.aws_partition.current: Read complete after 0s [id=aws]
+module.kubernetes_addons.data.aws_region.current: Read complete after 0s [id=us-east-1]
+module.kubernetes_addons.data.aws_caller_identity.current: Read complete after 0s [id=261106957109]
+module.kubernetes_addons.data.aws_eks_cluster.eks_cluster: Read complete after 0s [id=eks-lab]
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].data.aws_eks_addon_version.this: Reading...
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].data.aws_iam_policy_document.aws_ebs_csi_driver[0]: Reading...
+module.kubernetes_addons.module.aws_load_balancer_controller[0].data.aws_iam_policy_document.aws_lb: Reading...
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].data.aws_iam_policy_document.aws_ebs_csi_driver[0]: Read complete after 0s [id=1888929143]
+module.kubernetes_addons.module.aws_load_balancer_controller[0].data.aws_iam_policy_document.aws_lb: Read complete after 0s [id=2633998141]
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].aws_iam_policy.aws_ebs_csi_driver[0]: Creating...
+module.kubernetes_addons.module.aws_load_balancer_controller[0].aws_iam_policy.aws_load_balancer_controller: Creating...
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].data.aws_eks_addon_version.this: Read complete after 1s [id=aws-ebs-csi-driver]
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].aws_iam_policy.aws_ebs_csi_driver[0]: Creation complete after 1s [id=arn:aws:iam::261106957109:policy/eks-lab-aws-ebs-csi-driver-irsa]
+module.kubernetes_addons.module.aws_load_balancer_controller[0].aws_iam_policy.aws_load_balancer_controller: Creation complete after 1s [id=arn:aws:iam::261106957109:policy/eks-lab-lb-irsa]
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].module.irsa_addon[0].aws_iam_role.irsa[0]: Creating...
+module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.module.irsa[0].aws_iam_role.irsa[0]: Creating...
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].module.irsa_addon[0].aws_iam_role.irsa[0]: Creation complete after 1s [id=eks-lab-ebs-csi-controller-sa-irsa]
+module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.module.irsa[0].aws_iam_role.irsa[0]: Creation complete after 1s [id=eks-lab-aws-load-balancer-controller-sa-irsa]
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].module.irsa_addon[0].aws_iam_role_policy_attachment.irsa[0]: Creating...
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].aws_eks_addon.aws_ebs_csi_driver[0]: Creating...
+module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.module.irsa[0].aws_iam_role_policy_attachment.irsa[0]: Creating...
+module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.module.irsa[0].aws_iam_role_policy_attachment.irsa[0]: Creation complete after 1s [id=eks-lab-aws-load-balancer-controller-sa-irsa-20230422020330544500000003]
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].module.irsa_addon[0].aws_iam_role_policy_attachment.irsa[0]: Creation complete after 1s [id=eks-lab-ebs-csi-controller-sa-irsa-20230422020330543300000002]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_tcp"] (deposed object f10922f1): Destroying... [id=sgrule-4010384420]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_tcp"] (deposed object 662c48b5): Destroying... [id=sgrule-488868965]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_443"] (deposed object 0a1b86ad): Destroying... [id=sgrule-3935461898]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["ingress_nodes_443"] (deposed object 508207ad): Destroying... [id=sgrule-695323498]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_443"] (deposed object c5b6d455): Destroying... [id=sgrule-4177801947]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_tcp"] (deposed object 3b6a7f95): Destroying... [id=sgrule-3591147875]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_udp"] (deposed object c192202e): Destroying... [id=sgrule-1483412229]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_udp"] (deposed object b526a1b7): Destroying... [id=sgrule-2442639657]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_kubelet"] (deposed object fdd872c2): Destroying... [id=sgrule-3081823999]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_443"]: Destruction complete after 1s
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_https"] (deposed object 0a4c5768): Destroying... [id=sgrule-819437882]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_tcp"]: Destruction complete after 1s
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_udp"] (deposed object b3c7ec09): Destroying... [id=sgrule-3111923594]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_443"]: Destruction complete after 1s
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["ingress_nodes_443"]: Destruction complete after 1s
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_cluster_443"] (deposed object c23413c1): Destroying... [id=sgrule-1487053307]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_kubelet"] (deposed object 27150a2d): Destroying... [id=sgrule-3147465503]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_tcp"]: Destruction complete after 2s
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_kubelet"]: Destruction complete after 2s
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_udp"]: Destruction complete after 3s
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_self_coredns_tcp"]: Destruction complete after 3s
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_ntp_udp"]: Destruction complete after 4s
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_https"]: Destruction complete after 4s
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_self_coredns_udp"]: Destruction complete after 5s
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_cluster_443"]: Destruction complete after 5s
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].aws_eks_addon.aws_ebs_csi_driver[0]: Still creating... [10s elapsed]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["ingress_cluster_kubelet"]: Destruction complete after 6s
+module.eks_blueprints.module.aws_eks.aws_security_group.node[0] (deposed object f555d40c): Destroying... [id=sg-05419262c58b82268]
+module.eks_blueprints.module.aws_eks.aws_security_group.node[0]: Destruction complete after 1s
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].aws_eks_addon.aws_ebs_csi_driver[0]: Creation complete after 17s [id=eks-lab:aws-ebs-csi-driver]
+
+Apply complete! Resources: 8 added, 0 changed, 14 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-06ce67bba86f683c1"
+
+~~~~
+
 
 module.kubernetes_addons.module.aws_ebs_csi_driver[0].aws_eks_addon.aws_ebs_csi_driver[0]: Creation complete after 17s [id=eks-lab:aws-ebs-csi-driver]
 
@@ -3067,3 +4614,70 @@ eks-cluster-sg-eks-lab-1680437171	sg-0f552d7b44716d1ed	eks-cluster-sg-eks-lab-16
   }
 
 ~~~~
+
+
+
+
+- Exemplo para SG de Cluster:
+
+~~~~t
+# Configurações do módulo
+  create_cluster_security_group           = true
+  cluster_security_group_id               = "my-eks-cluster-security-group"
+  cluster_security_group_name             = "my-eks-cluster-security-group"
+  cluster_security_group_use_name_prefix  = false
+  cluster_security_group_description      = "My EKS Cluster Security Group"
+  cluster_additional_security_group_ids   = [aws_security_group.sg.id]
+  cluster_security_group_additional_rules = {
+    # Exemplo de regra de ingresso
+    ingress_example = {
+      type        = "ingress"
+      from_port   = 8082
+      to_port     = 8082
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    # Exemplo de regra de egresso
+    egress_example = {
+      type        = "egress"
+      from_port   = 30094
+      to_port     = 30094
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+  cluster_security_group_tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+~~~~
+
+
+
+
+
+
+
+
+- Erros ao tentar apply ou plan agora
+
+~~~~bash
+
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Refreshing state... [id=eks-lab-admin-access]
+╷
+│ Error: Get "http://localhost/api/v1/namespaces/kube-system/configmaps/aws-auth": dial tcp [::1]:80: connect: connection refused
+│
+│   with module.eks_blueprints.kubernetes_config_map.aws_auth[0],
+│   on .terraform/modules/eks_blueprints/aws-auth-configmap.tf line 1, in resource "kubernetes_config_map" "aws_auth":
+│    1: resource "kubernetes_config_map" "aws_auth" {
+│
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+~~~~
+
+
+- Provável falha devido permissões que foram destruidas mais cedo, ç___ç'
+- Provável falha devido permissões que foram destruidas mais cedo, ç___ç'
+- Provável falha devido permissões que foram destruidas mais cedo, ç___ç'
+- Provável falha devido permissões que foram destruidas mais cedo, ç___ç'
