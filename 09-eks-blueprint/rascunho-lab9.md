@@ -3000,3 +3000,70 @@ Outbound rules (1/7)
 	–	sgr-0e06c5b99deebd4d9	–	DNS (UDP)	UDP	53	sg-0f670a1c8e36994c1 / my-eks-node-security-group	Node to node CoreDNS
 	–	sgr-0fb34d3ed1417d022	IPv4	Custom UDP	UDP	123	0.0.0.0/0	Egress NTP/UDP to internet
 	–	sgr-079de51d2ed632f53	IPv4	Custom TCP	TCP	123	0.0.0.0/0	Egress NTP/TCP to internet
+
+
+
+
+
+
+
+
+
+
+- SG acima não é aplicada aos nodes.
+
+
+
+- Testar a Cluster SG
+https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf
+<https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf>
+  create_cluster_security_group           = var.create_cluster_security_group
+  cluster_security_group_id               = var.cluster_security_group_id
+  cluster_security_group_name             = var.cluster_security_group_name
+  cluster_security_group_use_name_prefix  = var.cluster_security_group_use_name_prefix
+  cluster_security_group_description      = var.cluster_security_group_description
+  cluster_additional_security_group_ids   = var.cluster_additional_security_group_ids
+  cluster_security_group_additional_rules = var.cluster_security_group_additional_rules
+  cluster_security_group_tags             = var.cluster_security_group_tags
+
+
+
+- EXEMPLO, atual que é atrelada aos Nodes:
+eks-cluster-sg-eks-lab-1680437171	sg-0f552d7b44716d1ed	eks-cluster-sg-eks-lab-1680437171	vpc-06ce67bba86f683c1
+	EKS created security group applied to ENI that is attached to EKS Control Plane master nodes, as well as any managed workloads.
+
+
+
+- Exemplo da conf de SG nodes:
+
+~~~~t
+
+  # Configurações do módulo
+  create_node_security_group           = true
+  node_security_group_name             = "my-eks-node-security-group"
+  node_security_group_use_name_prefix  = false
+  node_security_group_description      = "My EKS Node Security Group"
+  node_security_group_additional_rules = {
+    # Exemplo de regra de ingresso
+    ingress_example = {
+      type        = "ingress"
+      from_port   = 8080
+      to_port     = 8080
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    # Exemplo de regra de egresso
+    egress_example = {
+      type        = "egress"
+      from_port   = 30093
+      to_port     = 30093
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+  node_security_group_tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+
+~~~~

@@ -23,3 +23,7 @@ Um pouco mais sobre o Teams:<br/>
 ## kube-prometheus-stack Helm Chart
 Stack contendo Prometheus, Grafana e AlertManager
 <https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/modules/kubernetes-addons/kube-prometheus-stack>
+
+## Security Group personalizada
+Adicionado bloco que configura rules adicionais para a Security Group utilizada pelos Nodes.
+<https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf>
