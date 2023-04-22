@@ -5020,3 +5020,23 @@ sg-0c65f0e404d7d89d6 (eks-cluster-sg-eks-lab-1680437171)
                 "vpc_id": "vpc-0e331d7101e87f8ac"
               }
 ~~~~
+
+
+
+
+- No apply foi assim
+
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["Blueprint"]: Creation complete after 1s [id=sg-0c65f0e404d7d89d6,Blueprint]
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["GithubRepo"]: Creation complete after 1s [id=sg-0c65f0e404d7d89d6,GithubRepo]
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["Blueprint"]: Refreshing state... [id=sg-0c65f0e404d7d89d6,Blueprint]
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["GithubRepo"]: Refreshing state... [id=sg-0c65f0e404d7d89d6,GithubRepo]
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["GithubRepo"]: Refreshing state... [id=sg-0c65f0e404d7d89d6,GithubRepo]
+module.eks_blueprints.module.aws_eks.aws_ec2_tag.cluster_primary_security_group["Blueprint"]: Refreshing state... [id=sg-0c65f0e404d7d89d6,Blueprint]
+
+cluster_primary_security_group
+
+
+- Na console do EKS
+Cluster security group
+Info
+sg-0c65f0e404d7d89d6 
