@@ -2588,3 +2588,15 @@ terraform apply -target=module.kubernetes_addons -auto-approve
 terraform apply -auto-approve
 
 - Ajustar SG das EC2 do node-group via manifesto do EKS-BLUEPRINT. Liberar porta 30090, por exemplo, para que o Prometheus fique acessivel de fora.
+
+
+
+- Criado manifesto da sg
+/home/fernando/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint/security-group.tf
+
+- Adicionar o seguinte no main.tf:
+
+~~~~t
+  # IDs dos Security Groups a serem associados aos "managed_node_groups"
+  managed_node_groups_launch_template_security_group_ids = [aws_security_group.example.id]
+~~~~
