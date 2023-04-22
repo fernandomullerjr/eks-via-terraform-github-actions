@@ -2589,6 +2589,11 @@ terraform apply -auto-approve
 
 - Ajustar SG das EC2 do node-group via manifesto do EKS-BLUEPRINT. Liberar porta 30090, por exemplo, para que o Prometheus fique acessivel de fora.
 
+21:12h - subindo EKS
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-06ce67bba86f683c1"
+
 
 
 - Criado manifesto da sg
@@ -2598,5 +2603,199 @@ terraform apply -auto-approve
 
 ~~~~t
   # IDs dos Security Groups a serem associados aos "managed_node_groups"
-  managed_node_groups_launch_template_security_group_ids = [aws_security_group.example.id]
+  managed_node_groups_launch_template_security_group_ids = [aws_security_group.sg.id]
 ~~~~
+
+
+- ERRO
+
+~~~~bash
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform plan
+╷
+│ Error: Unsupported argument
+│
+│   on main.tf line 95, in module "eks_blueprints":
+│   95:   managed_node_groups_launch_template_security_group_ids = [aws_security_group.sg.id]
+│
+│ An argument named "managed_node_groups_launch_template_security_group_ids" is not expected here.
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+~~~~
+
+
+
+
+
+
+
+- Efetuando teste, adicionando o trecho sobre "scaling_config" no "managed_node_groups" do Blueprint:
+
+~~~~t
+
+  # EKS MANAGED NODE GROUPS
+  managed_node_groups = {
+#    T3A_NODE = {
+#      node_group_name = local.node_group_name
+#      instance_types  = ["t3a.medium"]
+#      subnet_ids      = module.vpc.private_subnets
+#      #subnet_ids      = module.vpc.public_subnets
+#    }
+    T3A_NODE2 = {
+      node_group_name = "teste2"
+      instance_types  = ["t3a.medium"]
+      subnet_ids      = module.vpc.public_subnets
+
+      scaling_config = {
+        # IDs dos Security Groups a serem associados ao grupo de nós
+        additional_security_group_ids = [aws_security_group.sg.id]
+      }
+
+    }
+  }
+
+~~~~
+
+
+
+- Efetuando validate
+
+~~~~bash
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform validate
+Success! The configuration is valid.
+
+~~~~
+
+
+- Nada aconteceu, seguiu igual o Cluster.
+- Nada aconteceu, seguiu igual o Cluster.
+- Nada aconteceu, seguiu igual o Cluster.
+- Nada aconteceu, seguiu igual o Cluster.
+- Nada aconteceu, seguiu igual o Cluster.
+
+
+
+
+
+
+
+
+
+
+node_security_group_id
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform plan
+╷
+│ Error: Unsupported argument
+│
+│   on main.tf line 94, in module "eks_blueprints":
+│   94:   node_security_group_id = aws_security_group.sg.id
+│
+│ An argument named "node_security_group_id" is not expected here.
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+
+
+
+
+
+
+
+~~~~t
+module "eks_blueprints" {
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.21.0"
+
+  # Configurações do módulo
+
+  node_security_group_additional_rules = [
+    # Exemplo de regra de ingresso
+    {
+      type        = "ingress"
+      from_port   = 8080
+      to_port     = 8080
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    # Exemplo de regra de egresso
+    {
+      type        = "egress"
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+}
+
+~~~~
+
+
+
+
+
+
+
+
+
+  create_node_security_group           = var.create_node_security_group
+  node_security_group_name             = var.node_security_group_name
+  node_security_group_use_name_prefix  = var.node_security_group_use_name_prefix
+  node_security_group_description      = var.node_security_group_description
+  node_security_group_additional_rules = var.node_security_group_additional_rules
+  node_security_group_tags             = var.node_security_group_tags
+
+
+
+  create_node_security_group           
+  node_security_group_name             
+  node_security_group_use_name_prefix  
+  node_security_group_description      
+  node_security_group_additional_rules 
+  node_security_group_tags            
+
+
+
+Claro! Aqui está um exemplo de como você pode configurar os parâmetros adicionais do módulo "aws_eks" junto com o uso do argumento node_security_group_additional_rules:
+
+~~~~t
+
+module "eks_blueprints" {
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.21.0"
+
+  # Configurações do módulo
+  create_node_security_group           = true
+  node_security_group_name             = "my-eks-node-security-group"
+  node_security_group_use_name_prefix  = false
+  node_security_group_description      = "My EKS Node Security Group"
+  node_security_group_additional_rules = [
+    # Exemplo de regra de ingresso
+    {
+      type        = "ingress"
+      from_port   = 8080
+      to_port     = 8080
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    # Exemplo de regra de egresso
+    {
+      type        = "egress"
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+  node_security_group_tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+}
+~~~~
+
+
+Neste exemplo, os parâmetros create_node_security_group, node_security_group_name, node_security_group_use_name_prefix, node_security_group_description e node_security_group_tags são configurados junto com o uso do argumento node_security_group_additional_rules para adicionar regras de segurança adicionais aos grupos de nós gerenciados do cluster EKS. Certifique-se de modificar os valores de acordo com suas necessidades específicas.
