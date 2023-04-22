@@ -93,63 +93,6 @@ module "eks_blueprints" {
 
   tags = local.tags
 
-#  # Configurações do módulo
-#  create_node_security_group           = true
-#  node_security_group_name             = "my-eks-node-security-group"
-#  node_security_group_use_name_prefix  = false
-#  node_security_group_description      = "My EKS Node Security Group"
-#  node_security_group_additional_rules = {
-#    # Exemplo de regra de ingresso
-#    ingress_example = {
-#      type        = "ingress"
-#      from_port   = 8080
-#      to_port     = 8080
-#      protocol    = "tcp"
-#      cidr_blocks = ["0.0.0.0/0"]
-#    },
-#    # Exemplo de regra de egresso
-#    egress_example = {
-#      type        = "egress"
-#      from_port   = 30093
-#      to_port     = 30093
-#      protocol    = "tcp"
-#      cidr_blocks = ["0.0.0.0/0"]
-#    }
-#  }
-#  node_security_group_tags = {
-#    Terraform   = "true"
-#    Environment = "dev"
-#  }
-
-  # Configurações do módulo
-  create_cluster_security_group           = true
-  cluster_security_group_id               = "my-eks-cluster-security-group"
-  cluster_security_group_name             = "my-eks-cluster-security-group"
-  cluster_security_group_use_name_prefix  = false
-  cluster_security_group_description      = "My EKS Cluster Security Group"
-  cluster_additional_security_group_ids   = [aws_security_group.sg.id]
-  cluster_security_group_additional_rules = {
-    # Exemplo de regra de ingresso
-    ingress_example = {
-      type        = "ingress"
-      from_port   = 8082
-      to_port     = 8082
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    },
-    # Exemplo de regra de egresso
-    egress_example = {
-      type        = "egress"
-      from_port   = 30094
-      to_port     = 30094
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
-  cluster_security_group_tags = {
-    Terraform   = "true"
-    Environment = "dev"
-  }
 
 }
 

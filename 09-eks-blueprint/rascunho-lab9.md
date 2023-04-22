@@ -4511,7 +4511,7 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-
 
 
 
-- Como ficou a SG
+- Como ficou a SG:
 
 Inbound rules (5)
 
@@ -4681,3 +4681,275 @@ fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-
 - Provável falha devido permissões que foram destruidas mais cedo, ç___ç'
 - Provável falha devido permissões que foram destruidas mais cedo, ç___ç'
 - Provável falha devido permissões que foram destruidas mais cedo, ç___ç'
+
+
+
+
+
+
+
+
+
+
+terraform destroy -target=module.kubernetes_addons -auto-approve
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
+
+
+Security group name
+eks-lab-cluster-20230422000758683400000001
+Security group ID
+sg-02e6be5a34ccda5f7
+
+Inbound security group rules successfully modified on security group (sg-02e6be5a34ccda5f7 | eks-lab-cluster-20230422000758683400000001)
+Details
+
+    New
+
+
+
+
+
+
+
+
+
+Inbound security group rules successfully modified on security group (sg-0f552d7b44716d1ed | eks-cluster-sg-eks-lab-1680437171)
+Details
+
+    New
+
+
+
+
+
+
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_policy.platform_team_eks_access[0]: Refreshing state... [id=arn:aws:iam::261106957109:policy/eks-lab-PlatformTeamEKSAccess]
+module.eks_blueprints.kubernetes_config_map.aws_auth[0]: Refreshing state... [id=kube-system/aws-auth]
+module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"]: Refreshing state... [id=eks-lab-admin-access]
+╷
+│ Warning: Resource targeting is in effect
+│
+│ You are creating a plan with the -target option, which means that the result of this plan may not represent all of the changes requested by the current configuration.
+│
+│ The -target option is not for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform specifically suggests to use
+│ it as part of an error message.
+╵
+╷
+│ Error: Get "http://localhost/api/v1/namespaces/kube-system/configmaps/aws-auth": dial tcp [::1]:80: connect: connection refused
+│
+│   with module.eks_blueprints.kubernetes_config_map.aws_auth[0],
+│   on .terraform/modules/eks_blueprints/aws-auth-configmap.tf line 1, in resource "kubernetes_config_map" "aws_auth":
+│    1: resource "kubernetes_config_map" "aws_auth" {
+│
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+
+
+ DimamoN commented Apr 25, 2022 •
+
+Faced the same, then checked state using terraform state list and found k8s related entries there.
+Then I removed then using
+
+terraform state rm module.eks.kubernetes_config_map.aws_auth[0]
+
+And that helped to resolve the issue.
+
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform state rm module.eks.kubernetes_config_map.aws_auth[0]
+╷
+│ Error: Invalid target address
+│
+│ No matching objects found. To view the available instances, use "terraform state list". Please modify the address to reference a specific instance.
+╵
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+
+
+
+terraform state rm module.eks_blueprints.kubernetes_config_map.aws_auth[0]
+
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform state rm module.eks_blueprints.kubernetes_config_map.aws_auth[0]
+Removed module.eks_blueprints.kubernetes_config_map.aws_auth[0]
+Successfully removed 1 resource instance(s).
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+
+
+
+│ Warning: Resource targeting is in effect
+│
+│ You are creating a plan with the -target option, which means that the result of this plan may not represent all of the changes requested by the current configuration.
+│
+│ The -target option is not for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform specifically suggests to use
+│ it as part of an error message.
+╵
+╷
+│ Error: Get "http://localhost/api/v1/namespaces/kube-system/serviceaccounts/aws-load-balancer-controller-sa": dial tcp [::1]:80: connect: connection refused
+│
+│   with module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.module.irsa[0].kubernetes_service_account_v1.irsa[0],
+│   on .terraform/modules/kubernetes_addons/modules/irsa/main.tf line 30, in resource "kubernetes_service_account_v1" "irsa":
+│   30: resource "kubernetes_service_account_v1" "irsa" {
+│
+╵
+╷
+│ Error: Kubernetes cluster unreachable: invalid configuration: no configuration has been provided, try setting KUBERNETES_MASTER environment variable
+│
+│   with module.kubernetes_addons.module.metrics_server[0].module.helm_addon.helm_release.addon[0],
+│   on .terraform/modules/kubernetes_addons/modules/kubernetes-addons/helm-addon/main.tf line 1, in resource "helm_release" "addon":
+│    1: resource "helm_release" "addon" {
+│
+╵
+╷
+│ Error: Get "http://localhost/api/v1/namespaces/kube-prometheus-stack": dial tcp [::1]:80: connect: connection refused
+│
+│   with module.kubernetes_addons.module.kube_prometheus_stack[0].kubernetes_namespace_v1.prometheus,
+│   on .terraform/modules/kubernetes_addons/modules/kubernetes-addons/kube-prometheus-stack/main.tf line 6, in resource "kubernetes_namespace_v1" "prometheus":
+│    6: resource "kubernetes_namespace_v1" "prometheus" {
+│
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+
+
+
+
+
+
+
+
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+- Removido trecho sobre SG adicional para CLUSTER, daí o erro cessou!
+
+
+
+
+
+
+
+
+
+
+
+
+module.kubernetes_addons.module.kube_prometheus_stack[0].kubernetes_namespace_v1.prometheus: Still destroying... [id=kube-prometheus-stack, 10s elapsed]
+module.kubernetes_addons.module.kube_prometheus_stack[0].kubernetes_namespace_v1.prometheus: Destruction complete after 13s
+╷
+│ Warning: Resource targeting is in effect
+│
+│ You are creating a plan with the -target option, which means that the result of this plan may not represent all of the changes requested by the current configuration.
+│
+│ The -target option is not for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform specifically suggests to use
+│ it as part of an error message.
+╵
+╷
+│ Warning: Applied changes may be incomplete
+│
+│ The plan was created with the -target option in effect, so some changes requested in the configuration may have been ignored and the output values may not be fully updated. Run the
+│ following command to verify that no other changes are pending:
+│     terraform plan
+│
+│ Note that the -target option is not suitable for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or when Terraform
+│ specifically suggests to use it as part of an error message.
+╵
+
+Destroy complete! Resources: 13 destroyed.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+
+
+
+
+terraform destroy -target=module.kubernetes_addons -auto-approve
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
+
+
+- SACAR FORA
+
+~~~~t
+
+  # Configurações do módulo
+  create_node_security_group           = true
+  node_security_group_name             = "my-eks-node-security-group"
+  node_security_group_use_name_prefix  = false
+  node_security_group_description      = "My EKS Node Security Group"
+  node_security_group_additional_rules = {
+    # Exemplo de regra de ingresso
+    ingress_example = {
+      type        = "ingress"
+      from_port   = 8080
+      to_port     = 8080
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    # Exemplo de regra de egresso
+    egress_example = {
+      type        = "egress"
+      from_port   = 30093
+      to_port     = 30093
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+  node_security_group_tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+~~~~
+
+
+
+terraform destroy -target=module.kubernetes_addons -auto-approve
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
+
+
+## PENDENTE
+- Ajustar SG das EC2 do node-group via manifesto do EKS-BLUEPRINT. Liberar porta 30090, por exemplo, para que o Prometheus fique acessivel de fora.
+testar outra maneira, pois usando o "create_node_security_group", ele não aplica a SG parece. Avaliar teste usando a "create_cluster_security_group"
+- KB sobre usar parametros dos modulos usados no Blueprint, hierarquias, etc:
+https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf
+- Criar KB, sobre como ajustar o Helm do "kube-prometheus-stack" via EKS-BLUEPRINT.
+
