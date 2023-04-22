@@ -4953,3 +4953,70 @@ testar outra maneira, pois usando o "create_node_security_group", ele não aplic
 https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf
 - Criar KB, sobre como ajustar o Helm do "kube-prometheus-stack" via EKS-BLUEPRINT.
 
+
+
+
+
+
+
+
+
+
+# Dia 22/04/2023
+
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -target=module.kubernetes_addons -auto-approve
+terraform apply -auto-approve
+
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0e331d7101e87f8ac"
+
+- Verificar Terraform State
+Security groups
+
+sg-0c65f0e404d7d89d6 (eks-cluster-sg-eks-lab-1680437171)
+
+
+- No state está assim:
+
+~~~~json
+    {
+      "module": "module.eks_blueprints.module.aws_eks",
+      "mode": "managed",
+      "type": "aws_ec2_tag",
+      "name": "cluster_primary_security_group",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "index_key": "Blueprint",
+          "schema_version": 0,
+          "attributes": {
+            "id": "sg-0c65f0e404d7d89d6,Blueprint",
+            "key": "Blueprint",
+            "resource_id": "sg-0c65f0e404d7d89d6",
+            "value": "eks-lab"
+          },
+
+[...]
+
+            "vpc_config": [
+              {
+                "cluster_security_group_id": "sg-0c65f0e404d7d89d6",
+                "endpoint_private_access": false,
+                "endpoint_public_access": true,
+                "public_access_cidrs": [
+                  "0.0.0.0/0"
+                ],
+                "security_group_ids": [
+                  "sg-05c5ade1cc25b89cb"
+                ],
+                "subnet_ids": [
+                  "subnet-04de967dfccdc151d",
+                  "subnet-0e47796081566a46a",
+                  "subnet-0fdcf34f161b1b7ff"
+                ],
+                "vpc_id": "vpc-0e331d7101e87f8ac"
+              }
+~~~~
