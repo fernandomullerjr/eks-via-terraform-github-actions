@@ -92,6 +92,35 @@ module "eks_blueprints" {
   }
 
   tags = local.tags
+
+  # Configurações do módulo
+  create_node_security_group           = true
+  node_security_group_name             = "my-eks-node-security-group"
+  node_security_group_use_name_prefix  = false
+  node_security_group_description      = "My EKS Node Security Group"
+  node_security_group_additional_rules = {
+    # Exemplo de regra de ingresso
+    ingress_example = {
+      type        = "ingress"
+      from_port   = 8080
+      to_port     = 8080
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    # Exemplo de regra de egresso
+    egress_example = {
+      type        = "egress"
+      from_port   = 30093
+      to_port     = 30093
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+  node_security_group_tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+
 }
 
 

@@ -2799,3 +2799,204 @@ module "eks_blueprints" {
 
 
 Neste exemplo, os parâmetros create_node_security_group, node_security_group_name, node_security_group_use_name_prefix, node_security_group_description e node_security_group_tags são configurados junto com o uso do argumento node_security_group_additional_rules para adicionar regras de segurança adicionais aos grupos de nós gerenciados do cluster EKS. Certifique-se de modificar os valores de acordo com suas necessidades específicas.
+
+
+
+
+
+
+
+
+
+
+- Erro
+
+~~~~bash
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_kubelet"]: Refreshing state... [id=sgrule-3081823999]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["egress_nodes_443"]: Refreshing state... [id=sgrule-3935461898]
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.cluster["ingress_nodes_443"]: Refreshing state... [id=sgrule-695323498]
+╷
+│ Error: Error in function call
+│
+│   on .terraform/modules/eks_blueprints.aws_eks/node_groups.tf line 171, in resource "aws_security_group_rule" "node":
+│  171:   for_each = { for k, v in merge(local.node_security_group_rules, var.node_security_group_additional_rules) : k => v if local.create_node_sg }
+│     ├────────────────
+│     │ local.node_security_group_rules is object with 10 attributes
+│     │ var.node_security_group_additional_rules is tuple with 2 elements
+│
+│ Call to function "merge" failed: arguments must be maps or objects, got "tuple".
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+~~~~
+
+
+
+
+
+
+
+Peço desculpas pelo erro. Você está correto, o argumento node_security_group_additional_rules no módulo aws_eks espera um objeto ou mapa, mas estamos fornecendo uma lista de regras como um exemplo anterior.
+
+Aqui está uma correção para o exemplo anterior, para usar um objeto em vez de uma lista de regras:
+
+~~~~t
+
+module "eks_blueprints" {
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.21.0"
+
+  # Configurações do módulo
+  create_node_security_group           = true
+  node_security_group_name             = "my-eks-node-security-group"
+  node_security_group_use_name_prefix  = false
+  node_security_group_description      = "My EKS Node Security Group"
+  node_security_group_additional_rules = {
+    # Exemplo de regra de ingresso
+    ingress_example = {
+      type        = "ingress"
+      from_port   = 8080
+      to_port     = 8080
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    # Exemplo de regra de egresso
+    egress_example = {
+      type        = "egress"
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+  node_security_group_tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+}
+~~~~
+
+Agora, estamos fornecendo um objeto para o argumento node_security_group_additional_rules, com chaves e valores representando as regras de segurança adicionais desejadas. Isso deve corrigir o erro e permitir que o código Terraform seja executado corretamente. Novamente, certifique-se de ajustar os valores de acordo com suas necessidades específicas.
+
+
+
+
+
+
+
+
+
+
+
+
+- ORIGINAL
+
+eks-lab-node	sg-05419262c58b82268	eks-lab-node-20230422000758685700000002	vpc-06ce67bba86f683c1
+	EKS node shared security group
+
+Inbound rules (4)
+
+	Name
+	Security group rule ID
+	IP version
+	Type
+	Protocol
+	Port range
+	Source
+	Description
+	–	sgr-0f789239462b2de67	–	Custom TCP	TCP	10250	sg-02e6be5a34ccda5f7 / eks-lab-cluster-20230422000758683400000001	Cluster API to node kubelets
+	–	sgr-087447b86b77898da	–	DNS (UDP)	UDP	53	sg-05419262c58b82268 / eks-lab-node-20230422000758685700000002	Node to node CoreDNS
+	–	sgr-0178d95e9f8a25a6f	–	HTTPS	TCP	443	sg-02e6be5a34ccda5f7 / eks-lab-cluster-20230422000758683400000001	Cluster API to node groups
+	–	sgr-0e55fc2d0e2f760a5	–	DNS (TCP)	TCP	53	sg-05419262c58b82268 / eks-lab-node-20230422000758685700000002	Node to node CoreDNS
+
+
+
+
+
+
+
+
+
+- erro
+
+
+module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_cluster_443"]: Creation complete after 8s [id=sgrule-4196098811]
+╷
+│ Error: [WARN] A duplicate Security Group rule was found on (sg-0f670a1c8e36994c1). This may be
+│ a side effect of a now-fixed Terraform issue causing two security groups with
+│ identical attributes but different source_security_group_ids to overwrite each
+│ other in the state. See https://github.com/hashicorp/terraform/pull/2376 for more
+│ information and instructions for recovery. Error: InvalidPermission.Duplicate: the specified rule "peer: 0.0.0.0/0, TCP, from port: 443, to port: 443, ALLOW" already exists
+│       status code: 400, request id: 03b1e2e0-900f-4e14-931f-7165ae3673f1
+│
+│   with module.eks_blueprints.module.aws_eks.aws_security_group_rule.node["egress_example"],
+│   on .terraform/modules/eks_blueprints.aws_eks/node_groups.tf line 170, in resource "aws_security_group_rule" "node":
+│  170: resource "aws_security_group_rule" "node" {
+│
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+
+- Ajustando
+
+      from_port   = 30093
+      to_port     = 30093
+
+
+
+
+
+module.kubernetes_addons.module.aws_ebs_csi_driver[0].aws_eks_addon.aws_ebs_csi_driver[0]: Creation complete after 17s [id=eks-lab:aws-ebs-csi-driver]
+
+Apply complete! Resources: 8 added, 0 changed, 14 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-06ce67bba86f683c1"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+
+
+
+
+
+
+
+
+
+- Como ficou a SG
+
+Inbound rules (5)
+
+	Name
+	Security group rule ID
+	IP version
+	Type
+	Protocol
+	Port range
+	Source
+	Description
+	–	sgr-08ba4ed9742b09734	–	DNS (UDP)	UDP	53	sg-0f670a1c8e36994c1 / my-eks-node-security-group	Node to node CoreDNS
+	–	sgr-0a2acc129c628638d	–	Custom TCP	TCP	10250	sg-02e6be5a34ccda5f7 / eks-lab-cluster-20230422000758683400000001	Cluster API to node kubelets
+	–	sgr-0ad0e5516b3329b3d	IPv4	Custom TCP	TCP	8080	0.0.0.0/0	–
+	–	sgr-096fd25b4deaa5ae8	–	HTTPS	TCP	443	sg-02e6be5a34ccda5f7 / eks-lab-cluster-20230422000758683400000001	Cluster API to node groups
+	–	sgr-0b271297498934971	–	DNS (TCP)	TCP	53	sg-0f670a1c8e36994c1 / my-eks-node-security-group	Node to node CoreDNS
+
+
+Outbound rules (1/7)
+
+	Name
+	Security group rule ID
+	IP version
+	Type
+	Protocol
+	Port range
+	Destination
+	Description
+	–	sgr-0b9d7cc551ac45ae2	IPv4	Custom TCP	TCP	30093	0.0.0.0/0	–
+	–	sgr-082322522da783e47	–	HTTPS	TCP	443	sg-02e6be5a34ccda5f7 / eks-lab-cluster-20230422000758683400000001	Node groups to cluster API
+	–	sgr-0d30a55f25a4563d7	IPv4	HTTPS	TCP	443	0.0.0.0/0	Egress all HTTPS to internet
+	–	sgr-0d3effd58f8023381	–	DNS (TCP)	TCP	53	sg-0f670a1c8e36994c1 / my-eks-node-security-group	Node to node CoreDNS
+	–	sgr-0e06c5b99deebd4d9	–	DNS (UDP)	UDP	53	sg-0f670a1c8e36994c1 / my-eks-node-security-group	Node to node CoreDNS
+	–	sgr-0fb34d3ed1417d022	IPv4	Custom UDP	UDP	123	0.0.0.0/0	Egress NTP/UDP to internet
+	–	sgr-079de51d2ed632f53	IPv4	Custom TCP	TCP	123	0.0.0.0/0	Egress NTP/TCP to internet
