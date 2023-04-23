@@ -5040,3 +5040,179 @@ cluster_primary_security_group
 Cluster security group
 Info
 sg-0c65f0e404d7d89d6 
+
+
+
+
+
+
+
+
+- Testar
+
+- Exemplo para SG de Cluster:
+
+~~~~t
+# Configurações do módulo
+  create_cluster_security_group           = true
+  cluster_security_group_id               = "my-eks-cluster-security-group"
+  cluster_security_group_name             = "my-eks-cluster-security-group"
+  cluster_security_group_use_name_prefix  = false
+  cluster_security_group_description      = "My EKS Cluster Security Group"
+  cluster_additional_security_group_ids   = [aws_security_group.sg.id]
+  cluster_security_group_additional_rules = {
+    # Exemplo de regra de ingresso
+    ingress_example = {
+      type        = "ingress"
+      from_port   = 8082
+      to_port     = 8082
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    # Exemplo de regra de egresso
+    egress_example = {
+      type        = "egress"
+      from_port   = 30094
+      to_port     = 30094
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+  cluster_security_group_tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+~~~~
+
+
+
+
+
+
+
+Aqui está o código Terraform modificado para permitir o tráfego de qualquer origem nas regras de ingresso e egresso:
+
+~~~~t
+
+cluster_security_group_additional_rules = {
+  # Exemplo de regra de ingresso
+  ingress_example = {
+    type        = "ingress"
+    from_port   = 8082
+    to_port     = 8082
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  },
+  # Exemplo de regra de egresso
+  egress_example = {
+    type        = "egress"
+    from_port   = 30094
+    to_port     = 30094
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  },
+  # Regra de ingresso permitindo qualquer origem
+  ingress_any = {
+    type        = "ingress"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  },
+  # Regra de egresso permitindo qualquer destino
+  egress_any = {
+    type        = "egress"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+~~~~
+
+Note que foram adicionadas duas novas regras, uma para ingresso e outra para egresso, com os portos configurados como 0 e o protocolo como "-1", o que permite qualquer origem/destino. As regras originais de ingresso e egresso continuam presentes no código para permitir o tráfego nas portas específicas que foram configuradas.
+
+
+
+
+- Editado
+
+~~~~t
+  # Configurações do módulo
+  create_cluster_security_group           = true
+  cluster_security_group_id               = "my-eks-cluster-security-group"
+  cluster_security_group_name             = "my-eks-cluster-security-group"
+  cluster_security_group_use_name_prefix  = false
+  cluster_security_group_description      = "My EKS Cluster Security Group"
+  cluster_additional_security_group_ids   = [aws_security_group.sg_adicional.id]
+
+  cluster_security_group_additional_rules = {
+    # Exemplo de regra de ingresso
+    ingress_example = {
+      type        = "ingress"
+      from_port   = 8082
+      to_port     = 8082
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    # Exemplo de regra de egresso
+    egress_example = {
+      type        = "egress"
+      from_port   = 30094
+      to_port     = 30094
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    # Regra de ingresso permitindo qualquer origem
+    ingress_any = {
+      type        = "ingress"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    # Regra de egresso permitindo qualquer destino
+    egress_any = {
+      type        = "egress"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+
+  cluster_security_group_tags = {
+    Terraform   = "true"
+    Environment = "dev"
+    Personalizado = "sim"
+  }
+~~~~
+
+
+
+
+
+
+
+
+- Ao adicionar o bloco sobre SG do cluster "cluster_security_group", voltam os erros de "dial tcp [::1]:80: connect: connection refused":
+
+~~~~bash
+
+│ Error: Get "http://localhost/api/v1/namespaces/kube-system/configmaps/aws-auth": dial tcp [::1]:80: connect: connection refused
+│
+│   with module.eks_blueprints.kubernetes_config_map.aws_auth[0],
+│   on .terraform/modules/eks_blueprints/aws-auth-configmap.tf line 1, in resource "kubernetes_config_map" "aws_auth":
+│    1: resource "kubernetes_config_map" "aws_auth" {
+│
+
+~~~~
+
+
+
+- Removidas as configurações do main.tf
+
+
+
+- Explicação
+https://github.com/terraform-aws-modules/terraform-aws-eks/issues/1542

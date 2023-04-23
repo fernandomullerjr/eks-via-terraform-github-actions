@@ -1,5 +1,5 @@
 # Criação do Security Group Personalizado
-resource "aws_security_group" "sg" {
+resource "aws_security_group" "sg_adicional" {
   name_prefix = "sg"
   
   # Regras de ingresso
@@ -14,6 +14,20 @@ resource "aws_security_group" "sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8575
+    to_port     = 8575
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
