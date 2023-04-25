@@ -5214,6 +5214,11 @@ Note que foram adicionadas duas novas regras, uma para ingresso e outra para egr
 
 
 
+terraform destroy -target=module.kubernetes_addons -auto-approve
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
 
 
 
@@ -5223,7 +5228,7 @@ Note que foram adicionadas duas novas regras, uma para ingresso e outra para egr
 testar outra maneira, pois usando o "create_node_security_group", ele não aplica a SG parece.   teste usando a "create_cluster_security_group" dá erro porta 80 dial.
 - Explicação, talvez nao role:
 https://github.com/terraform-aws-modules/terraform-aws-eks/issues/1542
-- Avaliar add aditional sg
+- Avaliar add aditional sg!!!!
 - KB sobre usar parametros dos modulos usados no Blueprint, hierarquias, etc:
 https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf
 - Criar KB, sobre como ajustar o Helm do "kube-prometheus-stack" via EKS-BLUEPRINT.
@@ -5232,9 +5237,5 @@ https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf
 
 
 
-terraform destroy -target=module.kubernetes_addons -auto-approve
-terraform destroy -target=module.eks_blueprints -auto-approve
-terraform destroy -target=module.vpc -auto-approve
-terraform destroy -auto-approve
 
 
