@@ -42,6 +42,7 @@ ssh-add /home/fernando/.ssh/chave-debian10-github
 git push
 git status
 
+
 - Git - add sem colocar .terraform:
 git add -u
 git reset -- 01-eks-cluster-terraform-simples/.terraform

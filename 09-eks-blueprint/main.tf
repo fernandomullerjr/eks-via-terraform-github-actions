@@ -82,6 +82,7 @@ module "eks_blueprints" {
     }
   }
 
+
   # teams
   platform_teams = {
     admin = {
@@ -97,7 +98,7 @@ module "eks_blueprints" {
 
 
 
-
+##################################################
 # VPC
 
 module "vpc" {

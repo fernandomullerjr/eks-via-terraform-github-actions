@@ -11,6 +11,7 @@ locals {
 
   node_group_name = "managed-ondemand"
 
+
   tags = {
     Blueprint  = local.name
     GithubRepo = "github.com/aws-ia/terraform-aws-eks-blueprints"
