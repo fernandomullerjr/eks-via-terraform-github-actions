@@ -5254,3 +5254,359 @@ terraform apply -auto-approve
 
 configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
 vpc_id = "vpc-0e275861788374089"
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0e275861788374089"
+
+
+
+
+~~~~bash
+fernando@debian10x64:~$ kubectl get svc -A
+NAMESPACE               NAME                                             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                        AGE
+default                 kubernetes                                       ClusterIP   172.20.0.1       <none>        443/TCP                        15m
+kube-prometheus-stack   alertmanager-operated                            ClusterIP   None             <none>        9093/TCP,9094/TCP,9094/UDP     4m45s
+kube-prometheus-stack   kube-prometheus-stack-alertmanager               ClusterIP   172.20.150.63    <none>        9093/TCP                       4m50s
+kube-prometheus-stack   kube-prometheus-stack-grafana                    ClusterIP   172.20.186.28    <none>        80/TCP                         4m50s
+kube-prometheus-stack   kube-prometheus-stack-kube-state-metrics         ClusterIP   172.20.77.102    <none>        8080/TCP                       4m50s
+kube-prometheus-stack   kube-prometheus-stack-operator                   ClusterIP   172.20.35.89     <none>        443/TCP                        4m50s
+kube-prometheus-stack   kube-prometheus-stack-prometheus                 NodePort    172.20.92.107    <none>        9090:30090/TCP                 4m50s
+kube-prometheus-stack   kube-prometheus-stack-prometheus-node-exporter   ClusterIP   172.20.166.158   <none>        9100/TCP                       4m50s
+kube-prometheus-stack   prometheus-operated                              ClusterIP   None             <none>        9090/TCP                       4m45s
+kube-system             aws-load-balancer-webhook-service                ClusterIP   172.20.94.15     <none>        443/TCP                        6m15s
+kube-system             kube-dns                                         ClusterIP   172.20.0.10      <none>        53/UDP,53/TCP                  15m
+kube-system             kube-prometheus-stack-coredns                    ClusterIP   None             <none>        9153/TCP                       4m50s
+kube-system             kube-prometheus-stack-kube-proxy                 ClusterIP   None             <none>        10249/TCP                      4m50s
+kube-system             kube-prometheus-stack-kubelet                    ClusterIP   None             <none>        10250/TCP,10255/TCP,4194/TCP   4m45s
+kube-system             metrics-server                                   ClusterIP   172.20.184.251   <none>        443/TCP                        6m44s
+fernando@debian10x64:~$
+
+
+fernando@debian10x64:~$ kubectl get nodes -o wide
+NAME                         STATUS   ROLES    AGE   VERSION                INTERNAL-IP   EXTERNAL-IP      OS-IMAGE         KERNEL-VERSION                 CONTAINER-RUNTIME
+ip-10-0-0-54.ec2.internal    Ready    <none>   11m   v1.23.17-eks-a59e1f0   10.0.0.54     44.200.210.199   Amazon Linux 2   5.4.238-148.347.amzn2.x86_64   docker://20.10.17
+ip-10-0-1-157.ec2.internal   Ready    <none>   11m   v1.23.17-eks-a59e1f0   10.0.1.157    52.91.211.29     Amazon Linux 2   5.4.238-148.347.amzn2.x86_64   docker://20.10.17
+ip-10-0-2-143.ec2.internal   Ready    <none>   11m   v1.23.17-eks-a59e1f0   10.0.2.143    3.80.215.98      Amazon Linux 2   5.4.238-148.347.amzn2.x86_64   docker://20.10.17
+fernando@debian10x64:~$
+
+~~~~
+
+
+
+44.200.210.199:30090
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Grafana Dashboards
+
+-  Adicionando Grafana Dashboards
+Projeto: https://github.com/dotdc/grafana-dashboards-kubernetes
+Artigo: https://medium.com/@dotdc/a-set-of-modern-grafana-dashboards-for-kubernetes-4b989c72a4b2
+
+- Editado o Values abaixo:
+eks-via-terraform-github-actions/09-eks-blueprint/values-stack.yaml
+
+
+- Adicionado o trecho:
+
+~~~~YAML
+
+# Adicionando Grafana Dashboards
+# Projeto: https://github.com/dotdc/grafana-dashboards-kubernetes
+# Artigo: https://medium.com/@dotdc/a-set-of-modern-grafana-dashboards-for-kubernetes-4b989c72a4b2
+
+grafana:
+  # Provision grafana-dashboards-kubernetes
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'grafana-dashboards-kubernetes'
+        orgId: 1
+        folder: 'Kubernetes'
+        type: file
+        disableDeletion: true
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/grafana-dashboards-kubernetes
+  dashboards:
+    grafana-dashboards-kubernetes:
+      k8s-system-api-server:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json
+        token: ''
+      k8s-system-coredns:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-coredns.json
+        token: ''
+      k8s-views-global:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-global.json
+        token: ''
+      k8s-views-namespaces:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-namespaces.json
+        token: ''
+      k8s-views-nodes:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json
+        token: ''
+      k8s-views-pods:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
+        token: ''
+
+~~~~
+
+
+- Efetuando plan:
+
+~~~~bash
+
+module.kubernetes_addons.module.aws_load_balancer_controller[0].module.helm_addon.helm_release.addon[0]: Refreshing state... [id=aws-load-balancer-controller]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+
+Terraform will perform the following actions:
+
+  # module.kubernetes_addons.module.kube_prometheus_stack[0].module.helm_addon.helm_release.addon[0] will be updated in-place
+  ~ resource "helm_release" "addon" {
+        id                         = "kube-prometheus-stack"
+        name                       = "kube-prometheus-stack"
+      ~ values                     = [
+          - <<-EOT
+                defaultRules:
+                  create: true
+                  rules:
+                    etcd: false
+                    kubeScheduler: false
+                kubeControllerManager:
+                  enabled: false
+                kubeEtcd:
+                  enabled: false
+                kubeScheduler:
+                  enabled: false
+                prometheus:
+                  prometheusSpec:
+                    storageSpec:
+                      volumeClaimTemplate:
+                        spec:
+                          accessModes:
+                          - ReadWriteOnce
+                          resources:
+                            requests:
+                              storage: 20Gi
+                          storageClassName: gp2
+                  enabled: true
+                  ## Configuration for Prometheus service
+                  ##
+                  service:
+                    annotations: {}
+                    labels: {}
+                    clusterIP: ""
+                    port: 9090
+                    ## To be used with a proxy extraContainer port
+                    targetPort: 9090
+                    ## List of IP addresses at which the Prometheus server service is available
+                    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+                    ##
+                    externalIPs: []
+                    ## Port to expose on each node
+                    ## Only used if service.type is 'NodePort'
+                    ##
+                    nodePort: 30090
+                    type: NodePort
+            EOT,
+          + <<-EOT
+                defaultRules:
+                  create: true
+                  rules:
+                    etcd: false
+                    kubeScheduler: false
+                kubeControllerManager:
+                  enabled: false
+                kubeEtcd:
+                  enabled: false
+                kubeScheduler:
+                  enabled: false
+                prometheus:
+                  prometheusSpec:
+                    storageSpec:
+                      volumeClaimTemplate:
+                        spec:
+                          accessModes:
+                          - ReadWriteOnce
+                          resources:
+                            requests:
+                              storage: 20Gi
+                          storageClassName: gp2
+                  enabled: true
+                  ## Configuration for Prometheus service
+                  ##
+                  service:
+                    annotations: {}
+                    labels: {}
+                    clusterIP: ""
+                    port: 9090
+                    ## To be used with a proxy extraContainer port
+                    targetPort: 9090
+                    ## List of IP addresses at which the Prometheus server service is available
+                    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+                    ##
+                    externalIPs: []
+                    ## Port to expose on each node
+                    ## Only used if service.type is 'NodePort'
+                    ##
+                    nodePort: 30090
+                    type: NodePort
+
+
+                # Adicionando Grafana Dashboards
+                # Projeto: https://github.com/dotdc/grafana-dashboards-kubernetes
+                # Artigo: https://medium.com/@dotdc/a-set-of-modern-grafana-dashboards-for-kubernetes-4b989c72a4b2
+
+                grafana:
+                  # Provision grafana-dashboards-kubernetes
+                  dashboardProviders:
+                    dashboardproviders.yaml:
+                      apiVersion: 1
+                      providers:
+                      - name: 'grafana-dashboards-kubernetes'
+                        orgId: 1
+                        folder: 'Kubernetes'
+                        type: file
+                        disableDeletion: true
+                        editable: true
+                        options:
+                          path: /var/lib/grafana/dashboards/grafana-dashboards-kubernetes
+                  dashboards:
+                    grafana-dashboards-kubernetes:
+                      k8s-system-api-server:
+                        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json
+                        token: ''
+                      k8s-system-coredns:
+                        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-coredns.json
+                        token: ''
+                      k8s-views-global:
+                        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-global.json
+                        token: ''
+                      k8s-views-namespaces:
+                        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-namespaces.json
+                        token: ''
+                      k8s-views-nodes:
+                        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json
+                        token: ''
+                      k8s-views-pods:
+                        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
+                        token: ''
+            EOT,
+        ]
+        # (28 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+Plan: 0 to add, 1 to change, 0 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+~~~~
+
+
+
+
+
+- Aplicando:
+terraform apply -auto-approve
+
+
+
+
+
+
+- Deu erro
+http://192.168.0.110:8080/
+
+dashboards não carregam
+
+
+
+
+
+- Verificando documentação, tem alguns detalhes
+
+Installation
+
+In most installation cases, you will need to clone this repository (or your fork):
+
+git clone https://github.com/dotdc/grafana-dashboards-kubernetes.git
+cd grafana-dashboards-kubernetes
+
+If you plan to deploy these dashboards using ArgoCD, ConfigMaps or Terraform, you will also need to enable and configure the dashboards sidecar on the Grafana Helm chart to get the dashboards loaded in your Grafana instance:
+
+# kube-prometheus-stack values
+grafana:
+  sidecar:
+    dashboards:
+      enabled: true
+      defaultFolderName: "General"
+      label: grafana_dashboard
+      labelValue: "1"
+      folderAnnotation: grafana_folder
+      searchNamespace: ALL
+      provider:
+        foldersFromFilesStructure: true
+
+
+
+
+- Editando values novamente
+
+
+- Acessando
+http://192.168.0.110:8080/d/k8s_views_global/kubernetes-views-global?orgId=1&refresh=30s
+funcionou agora
+
+
+
+
+
+
+## Grafana Dashboards
+
+- Adicionados diversos dashboards úteis ao Grafana, que ajudam no gerenciamento dos clusters Kubernetes.
+- São adicionados via Helm, conforme tutorial:
+eks-via-terraform-github-actions/09-eks-blueprint/material-de-apoio/Grafana-Dashboards-adicionais.md
+- Detalhamento de cada Dashboard e o que oferecem, detalhado no artigo abaixo:
+<https://medium.com/@dotdc/a-set-of-modern-grafana-dashboards-for-kubernetes-4b989c72a4b2>
+
+
+
+
+
+
+
+## PENDENTE
+- Ajustar SG das EC2 do node-group via manifesto do EKS-BLUEPRINT. Liberar porta 30090, por exemplo, para que o Prometheus fique acessivel de fora.
+testar outra maneira, pois usando o "create_node_security_group", ele não aplica a SG parece.   teste usando a "create_cluster_security_group" dá erro porta 80 dial.
+- Explicação, talvez nao role:
+https://github.com/terraform-aws-modules/terraform-aws-eks/issues/1542
+- Efetuar tshoot com base na resposta:
+https://medium.com/@fernandomllerjr/hi-6ec6fd207f0b
+https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/variables.tf#L314
+- Avaliar add aditional sg!!!!
+- KB sobre usar parametros dos modulos usados no Blueprint, hierarquias, etc:
+https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf
+- Criar KB, sobre como ajustar o Helm do "kube-prometheus-stack" via EKS-BLUEPRINT.

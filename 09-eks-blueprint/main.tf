@@ -24,6 +24,7 @@ module "eks_blueprints" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.21.0"
 
   cluster_name    = local.name
+  worker_additional_security_group_ids = [aws_security_group.sg_adicional.id]
 
   # EKS Cluster VPC and Subnet mandatory config
   vpc_id             = module.vpc.vpc_id

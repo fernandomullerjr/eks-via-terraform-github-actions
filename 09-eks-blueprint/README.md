@@ -17,6 +17,14 @@ Grafana<br/>
 AlertManager<br/>
 <br/><br/>
 
+## Grafana Dashboards
+
+- Adicionados diversos dashboards úteis ao Grafana, que ajudam no gerenciamento dos clusters Kubernetes.
+- São adicionados via Helm, conforme tutorial:
+eks-via-terraform-github-actions/09-eks-blueprint/material-de-apoio/Grafana-Dashboards-adicionais.md
+- Detalhamento de cada Dashboard e o que oferecem, detalhado no artigo abaixo:
+<https://medium.com/@dotdc/a-set-of-modern-grafana-dashboards-for-kubernetes-4b989c72a4b2>
+
 ## Blueprint
 Blueprint utilizado como referência:<br/>
 <https://catalog.workshops.aws/eks-blueprints-terraform/en-US><br/>
@@ -35,6 +43,34 @@ Adicionado bloco que configura rules adicionais para a Security Group utilizada 
 <https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf>
 
 
+# Subindo o projeto
+
+## Permissões
+
+- Para o acesso ao Prometheus ocorrer corretamente via navegador, é necessário liberar a porta 30090 do NodePort na SG da EC2 do EKS.
+nodePort: 30090
+
+- Ao liberar a porta na SG que atende as EC2 do node-group, ela fica acessível via navegador, por exemplo:
+44.200.210.199:30090
+http://44.200.210.199:30090/alerts?search=
+<http://44.200.210.199:30090/alerts?search=>
+
+- Até o momento, não foi encontrada maneira de liberar os ips e portas das SG das EC2 dos node-group via Terraform.
+
+
+## Port-forward
+
+PROMETHEUS
+- Somente para teste direto num Pod, devido o uso de NodePort já é acessível externamente.
+
+GRAFANA
+Acesso local usando Port-forward
+kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name
+kubectl port-forward $(kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name) -n kube-prometheus-stack --address 0.0.0.0 8080:3000
+
+- Acessível:
+192.168.0.110:8080
+<192.168.0.110:8080>
 
 # Particularidades
 
@@ -53,13 +89,6 @@ eks-via-terraform-github-actions/09-eks-blueprint/material-de-apoio/Metrics-with
 
 - Tutorial explicando como personalizar o Helm Chart do Prometheus
 eks-via-terraform-github-actions/09-eks-blueprint/material-de-apoio/Helm-Prometheus-kube-stack-Como-editar.md
-
-## Permissões
-
-- Para o acesso ao Prometheus ocorrer corretamente via navegador, é necessário liberar a porta 30090 do NodePort na SG da EC2 do EKS.
-nodePort: 30090
-
-- Até o momento, não foi encontrada maneira de liberar os ips e portas das SG das EC2 dos node-group via Terraform.
 
 ## Outras observações
 
