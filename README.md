@@ -24,4 +24,18 @@ Também adiciona 2 usuários(usuário root e um usuário comum) como administrad
 </details>
 
 
+[Lab09 - EKS via Blueprint + RBAC + Stack do Prometheus - Sem Github Actions](09-eks-blueprint/README.md)
+<details> 
+  <summary><b>Detalhes sobre o projeto</b> <em>(clique para visualizar)</em></summary>
+Projeto que cria um Cluster EKS via Terraform, usando Blueprint do EKS.<br/>
+Já efetua a criação da estrutura de RBAC (ClusterRole, ClusterRoleBinding, ClusterRole), aplicando os devidos manifestos.<br/>
+Também adiciona 2 usuários(usuário root e um usuário comum) como administradores, fazendo uso do "Teams", que é um recurso que facilita a criação de acesso ao cluster.<br/>
+Efetua a instalação da stack kube-prometheus-stack, contendo:<br/>
+Prometheus<br/>
+Grafana<br/>
+AlertManager<br/>
+<br/><br/>
+</details>
+
+
 > Status do Projeto: :warning: (em desenvolvimento, em breve serão adicionados novos projetos de exemplo)

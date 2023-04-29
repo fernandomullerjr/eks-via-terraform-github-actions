@@ -5239,3 +5239,18 @@ https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf
 
 
 
+
+
+
+
+# Dia 29/04/2023
+
+
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -target=module.kubernetes_addons -auto-approve
+terraform apply -auto-approve
+
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0e275861788374089"
