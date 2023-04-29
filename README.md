@@ -34,7 +34,9 @@ Efetua a instalação da stack kube-prometheus-stack, contendo:<br/>
 Prometheus<br/>
 Grafana<br/>
 AlertManager<br/>
-<br/><br/>
+<br/>
+Grafana Dashboards<br/>
+São adicionados diversos dashboards úteis ao Grafana, que ajudam no gerenciamento dos clusters Kubernetes.<br/><br/>
 </details>
 
 
