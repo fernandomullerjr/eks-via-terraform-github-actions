@@ -5598,6 +5598,45 @@ eks-via-terraform-github-actions/09-eks-blueprint/material-de-apoio/Grafana-Dash
 
 
 
+
+
+
+# TSHOOT - SG adicional nos Nodes
+
+- Teste adicionando:
+  worker_additional_security_group_ids = [aws_security_group.sg_adicional.id]
+
+- Aplicado:
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration and found no differences, so no changes are needed.
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+
+
+- Não tem efeito, nada ocorre e SG não é adicionada.
+
+
+
+
+
+
+
+
+terraform destroy -target=module.kubernetes_addons -auto-approve
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
+
+
+
+
+
+
+
 ## PENDENTE
 - Ajustar SG das EC2 do node-group via manifesto do EKS-BLUEPRINT. Liberar porta 30090, por exemplo, para que o Prometheus fique acessivel de fora.
 testar outra maneira, pois usando o "create_node_security_group", ele não aplica a SG parece.   teste usando a "create_cluster_security_group" dá erro porta 80 dial.
@@ -5610,3 +5649,10 @@ https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/variables.tf#L3
 - KB sobre usar parametros dos modulos usados no Blueprint, hierarquias, etc:
 https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf
 - Criar KB, sobre como ajustar o Helm do "kube-prometheus-stack" via EKS-BLUEPRINT.
+
+
+
+
+
+
+
