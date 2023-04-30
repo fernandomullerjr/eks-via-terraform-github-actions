@@ -6,6 +6,8 @@
 
 ## Descrição do projeto 
 
+> Status do Projeto: :warning: (em desenvolvimento, em breve serão adicionados novos projetos de exemplo)
+
 <p align="justify">
   Coleção de projetos que efetuam o deploy de um cluster EKS usando o Terraform.<br/>
   Idéia deste repositório é fornecer manifestos testados e validados, contendo alguns cenários de clusters EKS que podemos precisar.<br/>
@@ -39,5 +41,3 @@ Grafana Dashboards<br/>
 São adicionados diversos dashboards úteis ao Grafana, que ajudam no gerenciamento dos clusters Kubernetes.<br/><br/>
 </details>
 
-
-> Status do Projeto: :warning: (em desenvolvimento, em breve serão adicionados novos projetos de exemplo)
