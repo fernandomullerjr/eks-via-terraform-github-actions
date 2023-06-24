@@ -7,7 +7,7 @@ https://catalog.workshops.aws/eks-blueprints-terraform/en-US/030-provision-eks-c
 
 
 
-# RESUMO
+## RESUMO
 
 - COMANDOS
 terraform apply -target=module.vpc -auto-approve
@@ -21,8 +21,7 @@ terraform destroy -target=module.vpc -auto-approve
 terraform destroy -auto-approve
 
 
-
-# SOLUÇÃO
+## SOLUÇÃO
 - Para usuários comuns, adicionar o arn do usuário normal.
 - Para usuário root, adicionar arn "arn:aws:iam::261106957109:root" ao invés do arn do usuário com nome do usuário.
 
@@ -5629,6 +5628,18 @@ terraform destroy -target=module.kubernetes_addons -auto-approve
 terraform destroy -target=module.eks_blueprints -auto-approve
 terraform destroy -target=module.vpc -auto-approve
 terraform destroy -auto-approve
+
+
+
+
+
+
+
+
+
+
+## Dia 24/06/2023
+
 
 
 
