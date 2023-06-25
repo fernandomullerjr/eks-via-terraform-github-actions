@@ -34,6 +34,59 @@ terraform destroy -auto-approve
 
 - Projeto sobe EKS + Prometheus + Grafana + AlertManager
 
+
+# Subindo o projeto
+
+## Permissões
+
+- Para o acesso ao Prometheus ocorrer corretamente via navegador, é necessário liberar a porta 30090 do NodePort na SG da EC2 do EKS.
+nodePort: 30090
+
+- Ao liberar a porta na SG que atende as EC2 do node-group, ela fica acessível via navegador, por exemplo:
+44.200.210.199:30090
+http://44.200.210.199:30090/alerts?search=
+<http://44.200.210.199:30090/alerts?search=>
+
+- Até o momento, não foi encontrada maneira de liberar os ips e portas das SG das EC2 dos node-group via Terraform.
+
+
+## Port-forward
+
+PROMETHEUS
+- Somente para teste direto num Pod, devido o uso de NodePort já é acessível externamente.
+
+GRAFANA
+Acesso local usando Port-forward
+kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name
+kubectl port-forward $(kubectl get pods --selector app.kubernetes.io/name=grafana -n kube-prometheus-stack -o=name) -n kube-prometheus-stack --address 0.0.0.0 8080:3000
+
+- Acessível:
+192.168.0.110:8080
+<192.168.0.110:8080>
+
+# Particularidades
+
+- Os nodes públicos são provisionados com o trecho do "managed_node_groups" no main.tf, devido a linha abaixo, para que o Prometheus fique acessível externamente:
+subnet_ids      = module.vpc.public_subnets
+
+## Usuários
+
+- Para permitir usuários comuns, adicionar o arn do usuário normal.
+- Para permitir um usuário IAM que é root, adicionar arn "arn:aws:iam::261106957109:root" ao invés do arn do usuário com nome do usuário.
+
+## Tutoriais
+
+- Tutorial explicando como adicionar a Stack do Prometheus via Addons:
+eks-via-terraform-github-actions/09-eks-blueprint/material-de-apoio/Metrics-with-Blueprints-addons-kube-prometheus-stack.md
+
+- Tutorial explicando como personalizar o Helm Chart do Prometheus
+eks-via-terraform-github-actions/09-eks-blueprint/material-de-apoio/Helm-Prometheus-kube-stack-Como-editar.md
+
+## Outras observações
+
+- Seguir a ordem correta no Apply e no Destroy, para que não ocorra de alguns recursos ficarem impedidos de serem excluídos depois.
+- Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso, causando alguns problemas, que podem dificultar a criação ou exclusão de recursos.
+
 ## PROMETHEUS
 
 - Foram usados os addons de Prometheus(kube-prometheus-stack) para subir o Prometheus, Grafana e AlertManager:
@@ -5642,8 +5695,45 @@ terraform destroy -auto-approve
 
 
 
+- COMANDOS
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -target=module.kubernetes_addons -auto-approve
+terraform apply -auto-approve
 
 
+# Subindo o projeto
+
+## Permissões
+
+- Para o acesso ao Prometheus ocorrer corretamente via navegador, é necessário liberar a porta 30090 do NodePort na SG da EC2 do EKS.
+nodePort: 30090
+
+- Ao liberar a porta na SG que atende as EC2 do node-group, ela fica acessível via navegador, por exemplo:
+44.200.210.199:30090
+http://44.200.210.199:30090/alerts?search=
+<http://44.200.210.199:30090/alerts?search=>
+
+- Até o momento, não foi encontrada maneira de liberar os ips e portas das SG das EC2 dos node-group via Terraform.
+
+
+- IPs atuais
+
+~~~~bash
+fernando@debian10x64:~$ kubectl get nodes -o wide
+NAME                         STATUS   ROLES    AGE   VERSION                INTERNAL-IP   EXTERNAL-IP      OS-IMAGE         KERNEL-VERSION                 CONTAINER-RUNTIME
+ip-10-0-0-151.ec2.internal   Ready    <none>   29m   v1.23.17-eks-0a21954   10.0.0.151    34.236.243.93    Amazon Linux 2   5.4.242-156.349.amzn2.x86_64   docker://20.10.23
+ip-10-0-1-24.ec2.internal    Ready    <none>   29m   v1.23.17-eks-0a21954   10.0.1.24     34.226.249.163   Amazon Linux 2   5.4.242-156.349.amzn2.x86_64   docker://20.10.23
+ip-10-0-2-103.ec2.internal   Ready    <none>   29m   v1.23.17-eks-0a21954   10.0.2.103    54.164.139.147   Amazon Linux 2   5.4.242-156.349.amzn2.x86_64   docker://20.10.23
+fernando@debian10x64:~$ date
+Sat 24 Jun 2023 08:34:22 PM -03
+fernando@debian10x64:~$
+
+~~~~
+
+
+- Acessível, após liberar meu ip na sg:
+34.236.243.93:30090
 
 
 
