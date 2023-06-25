@@ -5737,8 +5737,20 @@ fernando@debian10x64:~$
 
 
 
+- Terminate
 
-## PENDENTE
+terraform destroy -target=module.kubernetes_addons -auto-approve
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
+
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+##  PENDENTE
 - Ajustar SG das EC2 do node-group via manifesto do EKS-BLUEPRINT. Liberar porta 30090, por exemplo, para que o Prometheus fique acessivel de fora.
 testar outra maneira, pois usando o "create_node_security_group", ele não aplica a SG parece.   teste usando a "create_cluster_security_group" dá erro porta 80 dial.
 - Explicação, talvez nao role:
