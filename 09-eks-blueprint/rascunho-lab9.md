@@ -5745,12 +5745,82 @@ terraform destroy -target=module.vpc -auto-approve
 terraform destroy -auto-approve
 
 
+
+
+
+
+
+
+
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+### Dia 01/07/2023
+
+- COMANDOS
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -target=module.kubernetes_addons -auto-approve
+terraform apply -auto-approve
+
+
+# Subindo o projeto
+
+## Permissões
+
+- Para o acesso ao Prometheus ocorrer corretamente via navegador, é necessário liberar a porta 30090 do NodePort na SG da EC2 do EKS.
+nodePort: 30090
+
+- Ao liberar a porta na SG que atende as EC2 do node-group, ela fica acessível via navegador, por exemplo:
+44.200.210.199:30090
+http://44.200.210.199:30090/alerts?search=
+<http://44.200.210.199:30090/alerts?search=>
+
+- Até o momento, não foi encontrada maneira de liberar os ips e portas das SG das EC2 dos node-group via Terraform.
+
+
+- IPs atuais
+
+~~~~bash
+fernando@debian10x64:~$ kubectl get nodes -o wide
+
+fernando@debian10x64:~$ kubectl get nodes -o wide
+NAME                         STATUS   ROLES    AGE     VERSION                INTERNAL-IP   EXTERNAL-IP     OS-IMAGE         KERNEL-VERSION                 CONTAINER-RUNTIME
+ip-10-0-0-41.ec2.internal    Ready    <none>   3h13m   v1.23.17-eks-0a21954   10.0.0.41     44.204.116.87   Amazon Linux 2   5.4.242-156.349.amzn2.x86_64   docker://20.10.23
+ip-10-0-1-72.ec2.internal    Ready    <none>   3h13m   v1.23.17-eks-0a21954   10.0.1.72     44.204.12.241   Amazon Linux 2   5.4.242-156.349.amzn2.x86_64   docker://20.10.23
+ip-10-0-2-124.ec2.internal   Ready    <none>   3h13m   v1.23.17-eks-0a21954   10.0.2.124    3.80.70.254     Amazon Linux 2   5.4.242-156.349.amzn2.x86_64   docker://20.10.23
+fernando@debian10x64:~$ date
+Sat 01 Jul 2023 11:31:37 PM -03
+fernando@debian10x64:~$
+
+~~~~
+
+
+
+
+- DESTROY
+
+terraform destroy -target=module.kubernetes_addons -auto-approve
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
+
+
+
+
+
+
+
 # ####################################################################################################################################################
 # ####################################################################################################################################################
 # ####################################################################################################################################################
 # ####################################################################################################################################################
 # ####################################################################################################################################################
 ##  PENDENTE
+
 - Ajustar SG das EC2 do node-group via manifesto do EKS-BLUEPRINT. Liberar porta 30090, por exemplo, para que o Prometheus fique acessivel de fora.
 testar outra maneira, pois usando o "create_node_security_group", ele não aplica a SG parece.   teste usando a "create_cluster_security_group" dá erro porta 80 dial.
 - Explicação, talvez nao role:
