@@ -79,7 +79,7 @@ module "eks_blueprints" {
   platform_teams = {
     admin = {
       users = [
-        data.aws_caller_identity.current.arn, "arn:aws:iam::552925778543:user/fernando", "arn:aws:iam::552925778543:user/fernandomullerjunior072023", "arn:aws:iam::552925778543:root"
+        data.aws_caller_identity.current.arn, "arn:aws:iam::552925778543:user/fernando", "arn:aws:iam::552925778543:root"
       ]
     }
   }

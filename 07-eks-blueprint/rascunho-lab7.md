@@ -2040,3 +2040,53 @@ modificado no manifesto, mas não aplicado ainda
       ]
     }
   }
+
+
+
+
+
+
+
+
+
+
+│ (and one more similar warning elsewhere)
+╵
+╷
+│ Error: updating IAM Role (eks-lab-admin-access) assume role policy: MalformedPolicyDocument: Invalid principal in policy: "AWS":"arn:aws:iam::552925778543:user/fernandomullerjunior072023"
+│       status code: 400, request id: 2b15077f-e865-414a-abee-7825cbb535df
+│
+│   with module.eks_blueprints.module.aws_eks_teams[0].aws_iam_role.platform_team["admin"],
+│   on .terraform/modules/eks_blueprints/modules/aws-eks-teams/main.tf line 178, in resource "aws_iam_role" "platform_team":
+│  178: resource "aws_iam_role" "platform_team" {
+│
+
+
+
+
+
+
+- DESTROY
+
+terraform destroy -target=module.eks_blueprints -auto-approve
+terraform destroy -target=module.vpc -auto-approve
+terraform destroy -auto-approve
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# PENDENTE
+
+- Tratar erros na console do EKS, erro de IAM, devido mudança de conta AWS. Detalhe, tem conta IAM e IAM-Identity-Center, ver como lidar.
+
+## Obs
+- Seguir o README no Apply e no Destroy.
+- Cuidar extensão do nome(no locals.tf), para não formar um nome muito longo ao recurso.
+
+## Para o projeto 07
+- Criar uma v2, agora que foi encontrada a solução.
+- Efetuar testes adicionais com usuários comuns, que não seja o fernando-devops, para ver se ele não tomou erro devido estrutura que tinha via KB.
+
