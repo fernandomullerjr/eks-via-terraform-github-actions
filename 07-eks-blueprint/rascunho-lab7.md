@@ -1960,3 +1960,83 @@ terraform destroy -auto-approve
 ## Para o projeto 07
 - Criar uma v2, agora que foi encontrada a solução.
 - Efetuar testes adicionais com usuários comuns, que não seja o fernando-devops, para ver se ele não tomou erro devido estrutura que tinha via KB.
+
+
+
+
+
+
+# Dia 05/08/2023
+
+
+- Subindo lab de EKS, para testar Backstage e expor o backstage
+
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -auto-approve
+
+
+
+│
+│   on .terraform/modules/vpc/main.tf line 35, in resource "aws_vpc" "this":
+│   35:   enable_classiclink             = null # https://github.com/hashicorp/terraform/issues/31730
+│
+│ An argument named "enable_classiclink" is not expected here.
+╵
+╷
+│ Error: Unsupported argument
+│
+│   on .terraform/modules/vpc/main.tf line 36, in resource "aws_vpc" "this":
+│   36:   enable_classiclink_dns_support = null # https://github.com/hashicorp/terraform/issues/31730
+│
+│ An argument named "enable_classiclink_dns_support" is not expected here.
+╵
+╷
+│ Error: Unsupported argument
+│
+│   on .terraform/modules/vpc/main.tf line 1244, in resource "aws_default_vpc" "this":
+│ 1244:   enable_classiclink   = null # https://github.com/hashicorp/terraform/issues/31730
+│
+│ An argument named "enable_classiclink" is not expected here.
+╵
+
+
+
+- Ajustado
+comentados os classiclink
+
+- Novo erro
+relacionado a STS e AWS
+ajustadas as chaves AWS, pois foi criada nova conta AWS
+
+
+- Aplicando novamente
+- Subindo lab de EKS, para testar Backstage e expor o backstage
+
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -auto-approve
+
+
+
+
+Atualização da configuração do grupo de nós em andamento
+A configuração de managed-ondemand-20230805192655483600000009 está sendo atualizada. Esse processo pode levar vários minutos.
+
+- ERRO na console
+A entidade principal do IAM atual não tem acesso a objetos do Kubernetes neste cluster.
+This may be due to the current user or role not having Kubernetes RBAC permissions to describe cluster resources or not having an entry in the cluster’s auth config map.Saiba mais 
+
+
+- VERTIFICANDO
+ID da conta AWS mudou
+modificado no manifesto, mas não aplicado ainda
+
+
+  platform_teams = {
+    admin = {
+      users = [
+        data.aws_caller_identity.current.arn, "arn:aws:iam::552925778543:user/fernando", "arn:aws:iam::552925778543:user/fernandomullerjunior072023", "arn:aws:iam::552925778543:root"
+      ]
+    }
+  }

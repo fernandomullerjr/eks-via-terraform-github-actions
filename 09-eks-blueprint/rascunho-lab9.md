@@ -5839,3 +5839,64 @@ https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/main.tf
 
 
 
+
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+## Dia 05/08/2023
+
+- Subindo Cluster, para usar no Lab do Backstage
+
+- COMANDOS
+cd ~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -target=module.kubernetes_addons -auto-approve
+terraform apply -auto-approve
+
+
+- Lab com erros no init e  apply:
+
+
+╷
+│ Error: Failed to read module directory
+│
+│ Module directory .terraform/modules/kubernetes_addons.ondat.helm_addon/modules/kubernetes-addons/helm-addon does not exist or cannot be read.
+╵
+
+╷
+│ Error: Failed to read module directory
+│
+│ Module directory .terraform/modules/kubernetes_addons.portworx.helm_addon/modules/kubernetes-addons/helm-addon does not exist or cannot be read.
+╵
+
+╷
+│ Error: Failed to read module directory
+│
+│ Module directory .terraform/modules/kubernetes_addons.sysdig_agent.helm_addon/modules/kubernetes-addons/helm-addon does not exist or cannot be read.
+╵
+
+╷
+│ Error: Failed to read module directory
+│
+│ Module directory .terraform/modules/kubernetes_addons.ondat.helm_addon/modules/kubernetes-addons/helm-addon does not exist or cannot be read.
+╵
+
+╷
+│ Error: Failed to read module directory
+│
+│ Module directory .terraform/modules/kubernetes_addons.portworx.helm_addon/modules/kubernetes-addons/helm-addon does not exist or cannot be read.
+╵
+
+╷
+│ Error: Failed to read module directory
+│
+│ Module directory .terraform/modules/kubernetes_addons.sysdig_agent.helm_addon/modules/kubernetes-addons/helm-addon does not exist or cannot be read.
+╵
+
+
+
+- Talvez seja algo devido exclusão dos diretórios .terraform e etc
+- Revisar os source dos kubernetes addons

@@ -41,7 +41,7 @@ module "eks_blueprints" {
       groups   = ["system:masters"] # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
     },
     {
-      rolearn  = "arn:aws:iam::261106957109:role/eks-admin"
+      rolearn  = "arn:aws:iam::552925778543:role/eks-admin"
       username = "eks-admin"
       groups   = ["system:masters"]
     }
@@ -55,12 +55,12 @@ module "eks_blueprints" {
       groups   = ["system:masters", "eks-console-dashboard-full-access-group"]                                   # A list of groups within Kubernetes to which the role is mapped; Checkout K8s Role and Rolebindings
     },
     {
-      userarn  = "arn:aws:iam::261106957109:user/fernando-devops"     # The ARN of the IAM user to add.
+      userarn  = "arn:aws:iam::552925778543:user/fernando"     # The ARN of the IAM user to add.
       username = "fernando-devops"                                            # The user name within Kubernetes to map to the IAM role
       groups   = ["system:masters", "eks-console-dashboard-full-access-group"]
     },
     {
-      userarn  = "arn:aws:iam::261106957109:root"     # The ARN of the IAM user to add.
+      userarn  = "arn:aws:iam::552925778543:root"     # The ARN of the IAM user to add.
       username = "root"                                            # The user name within Kubernetes to map to the IAM role
       groups   = ["system:masters", "eks-console-dashboard-full-access-group"]
     }
@@ -79,7 +79,7 @@ module "eks_blueprints" {
   platform_teams = {
     admin = {
       users = [
-        data.aws_caller_identity.current.arn, "arn:aws:iam::261106957109:user/fernando-devops", "arn:aws:iam::261106957109:root"
+        data.aws_caller_identity.current.arn, "arn:aws:iam::552925778543:user/fernando", "arn:aws:iam::552925778543:user/fernandomullerjunior072023", "arn:aws:iam::552925778543:root"
       ]
     }
   }
