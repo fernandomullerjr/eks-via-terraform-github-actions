@@ -3551,3 +3551,4 @@ mas ele grava num contexto local, não é possível usar numa variável.
 
 
 
+

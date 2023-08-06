@@ -6086,3 +6086,16 @@ terraform apply -target=module.vpc -auto-approve
 terraform apply -target=module.eks_blueprints -auto-approve
 terraform apply -target=module.kubernetes_addons -auto-approve
 terraform apply -auto-approve
+
+
+
+
+Apply complete! Resources: 8 added, 1 changed, 7 destroyed.
+
+Outputs:
+
+configure_kubectl = "aws eks --region us-east-1 update-kubeconfig --name eks-lab"
+vpc_id = "vpc-0a9f90de740c75f4f"
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ aws eks --region us-east-1 update-kubeconfig --name eks-lab
+Updated context arn:aws:eks:us-east-1:552925778543:cluster/eks-lab in /home/fernando/.kube/config
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
