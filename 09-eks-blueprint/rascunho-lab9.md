@@ -5906,10 +5906,14 @@ terraform apply -auto-approve
 
 
 
-## Dia 05/08/2023
 
 
-
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+## Dia 06/08/2023
 
 - COMANDOS
 cd ~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint
@@ -6019,3 +6023,66 @@ commands will detect it and remind you to do so if necessary.
 fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
 
 ~~~~
+
+
+
+- COMANDOS
+cd ~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -target=module.kubernetes_addons -auto-approve
+terraform apply -auto-approve
+
+
+
+- Erros no apply do VPC:
+
+~~~~BASH
+
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$ terraform apply -target=module.vpc -auto-approve
+╷
+│ Warning: Argument is deprecated
+│
+│   with module.vpc.aws_eip.nat,
+│   on .terraform/modules/vpc/main.tf line 1011, in resource "aws_eip" "nat":
+│ 1011:   vpc = true
+│
+│ use domain attribute instead
+╵
+╷
+│ Error: Unsupported argument
+│
+│   on .terraform/modules/vpc/main.tf line 35, in resource "aws_vpc" "this":
+│   35:   enable_classiclink             = null # https://github.com/hashicorp/terraform/issues/31730
+│
+│ An argument named "enable_classiclink" is not expected here.
+╵
+╷
+│ Error: Unsupported argument
+│
+│   on .terraform/modules/vpc/main.tf line 36, in resource "aws_vpc" "this":
+│   36:   enable_classiclink_dns_support = null # https://github.com/hashicorp/terraform/issues/31730
+│
+│ An argument named "enable_classiclink_dns_support" is not expected here.
+╵
+╷
+│ Error: Unsupported argument
+│
+│   on .terraform/modules/vpc/main.tf line 1244, in resource "aws_default_vpc" "this":
+│ 1244:   enable_classiclink   = null # https://github.com/hashicorp/terraform/issues/31730
+│
+│ An argument named "enable_classiclink" is not expected here.
+╵
+fernando@debian10x64:~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint$
+
+~~~~
+
+- Comentando os classiclink no main.tf do module VPC:
+eks-via-terraform-github-actions/09-eks-blueprint/.terraform/modules/vpc/main.tf
+
+- Testando novo apply:
+terraform apply -target=module.vpc -auto-approve
+
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -target=module.kubernetes_addons -auto-approve
+terraform apply -auto-approve
