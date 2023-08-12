@@ -6109,3 +6109,20 @@ terraform destroy -target=module.kubernetes_addons -auto-approve
 terraform destroy -target=module.eks_blueprints -auto-approve
 terraform destroy -target=module.vpc -auto-approve
 terraform destroy -auto-approve
+
+
+
+
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+# ####################################################################################################################################################
+## Dia 12/08/2023
+
+- COMANDOS
+cd ~/cursos/terraform/eks-via-terraform-github-actions/09-eks-blueprint
+terraform apply -target=module.vpc -auto-approve
+terraform apply -target=module.eks_blueprints -auto-approve
+terraform apply -target=module.kubernetes_addons -auto-approve
+terraform apply -auto-approve
